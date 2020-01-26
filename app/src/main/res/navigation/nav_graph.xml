@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/receipeListFragment">
+
+    <fragment
+        android:id="@+id/receipeFragment"
+        android:name="com.realitix.mealassistant.ReceipeFragment"
+        android:label="fragment_receipe"
+        tools:layout="@layout/fragment_receipe" >
+        <argument android:name="toto" />
+    </fragment>
+    <fragment
+        android:id="@+id/receipeListFragment"
+        android:name="com.realitix.mealassistant.ReceipeListFragment"
+        android:label="fragment_receipe_list"
+        tools:layout="@layout/fragment_receipe_list" >
+        <action
+            android:id="@+id/action_receipelist_to_single"
+            app:destination="@id/receipeFragment"
+            app:enterAnim="@anim/fragment_fast_out_extra_slow_in" />
+    </fragment>
+</navigation>
