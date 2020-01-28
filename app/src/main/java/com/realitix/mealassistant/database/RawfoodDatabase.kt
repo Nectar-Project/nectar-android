@@ -21,32 +21,32 @@ import com.realitix.mealassistant.database.entity.*
     exportSchema = false,
     version = 1
 )
-abstract class RawfoodDatabase : RoomDatabase() {
-    abstract fun alimentCategoryDao(): AlimentCategoryDao?
-    abstract fun alimentDao(): AlimentDao?
-    abstract fun mealDao(): MealDao?
-    abstract fun receipeDao(): ReceipeDao?
-    abstract fun receipeStepDao(): ReceipeStepDao?
-    abstract fun receipeStepAlimentDao(): ReceipeStepAlimentDao?
-    abstract fun receipeStepReceipeDao(): ReceipeStepReceipeDao?
-    abstract fun mealAlimentDao(): MealAlimentDao?
-    abstract fun mealReceipeDao(): MealReceipeDao?
+abstract class MealDatabase : RoomDatabase() {
+    abstract fun alimentCategoryDao(): AlimentCategoryDao
+    abstract fun alimentDao(): AlimentDao
+    abstract fun mealDao(): MealDao
+    abstract fun receipeDao(): ReceipeDao
+    abstract fun receipeStepDao(): ReceipeStepDao
+    abstract fun receipeStepAlimentDao(): ReceipeStepAlimentDao
+    abstract fun receipeStepReceipeDao(): ReceipeStepReceipeDao
+    abstract fun mealAlimentDao(): MealAlimentDao
+    abstract fun mealReceipeDao(): MealReceipeDao
 
     companion object {
         private const val DB_NAME = "rawfood_db"
-        private var instance: RawfoodDatabase? = null
+        private var instance: MealDatabase? = null
         @Synchronized
-        fun getInstance(context: Context): RawfoodDatabase? {
+        fun getInstance(context: Context): MealDatabase {
             if (instance == null) {
                 instance = Room.databaseBuilder(
                     context.applicationContext,
-                    RawfoodDatabase::class.java,
+                    MealDatabase::class.java,
                     DB_NAME
                 )
                     .fallbackToDestructiveMigration()
                     .build()
             }
-            return instance
+            return instance as MealDatabase
         }
     }
 }

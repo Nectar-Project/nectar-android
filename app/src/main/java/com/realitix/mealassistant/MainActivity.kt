@@ -10,13 +10,14 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.Navigation
 import androidx.navigation.Navigation.findNavController
+import com.realitix.mealassistant.command.AlimentUpdater
 
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainActivity :
-    AppCompatActivity(),
-    ReceipeFragment.OnFragmentInteractionListener,
-    ReceipeListFragment.OnFragmentInteractionListener {
+    AppCompatActivity() {
 
     lateinit var navController : NavController
 
@@ -25,8 +26,12 @@ class MainActivity :
         setContentView(R.layout.activity_main)
 
         navController = findNavController(this,R.id.nav_host_fragment)
-
         setSupportActionBar(toolbar)
+
+        val au = AlimentUpdater()
+        GlobalScope.launch {
+            au.update(applicationContext)
+        }
 
     }
 
@@ -44,8 +49,5 @@ class MainActivity :
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun onFragmentInteraction(uri: Uri) {
     }
 }

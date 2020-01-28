@@ -7,19 +7,27 @@
 
     <fragment
         android:id="@+id/receipeFragment"
-        android:name="com.realitix.mealassistant.ReceipeFragment"
+        android:name="com.realitix.mealassistant.fragment.ReceipeFragment"
         android:label="fragment_receipe"
         tools:layout="@layout/fragment_receipe" >
-        <argument android:name="toto" />
+        <argument android:name="receipeId"
+            app:argType="long" />
     </fragment>
     <fragment
         android:id="@+id/receipeListFragment"
-        android:name="com.realitix.mealassistant.ReceipeListFragment"
+        android:name="com.realitix.mealassistant.fragment.ReceipeListFragment"
         android:label="fragment_receipe_list"
         tools:layout="@layout/fragment_receipe_list" >
         <action
             android:id="@+id/action_receipelist_to_single"
-            app:destination="@id/receipeFragment"
-            app:enterAnim="@anim/fragment_fast_out_extra_slow_in" />
+            app:destination="@+id/receipeFragment" />
+        <action
+            android:id="@+id/action_receipeListFragment_to_createReceipeFragment"
+            app:destination="@id/createReceipeFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/createReceipeFragment"
+        android:name="com.realitix.mealassistant.fragment.CreateReceipeFragment"
+        android:label="fragment_create_receipe"
+        tools:layout="@layout/fragment_create_receipe" />
 </navigation>

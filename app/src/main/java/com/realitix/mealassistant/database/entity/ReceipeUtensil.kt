@@ -2,6 +2,7 @@ package com.realitix.mealassistant.database.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 
 @Entity(
     primaryKeys = arrayOf("receipeId", "utensilId"),
@@ -15,7 +16,11 @@ import androidx.room.ForeignKey
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("utensilId"),
         onDelete = ForeignKey.CASCADE
-    ))
+    )),
+    indices = arrayOf(
+        Index(value=["receipeId"]),
+        Index(value=["utensilId"])
+    )
 )
 class ReceipeUtensil(var receipeId: Long, var utensilId: Long) {
 }

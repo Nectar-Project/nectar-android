@@ -15,7 +15,10 @@ import androidx.room.PrimaryKey
         childColumns = arrayOf("categoryId"),
         onDelete = ForeignKey.CASCADE
     )),
-    indices = arrayOf(Index(value = ["name"], unique = true))
+    indices = arrayOf(
+        Index(value=["name"], unique=true),
+        Index(value=["categoryId"])
+    )
 )
 class Aliment(
     var name: String,

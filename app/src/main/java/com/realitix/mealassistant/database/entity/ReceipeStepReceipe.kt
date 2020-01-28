@@ -2,6 +2,7 @@ package com.realitix.mealassistant.database.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
@@ -15,7 +16,11 @@ import androidx.room.PrimaryKey
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("stepId"),
         onDelete = ForeignKey.CASCADE
-    ))
+    )),
+    indices = arrayOf(
+        Index(value=["receipeId"]),
+        Index(value=["stepId"])
+    )
 )
 open class ReceipeStepReceipe(var receipeId: Long, var stepId: Long) {
     @PrimaryKey(autoGenerate = true)
