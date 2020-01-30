@@ -55,7 +55,7 @@ class AlimentUpdater {
         //}
     }
 
-    fun updateInternal(context: Context, data: UAlimentRoot?) {
+    suspend fun updateInternal(context: Context, data: UAlimentRoot?) {
         val db: MealDatabase = MealDatabase.getInstance(context)
         var nbAlimentsUpdated = 0
 

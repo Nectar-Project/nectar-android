@@ -7,16 +7,35 @@
             name="receipe"
             type="com.realitix.mealassistant.database.entity.Receipe"/>
     </data>
-    <FrameLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragment.ReceipeFragment">
-
-        <!-- TODO: Update blank fragment layout -->
-        <TextView
+        android:fillViewport="true">
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@{receipe.name}" />
+            tools:context=".fragment.ReceipeFragment">
 
-    </FrameLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/receipe_edit_name_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="invisible">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/receipe_edit_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Nom de la recette"
+                    android:textSize="24sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/receipe_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@{receipe.name}" />
+        </FrameLayout>
+    </androidx.core.widget.NestedScrollView>
 </layout>

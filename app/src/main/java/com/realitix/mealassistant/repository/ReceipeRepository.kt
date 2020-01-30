@@ -16,6 +16,16 @@ class ReceipeRepository(val context: Context) {
         return MealDatabase.getInstance(context).receipeDao().get(receipeId)
     }
 
+    suspend fun hasReceipe(receipeId: Long): Boolean {
+        if(MealDatabase.getInstance(context).receipeDao().has(receipeId) != null)
+            return true
+        return false
+    }
+
+    suspend fun createReceipe(receipe: Receipe): Long {
+        return MealDatabase.getInstance(context).receipeDao().insert(receipe)
+    }
+
     companion object {
         private var instance: ReceipeRepository? = null
         @Synchronized

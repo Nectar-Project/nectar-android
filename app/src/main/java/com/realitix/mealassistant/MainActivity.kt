@@ -26,7 +26,7 @@ class MainActivity :
         setContentView(R.layout.activity_main)
 
         navController = findNavController(this,R.id.nav_host_fragment)
-        setSupportActionBar(toolbar)
+        //setSupportActionBar(toolbar)
 
         val au = AlimentUpdater()
         GlobalScope.launch {

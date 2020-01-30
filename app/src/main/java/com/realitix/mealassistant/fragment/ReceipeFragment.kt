@@ -1,19 +1,30 @@
 package com.realitix.mealassistant.fragment
 
+import android.animation.LayoutTransition
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
+import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.textview.MaterialTextView
 import com.realitix.mealassistant.R
-import com.realitix.mealassistant.database.entity.Receipe
 import com.realitix.mealassistant.databinding.FragmentReceipeBinding
 import com.realitix.mealassistant.repository.ReceipeRepository
 import com.realitix.mealassistant.viewmodel.ReceipeViewModel
 import com.realitix.mealassistant.viewmodel.RepositoryViewModelFactory
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -31,6 +42,11 @@ class ReceipeFragment : Fragment() {
         }
     )
 
+    // Views
+    private lateinit var receipeName: MaterialTextView
+    private lateinit var receipeEditName: TextInputEditText
+    private lateinit var receipeEditNameContainer: TextInputLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -44,7 +60,12 @@ class ReceipeFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_receipe, container, false)
-        binding.receipe = Receipe("Une recette de test", 1, 2)
+
+        // Set views
+        receipeName = binding.receipeName
+        receipeEditName = binding.receipeEditName
+        receipeEditNameContainer = binding.receipeEditNameContainer
+
         return binding.root
     }
 
@@ -53,5 +74,27 @@ class ReceipeFragment : Fragment() {
         viewModel.receipe.observe(viewLifecycleOwner) {
             binding.receipe = it
         }
+
+        receipeName.setOnClickListener {
+            zoomReceipeEditName()
+        }
+
+        val bbar = activity!!.findViewById<BottomAppBar>(R.id.bottom_app_bar)
+        val ll = activity!!.findViewById<LinearLayout>(R.id.bottom_app_bar_linear_layout)
+        val fab = activity!!.findViewById<FloatingActionButton>(R.id.fab)
+        fab.hide()
+
+        ll.getChildAt(2).animate().alpha(0.5f)
+
+        //ll.layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
+        //ll.setPadding(ll.paddingLeft, ll.paddingTop, ll.paddingRight + 200, ll.paddingBottom)
+        //ll.getChildAt(2).visibility = View.GONE
+        //ll.weightSum = 4f
+        //bbar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
+    }
+
+    private fun zoomReceipeEditName() {
+        receipeName.visibility = View.INVISIBLE
+        receipeEditNameContainer.visibility = View.VISIBLE
     }
 }

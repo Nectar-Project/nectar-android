@@ -21,10 +21,13 @@ interface ReceipeDao {
     @Query("SELECT * FROM Receipe WHERE id=:id")
     fun get(id: Long): LiveData<Receipe>
 
+    @Query("SELECT * FROM Receipe WHERE id=:id")
+    suspend fun has(id: Long): Receipe?
+
+    @Insert
+    suspend fun insert(receipe: Receipe): Long
+
     @Transaction
     @Query("SELECT * FROM Receipe WHERE Receipe.id=:id")
     fun getFull(id: Long): ReceipeFull?
-
-    @Insert
-    fun insert(receipe: Receipe): Long
 }
