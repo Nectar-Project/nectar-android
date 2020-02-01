@@ -79,12 +79,12 @@ class ReceipeFragment : Fragment() {
             zoomReceipeEditName()
         }
 
-        val bbar = activity!!.findViewById<BottomAppBar>(R.id.bottom_app_bar)
-        val ll = activity!!.findViewById<LinearLayout>(R.id.bottom_app_bar_linear_layout)
-        val fab = activity!!.findViewById<FloatingActionButton>(R.id.fab)
-        fab.hide()
+        //val bbar = activity!!.findViewById<BottomAppBar>(R.id.bottom_app_bar)
+        //val ll = activity!!.findViewById<LinearLayout>(R.id.bottom_app_bar_linear_layout)
+        //val fab = activity!!.findViewById<FloatingActionButton>(R.id.fab)
+        //fab.hide()
 
-        ll.getChildAt(2).animate().alpha(0.5f)
+        //ll.getChildAt(2).animate().alpha(0.5f)
 
         //ll.layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
         //ll.setPadding(ll.paddingLeft, ll.paddingTop, ll.paddingRight + 200, ll.paddingBottom)

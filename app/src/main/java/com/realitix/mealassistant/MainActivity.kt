@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.Navigation
 import androidx.navigation.Navigation.findNavController
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.realitix.mealassistant.command.AlimentUpdater
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -50,4 +51,8 @@ class MainActivity :
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    /*fun getFab(): FloatingActionButton {
+        return findViewById(R.id.fab)
+    }*/
 }

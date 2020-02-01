@@ -22,6 +22,7 @@ import com.realitix.mealassistant.repository.ReceipeRepository
 import com.realitix.mealassistant.util.RecyclerItemClickListener
 import com.realitix.mealassistant.viewmodel.ReceipesViewModel
 import com.realitix.mealassistant.viewmodel.RepositoryViewModelFactory
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -87,20 +88,20 @@ class ReceipeListFragment : Fragment() {
 
         }))
 
-        fab = activity!!.findViewById<FloatingActionButton>(R.id.fab)
-        fab.show()
         val navController = findNavController()
+        fab = activity!!.fab
+        fab.show()
         fab.setOnClickListener {
             val action = ReceipeListFragmentDirections.actionReceipelistToSingle(-1)
             navController.navigate(action)
         }
 
-        val bbar = activity!!.findViewById<BottomAppBar>(R.id.bottom_app_bar)
-        val ll = activity!!.findViewById<LinearLayout>(R.id.bottom_app_bar_linear_layout)
-        val fab = activity!!.findViewById<FloatingActionButton>(R.id.fab)
+        //val bbar = activity!!.findViewById<BottomAppBar>(R.id.bottom_app_bar)
+        //val ll = activity!!.findViewById<LinearLayout>(R.id.bottom_app_bar_linear_layout)
+        //val fab = activity!!.findViewById<FloatingActionButton>(R.id.fab)
 
 
-        ll.getChildAt(2).animate().alpha(0f)
+        //ll.getChildAt(2).animate().alpha(0f)
 
         //ll.layoutTransition.enableTransitionType(LayoutTransition.CHANGE_APPEARING)
         //ll.getChildAt(2).visibility = View.INVISIBLE
