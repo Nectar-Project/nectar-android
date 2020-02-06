@@ -1,6 +1,8 @@
 package com.realitix.mealassistant.database.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.realitix.mealassistant.database.entity.Receipe
 import com.realitix.mealassistant.database.entity.ReceipeStep
 import com.realitix.mealassistant.database.entity.ReceipeStepAliment
 import com.realitix.mealassistant.database.entity.ReceipeStepReceipe
@@ -19,8 +21,11 @@ interface ReceipeStepDao {
 
     @Transaction
     @Query("SELECT * FROM ReceipeStep WHERE id=:id")
-    fun getFull(id: Long): ReceipeStepFull?
+    fun getFull(id: Long): LiveData<ReceipeStepFull>
+
+    @Query("SELECT * FROM ReceipeStep WHERE id=:id")
+    suspend fun has(id: Long): ReceipeStep?
 
     @Insert
-    fun insert(receipeStep: ReceipeStep?): Long
+    suspend fun insert(receipeStep: ReceipeStep): Long
 }

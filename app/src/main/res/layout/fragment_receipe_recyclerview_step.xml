@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
-            name="receipe"
-            type="String"/>
+            name="step"
+            type="com.realitix.mealassistant.database.entity.ReceipeStep"/>
     </data>
 
     <LinearLayout
@@ -13,6 +15,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{receipe}" />
+            android:paddingVertical="5dp"
+            android:text="@{step.description}" />
     </LinearLayout>
 </layout>

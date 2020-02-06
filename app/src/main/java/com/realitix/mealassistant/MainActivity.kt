@@ -1,21 +1,18 @@
 package com.realitix.mealassistant
 
-import android.net.Uri
+import android.content.Context
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
-import androidx.navigation.Navigation
 import androidx.navigation.Navigation.findNavController
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.realitix.mealassistant.command.AlimentUpdater
-
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+
 
 class MainActivity :
     AppCompatActivity() {
@@ -52,7 +49,13 @@ class MainActivity :
         }
     }
 
-    /*fun getFab(): FloatingActionButton {
-        return findViewById(R.id.fab)
-    }*/
+    fun toggleKeyboard() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm!!.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
+    }
+
+    fun hideKeyboard(view: View) {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm!!.hideSoftInputFromWindow(view.windowToken, 0)
+    }
 }

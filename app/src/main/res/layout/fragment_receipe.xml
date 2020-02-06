@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
             name="receipe"
-            type="com.realitix.mealassistant.database.entity.Receipe"/>
+            type="com.realitix.mealassistant.database.dao.ReceipeDao.ReceipeFull"/>
     </data>
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -17,11 +18,37 @@
             tools:context=".fragment.ReceipeFragment">
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/fragment_receipe_add_step_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:translationZ="10dp"
+                android:visibility="gone">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/fragment_receipe_add_step"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Description de l'étape"
+                    android:textSize="24sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/fragment_receipe_add_step_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="Valider" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/receipe_edit_name_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:visibility="invisible">
+                android:translationZ="10dp"
+                android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/receipe_edit_name"
@@ -29,13 +56,54 @@
                     android:layout_height="wrap_content"
                     android:hint="Nom de la recette"
                     android:textSize="24sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/receipe_edit_name_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="Valider" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/receipe_name"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@{receipe.name}" />
+                android:layout_height="match_parent">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/fragment_receipe_receipe_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{receipe.name}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout_editor_absoluteX="0dp" />
+
+                <TextView
+                    android:id="@+id/fragment_receipe_receipe_nb_people"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{String.valueOf(receipe.nb_people)}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fragment_receipe_receipe_name"
+                    app:layout_constraintEnd_toStartOf="@+id/fragment_receipe_receipe_star"/>
+
+                <TextView
+                    android:id="@+id/fragment_receipe_receipe_star"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{String.valueOf(receipe.stars)}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/fragment_receipe_receipe_nb_people"
+                    app:layout_constraintTop_toBottomOf="@+id/fragment_receipe_receipe_name" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/fragment_receipe_list_steps"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fragment_receipe_receipe_nb_people"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </FrameLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

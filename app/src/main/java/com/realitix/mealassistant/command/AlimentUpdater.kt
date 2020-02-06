@@ -60,8 +60,8 @@ class AlimentUpdater {
         var nbAlimentsUpdated = 0
 
         // Check create receipe
-        val rt = Receipe("Popolopo", 1, 3)
-        db.receipeDao().insert(rt)
+        //val rt = Receipe("Popolopo", 1, 3)
+        //db.receipeDao().insert(rt)
 
         for (aliment in data!!.aliments) {
             // Get category

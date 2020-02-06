@@ -16,7 +16,7 @@ import androidx.room.PrimaryKey
         Index(value=["receipeId"])
     )
 )
-open class ReceipeStep(var receipeId: Long, var order: Int, var description: String?, var duration: Int) {
+open class ReceipeStep(var receipeId: Long, var order: Int, var description: String, var duration: Int) {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
 

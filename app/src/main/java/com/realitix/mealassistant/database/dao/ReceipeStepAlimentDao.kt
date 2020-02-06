@@ -10,9 +10,9 @@ import com.realitix.mealassistant.database.entity.ReceipeStepAliment
 interface ReceipeStepAlimentDao {
     class ReceipeStepAlimentFull : ReceipeStepAliment() {
         @Relation(parentColumn = "alimentId", entityColumn = "id")
-        var alimentDetail: Aliment? = null
+        lateinit var aliment: Aliment
     }
 
     @Insert
-    fun insert(receipeStepAliment: ReceipeStepAliment?): Long
+    suspend fun insert(receipeStepAliment: ReceipeStepAliment): Long
 }
