@@ -114,9 +114,9 @@ class ReceipeFragment : Fragment() {
     }
 
     private fun configureFab() {
-        activity!!.fab.setOnClickListener {
+        /*activity!!.fab.setOnClickListener {
             switchStepAdd()
-        }
+        }*/
     }
 
     private fun switchReceipeName() {

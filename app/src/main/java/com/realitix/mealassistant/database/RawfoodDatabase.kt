@@ -19,7 +19,7 @@ import com.realitix.mealassistant.database.entity.*
         MealAliment::class,
         MealReceipe::class),
     exportSchema = false,
-    version = 1
+    version = 2
 )
 abstract class MealDatabase : RoomDatabase() {
     abstract fun alimentCategoryDao(): AlimentCategoryDao

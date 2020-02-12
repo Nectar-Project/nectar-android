@@ -50,10 +50,10 @@ class ReceipeStepFragment : Fragment() {
             R.layout.fragment_receipe_step, container, false)
 
         // Set aliment listing
-        recyclerView = binding.fragmentReceipeListSteps
+        /*recyclerView = binding.fragmentReceipeListSteps
         adapter = ReceipeStepsDataAdapter()
         recyclerView.hasFixedSize()
-        recyclerView.adapter = adapter
+        recyclerView.adapter = adapter*/
         return binding.root
     }
 }

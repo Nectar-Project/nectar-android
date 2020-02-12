@@ -1,23 +1,12 @@
 package com.realitix.mealassistant.adapter
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.realitix.mealassistant.R
-import com.realitix.mealassistant.database.entity.Receipe
-import com.realitix.mealassistant.databinding.ReceipeInListBinding
-import com.realitix.mealassistant.util.SingleLineItemViewHolder
-import com.realitix.mealassistant.util.ThreeLineItemViewHolder
-import com.realitix.mealassistant.util.TwoLineItemViewHolder
 
-private const val RECYCLER_ONE = 1
-private const val RECYCLER_TWO = 2
-private const val RECYCLER_THREE = 3
 
-class GenericDataAdapter<T: RecyclerView.ViewHolder, U>(
+class GenericAdapter<T: RecyclerView.ViewHolder, U>(
     val onCreate: (ViewGroup) -> T,
-    val onBind: (T, U) -> Void
+    val onBind: (T, U) -> Unit
 ): RecyclerView.Adapter<T>() {
     private var data: List<U>? = null
 
@@ -36,7 +25,7 @@ class GenericDataAdapter<T: RecyclerView.ViewHolder, U>(
         notifyDataSetChanged()
     }
 
-    fun getDataAtPosition(position: Int): U {
+    fun getAtPosition(position: Int): U {
         return data!![position]
     }
 
