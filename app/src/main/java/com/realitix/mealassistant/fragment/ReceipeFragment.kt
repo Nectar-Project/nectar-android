@@ -1,30 +1,24 @@
 package com.realitix.mealassistant.fragment
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.TextView
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.databinding.DataBindingUtil
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
-import androidx.navigation.findNavController
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.textview.MaterialTextView
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.realitix.mealassistant.MainActivity
 import com.realitix.mealassistant.R
-import com.realitix.mealassistant.adapter.ReceipeStepsDataAdapter
-import com.realitix.mealassistant.databinding.FragmentReceipeBinding
+import com.realitix.mealassistant.util.GenericAdapter
+import com.realitix.mealassistant.database.dao.ReceipeStepDao
 import com.realitix.mealassistant.repository.ReceipeRepository
-import com.realitix.mealassistant.util.RecyclerItemClickListener
+import com.realitix.mealassistant.util.SingleLineItemViewHolder
 import com.realitix.mealassistant.viewmodel.ReceipeViewModel
 import com.realitix.mealassistant.viewmodel.RepositoryViewModelFactory
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_receipe.*
 
 
 private const val ARG_RECEIPE_ID = "receipeId"
@@ -32,7 +26,6 @@ private const val ARG_RECEIPE_ID = "receipeId"
 
 class ReceipeFragment : Fragment() {
     private var receipeId: Long = -1
-    private lateinit var binding: FragmentReceipeBinding
     private val viewModel: ReceipeViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
@@ -41,12 +34,7 @@ class ReceipeFragment : Fragment() {
         }
     )
 
-    private lateinit var name: MaterialTextView
-    private lateinit var editName: EditText
-    private lateinit var nbPeople: TextView
-    private lateinit var stars: TextView
-    private lateinit var adapter: ReceipeStepsDataAdapter
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: GenericAdapter<SingleLineItemViewHolder, ReceipeStepDao.ReceipeStepFull>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,43 +46,48 @@ class ReceipeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = DataBindingUtil.inflate(inflater,
-            R.layout.fragment_receipe, container, false)
-
-        name = binding.fragmentReceipeReceipeName
-        nbPeople = binding.fragmentReceipeReceipeNbPeople
-        stars = binding.fragmentReceipeReceipeStar
-
-        // Set steps listing
-        recyclerView = binding.fragmentReceipeListSteps
-        adapter = ReceipeStepsDataAdapter()
-        recyclerView.hasFixedSize()
-        recyclerView.adapter = adapter
-
-        return binding.root
-    }
+    ): View? = inflater.inflate(R.layout.fragment_receipe, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        toolbar.setupWithNavController(findNavController())
+
+        // Set RecyclerView
+        adapter = GenericAdapter(
+            { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
+            { holder, step ->
+                holder.text.text = step.description
+                holder.icon.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context!!,
+                        R.drawable.ic_receipt_black_36dp
+                    )
+                )
+            }
+        )
+        recyclerView.hasFixedSize()
+        recyclerView.adapter = adapter
+
         viewModel.receipe.observe(viewLifecycleOwner) {
-            binding.receipe = it
-            binding.receipeEditName.setText(it.name)
-            adapter.setSteps(it.steps)
+            name.text = it.name
+            nbPeople.text = it.nb_people.toString()
+            stars.text = it.stars.toString()
+            nameTextInput.setText(it.name)
+            adapter.setData(it.steps!!)
         }
 
         name.setOnClickListener {
             switchReceipeName()
         }
 
-        binding.receipeEditNameButton.setOnClickListener {
-            val newName: String = binding.receipeEditName.text.toString()
+        nameButton.setOnClickListener {
+            val newName: String = nameTextInput.text.toString()
             switchReceipeName()
             viewModel.updateReceipeName(newName)
         }
 
-        binding.fragmentReceipeAddStepButton.setOnClickListener {
-            val description: String = binding.fragmentReceipeAddStep.text.toString()
+        stepButton.setOnClickListener {
+            val description: String = stepTextInput.text.toString()
             switchStepAdd()
             viewModel.createStep(description)
         }
@@ -110,38 +103,32 @@ class ReceipeFragment : Fragment() {
             }
         }))*/
 
-        configureFab()
     }
 
-    private fun configureFab() {
-        /*activity!!.fab.setOnClickListener {
-            switchStepAdd()
-        }*/
-    }
 
     private fun switchReceipeName() {
-        if(binding.receipeEditNameContainer.visibility == View.GONE) {
+        if(nameContainer.visibility == View.GONE) {
             name.visibility = View.INVISIBLE
-            binding.receipeEditNameContainer.visibility = View.VISIBLE
-            binding.receipeEditName.requestFocus()
+            nameContainer.visibility = View.VISIBLE
+            nameTextInput.requestFocus()
             (activity!! as MainActivity).toggleKeyboard()
         }
         else {
             name.visibility = View.VISIBLE
-            binding.receipeEditName.clearFocus()
-            binding.receipeEditNameContainer.visibility = View.GONE
+            nameTextInput.clearFocus()
+            nameContainer.visibility = View.GONE
             (activity!! as MainActivity).toggleKeyboard()
         }
     }
 
     private fun switchStepAdd() {
-        if(binding.fragmentReceipeAddStepContainer.visibility == View.GONE) {
-            binding.fragmentReceipeAddStepContainer.visibility = View.VISIBLE
-            binding.fragmentReceipeAddStep.requestFocus()
+        if(stepContainer.visibility == View.GONE) {
+            stepContainer.visibility = View.VISIBLE
+            stepTextInput.requestFocus()
             (activity!! as MainActivity).toggleKeyboard()
         }
         else {
-            binding.fragmentReceipeAddStepContainer.visibility = View.GONE
+            stepContainer.visibility = View.GONE
             (activity!! as MainActivity).toggleKeyboard()
         }
     }

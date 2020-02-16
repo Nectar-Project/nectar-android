@@ -1,4 +1,4 @@
-package com.realitix.mealassistant.adapter
+package com.realitix.mealassistant.util
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView

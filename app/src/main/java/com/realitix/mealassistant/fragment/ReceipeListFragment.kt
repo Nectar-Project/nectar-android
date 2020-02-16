@@ -12,7 +12,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.realitix.mealassistant.R
-import com.realitix.mealassistant.adapter.GenericAdapter
+import com.realitix.mealassistant.util.GenericAdapter
 import com.realitix.mealassistant.database.entity.Receipe
 import com.realitix.mealassistant.repository.ReceipeRepository
 import com.realitix.mealassistant.util.RecyclerItemClickListener
@@ -40,14 +40,19 @@ class ReceipeListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        collapsingToolbar.setupWithNavController(toolbar, findNavController())
+        collapsingToolbarLayout.setupWithNavController(toolbar, findNavController())
 
         // Set RecyclerView
         adapter = GenericAdapter(
-            {v: ViewGroup ->  SingleLineItemViewHolder.create(v)},
-            {holder, receipe ->
+            { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
+            { holder, receipe ->
                 holder.text.text = receipe.name
-                holder.icon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_receipt_black_36dp))
+                holder.icon.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context!!,
+                        R.drawable.ic_receipt_black_36dp
+                    )
+                )
             }
         )
         recyclerView.hasFixedSize()
@@ -68,12 +73,10 @@ class ReceipeListFragment : Fragment() {
             }
         }))
 
-        val navController = findNavController()
-        /*val fab = activity!!.fab
-        fab.show()
+
         fab.setOnClickListener {
             val action = ReceipeListFragmentDirections.actionReceipelistToSingle(-1)
-            navController.navigate(action)
-        }*/
+            findNavController().navigate(action)
+        }
     }
 }
