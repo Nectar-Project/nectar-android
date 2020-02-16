@@ -81,7 +81,8 @@ class ReceipeStepFragment : Fragment() {
         }
 
         fab.setOnClickListener {
-
+            val action = ReceipeStepFragmentDirections.actionReceipeStepFragmentToAlimentAddSearchFragment()
+            findNavController().navigate(action)
         }
     }
 }

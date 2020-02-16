@@ -43,7 +43,7 @@
     <action android:id="@+id/action_global_receipesFragment" app:destination="@id/receipesFragment"/>
     <fragment
         android:id="@+id/alimentAddSearchFragment"
-        android:name="com.realitix.mealassistant.AlimentAddSearchFragment"
+        android:name="com.realitix.mealassistant.fragment.AlimentAddSearchFragment"
         android:label="fragment_aliment_add_search"
         tools:layout="@layout/fragment_aliment_add_search" />
 </navigation>
