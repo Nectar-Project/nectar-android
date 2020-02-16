@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/receipeFragment"
         android:name="com.realitix.mealassistant.fragment.ReceipeFragment"
-        android:label="fragment_receipe"
+        android:label="Recette"
         tools:layout="@layout/fragment_receipe" >
         <argument android:name="receipeId"
             app:argType="long" />
@@ -28,7 +28,7 @@
     <fragment
         android:id="@+id/receipeStepFragment"
         android:name="com.realitix.mealassistant.fragment.ReceipeStepFragment"
-        android:label="fragment_receipe_step"
+        android:label="Etape"
         tools:layout="@layout/fragment_receipe_step" >
         <argument
             android:name="stepId"

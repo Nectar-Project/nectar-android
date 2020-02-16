@@ -7,11 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.realitix.mealassistant.R
 import com.realitix.mealassistant.repository.ReceipeRepository
 import com.realitix.mealassistant.viewmodel.ReceipeStepViewModel
 import com.realitix.mealassistant.viewmodel.RepositoryViewModelFactory
+import kotlinx.android.synthetic.main.fragment_receipe_step.*
 
 private const val ARG_STEP_ID = "stepId"
 private const val ARG_RECEIPE_ID = "receipeId"
@@ -42,4 +45,9 @@ class ReceipeStepFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View?  = inflater.inflate(R.layout.fragment_receipe_step, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        toolbar.setupWithNavController(findNavController())
+    }
 }

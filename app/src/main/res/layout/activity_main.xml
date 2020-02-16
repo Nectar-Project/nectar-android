@@ -39,12 +39,12 @@
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/navigation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/nav_graph" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -59,75 +59,5 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/navigation" />
-
-
-    <!--<com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottom_app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:backgroundTint="@color/colorPrimary"
-        app:fabAlignmentMode="center"
-        app:fabAnimationMode="scale">
-
-        <LinearLayout
-            android:id="@+id/bottom_app_bar_linear_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
-            android:paddingEnd="16dp"
-            android:weightSum="5">
-
-            <ImageButton
-                android:id="@+id/activity_main_bottom_bar_home"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:tint="@color/colorAccent"
-                app:srcCompat="@drawable/ic_home_white_24dp" />
-
-            <ImageButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:srcCompat="@drawable/ic_zoom_out_map_white_24dp" />
-
-            <ImageButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:visibility="invisible"
-                app:srcCompat="@drawable/ic_edit_location_white_24dp" />
-
-            <ImageButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:srcCompat="@drawable/ic_people_white_24dp" />
-
-            <ImageButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:srcCompat="@drawable/ic_account_circle_white_24dp" />
-        </LinearLayout>
-    </com.google.android.material.bottomappbar.BottomAppBar>
--->
-    <!--
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_add_black_24dp"
-        android:tint="@android:color/white"
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|end" />
-        -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

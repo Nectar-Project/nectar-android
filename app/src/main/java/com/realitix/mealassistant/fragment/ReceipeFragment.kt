@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.realitix.mealassistant.MainActivity
@@ -15,6 +16,7 @@ import com.realitix.mealassistant.R
 import com.realitix.mealassistant.util.GenericAdapter
 import com.realitix.mealassistant.database.dao.ReceipeStepDao
 import com.realitix.mealassistant.repository.ReceipeRepository
+import com.realitix.mealassistant.util.RecyclerItemClickListener
 import com.realitix.mealassistant.util.SingleLineItemViewHolder
 import com.realitix.mealassistant.viewmodel.ReceipeViewModel
 import com.realitix.mealassistant.viewmodel.RepositoryViewModelFactory
@@ -92,17 +94,20 @@ class ReceipeFragment : Fragment() {
             viewModel.createStep(description)
         }
 
-        /*recyclerView.addOnItemTouchListener(RecyclerItemClickListener(context!!, recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
+        fab.setOnClickListener {
+            switchStepAdd()
+        }
+
+        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(context!!, recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
-                val receipe = adapter.getReceipeAtPosition(position)
-                val action = ReceipeListFragmentDirections.actionReceipelistToSingle(receipe.id)
-                view.findNavController().navigate(action)
+                val step = adapter.getAtPosition(position)
+                val action = ReceipeFragmentDirections.actionReceipeFragmentToReceipeStepFragment(step.id, receipeId)
+                findNavController().navigate(action)
             }
 
             override fun onLongItemClick(view: View, position: Int) {
             }
-        }))*/
-
+        }))
     }
 
 

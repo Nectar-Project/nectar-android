@@ -19,6 +19,49 @@
             android:layout_height="?attr/actionBarSize" />
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_add_black_24dp"
+        android:tint="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/appbar"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/nbPeople"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@{String.valueOf(receipe.nb_people)}"
+        app:layout_constraintEnd_toStartOf="@+id/stars"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/stars"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@{String.valueOf(receipe.stars)}"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/nbPeople"
+        app:layout_constraintTop_toBottomOf="@+id/name" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nbPeople" />
+
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
@@ -76,43 +119,5 @@
                 android:layout_weight="1"
                 android:text="Valider" />
         </com.google.android.material.textfield.TextInputLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="0dp" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/nbPeople"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@{String.valueOf(receipe.nb_people)}"
-                app:layout_constraintEnd_toStartOf="@+id/stars"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/name" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/stars"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@{String.valueOf(receipe.stars)}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/nbPeople"
-                app:layout_constraintTop_toBottomOf="@+id/name" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/nbPeople" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
