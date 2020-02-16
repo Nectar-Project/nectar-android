@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav"
-    app:startDestination="@id/receipeListFragment">
+    app:startDestination="@id/receipesFragment">
 
     <fragment
         android:id="@+id/receipeFragment"
@@ -17,12 +17,12 @@
             app:destination="@id/receipeStepFragment" />
     </fragment>
     <fragment
-        android:id="@+id/receipeListFragment"
-        android:name="com.realitix.mealassistant.fragment.ReceipeListFragment"
+        android:id="@+id/receipesFragment"
+        android:name="com.realitix.mealassistant.fragment.ReceipesFragment"
         android:label="Liste des recettes"
-        tools:layout="@layout/fragment_receipe_list" >
+        tools:layout="@layout/fragment_receipes" >
         <action
-            android:id="@+id/action_receipelist_to_single"
+            android:id="@+id/action_receipes_to_single"
             app:destination="@+id/receipeFragment" />
     </fragment>
     <fragment
@@ -36,6 +36,14 @@
         <argument
             android:name="receipeId"
             app:argType="long" />
+        <action
+            android:id="@+id/action_receipeStepFragment_to_alimentAddSearchFragment"
+            app:destination="@id/alimentAddSearchFragment" />
     </fragment>
-    <action android:id="@+id/action_global_receipeListFragment" app:destination="@id/receipeListFragment"/>
+    <action android:id="@+id/action_global_receipesFragment" app:destination="@id/receipesFragment"/>
+    <fragment
+        android:id="@+id/alimentAddSearchFragment"
+        android:name="com.realitix.mealassistant.AlimentAddSearchFragment"
+        android:label="fragment_aliment_add_search"
+        tools:layout="@layout/fragment_aliment_add_search" />
 </navigation>

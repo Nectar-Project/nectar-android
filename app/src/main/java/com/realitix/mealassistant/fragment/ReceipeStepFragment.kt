@@ -6,12 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.RecyclerView
 import com.realitix.mealassistant.R
+import com.realitix.mealassistant.database.dao.ReceipeStepAlimentDao
+import com.realitix.mealassistant.database.entity.Aliment
 import com.realitix.mealassistant.repository.ReceipeRepository
+import com.realitix.mealassistant.util.GenericAdapter
+import com.realitix.mealassistant.util.SingleLineItemViewHolder
 import com.realitix.mealassistant.viewmodel.ReceipeStepViewModel
 import com.realitix.mealassistant.viewmodel.RepositoryViewModelFactory
 import kotlinx.android.synthetic.main.fragment_receipe_step.*
@@ -31,7 +36,7 @@ class ReceipeStepFragment : Fragment() {
         }
     )
 
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: GenericAdapter<SingleLineItemViewHolder, ReceipeStepAlimentDao.ReceipeStepAlimentFull>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,5 +54,34 @@ class ReceipeStepFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbar.setupWithNavController(findNavController())
+
+        // Set RecyclerView
+        adapter = GenericAdapter(
+            { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
+            { holder, aliment ->
+                holder.text.text = aliment.aliment.name
+                holder.icon.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context!!,
+                        R.drawable.ic_receipt_black_36dp
+                    )
+                )
+            }
+        )
+        recyclerView.hasFixedSize()
+        recyclerView.adapter = adapter
+
+        viewModel.receipe.observe(viewLifecycleOwner) {
+            receipeName.text = it.name
+        }
+
+        viewModel.step.observe(viewLifecycleOwner) {
+            stepDescription.text = it.description
+            adapter.setData(it.aliments!!)
+        }
+
+        fab.setOnClickListener {
+
+        }
     }
 }

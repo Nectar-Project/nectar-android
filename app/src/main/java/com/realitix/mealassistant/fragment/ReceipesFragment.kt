@@ -19,9 +19,9 @@ import com.realitix.mealassistant.util.RecyclerItemClickListener
 import com.realitix.mealassistant.util.SingleLineItemViewHolder
 import com.realitix.mealassistant.viewmodel.ReceipeListViewModel
 import com.realitix.mealassistant.viewmodel.RepositoryViewModelFactory
-import kotlinx.android.synthetic.main.fragment_receipe_list.*
+import kotlinx.android.synthetic.main.fragment_receipes.*
 
-class ReceipeListFragment : Fragment() {
+class ReceipesFragment : Fragment() {
     private val viewModel: ReceipeListViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
@@ -35,7 +35,7 @@ class ReceipeListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_receipe_list, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_receipes, container, false)
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,7 +65,7 @@ class ReceipeListFragment : Fragment() {
         recyclerView.addOnItemTouchListener(RecyclerItemClickListener(context!!, recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val receipe = adapter.getAtPosition(position)
-                val action = ReceipeListFragmentDirections.actionReceipelistToSingle(receipe.id)
+                val action = ReceipesFragmentDirections.actionReceipesToSingle(receipe.id)
                 view.findNavController().navigate(action)
             }
 
@@ -75,7 +75,7 @@ class ReceipeListFragment : Fragment() {
 
 
         fab.setOnClickListener {
-            val action = ReceipeListFragmentDirections.actionReceipelistToSingle(-1)
+            val action = ReceipesFragmentDirections.actionReceipesToSingle(-1)
             findNavController().navigate(action)
         }
     }
