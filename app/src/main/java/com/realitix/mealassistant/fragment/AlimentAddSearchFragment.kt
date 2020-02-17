@@ -6,13 +6,19 @@ import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.realitix.mealassistant.R
 import com.realitix.mealassistant.database.dao.ReceipeStepDao
 import com.realitix.mealassistant.database.entity.Aliment
+import com.realitix.mealassistant.repository.AlimentRepository
 import com.realitix.mealassistant.util.GenericAdapter
+import com.realitix.mealassistant.util.RecyclerItemClickListener
 import com.realitix.mealassistant.util.SingleLineItemViewHolder
+import com.realitix.mealassistant.viewmodel.AlimentAddSearchViewModel
+import com.realitix.mealassistant.viewmodel.RepositoryViewModelFactory
 import kotlinx.android.synthetic.main.fragment_aliment_add_search.*
 
 
@@ -30,6 +36,13 @@ class AlimentAddSearchFragment : Fragment() {
     private var param2: String? = null
 
     private lateinit var adapter: GenericAdapter<SingleLineItemViewHolder, Aliment>
+    private val viewModel: AlimentAddSearchViewModel by viewModels(
+        factoryProducer = {
+            RepositoryViewModelFactory {
+                AlimentAddSearchViewModel(AlimentRepository.getInstance(context!!))
+            }
+        }
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,15 +76,27 @@ class AlimentAddSearchFragment : Fragment() {
         )
         recyclerView.hasFixedSize()
         recyclerView.adapter = adapter
+        viewModel.aliments.observe(viewLifecycleOwner) {
+            adapter.setData(it)
+        }
+
         searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+                if(newText != null)
+                    viewModel.searchAliments(newText)
                 return true
             }
-
         })
+
+        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(context!!, recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
+            override fun onItemClick(view: View, position: Int) {
+                val aliment = adapter.getAtPosition(position)
+                findNavController().navigate(action)
+            }
+        }))
     }
 }

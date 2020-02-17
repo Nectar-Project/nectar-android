@@ -18,7 +18,7 @@ class RecyclerItemClickListener(
 
     interface OnItemClickListener {
         fun onItemClick(view: View, position: Int)
-        fun onLongItemClick(view: View, position: Int)
+        //fun onLongItemClick(view: View, position: Int)
     }
 
     var mGestureDetector: GestureDetector
@@ -43,7 +43,7 @@ class RecyclerItemClickListener(
             override fun onLongPress(e: MotionEvent) {
                 val child = recyclerView.findChildViewUnder(e.x, e.y)
                 if (child != null) {
-                    mListener.onLongItemClick(child, recyclerView.getChildAdapterPosition(child))
+                    //mListener.onLongItemClick(child, recyclerView.getChildAdapterPosition(child))
                 }
             }
         })

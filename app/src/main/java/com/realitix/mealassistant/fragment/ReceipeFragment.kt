@@ -104,9 +104,6 @@ class ReceipeFragment : Fragment() {
                 val action = ReceipeFragmentDirections.actionReceipeFragmentToReceipeStepFragment(step.id, receipeId)
                 findNavController().navigate(action)
             }
-
-            override fun onLongItemClick(view: View, position: Int) {
-            }
         }))
     }
 
