@@ -8,7 +8,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.realitix.mealassistant.MainActivity
@@ -21,9 +20,6 @@ import com.realitix.mealassistant.util.SingleLineItemViewHolder
 import com.realitix.mealassistant.viewmodel.ReceipeViewModel
 import com.realitix.mealassistant.viewmodel.RepositoryViewModelFactory
 import kotlinx.android.synthetic.main.fragment_receipe.*
-
-
-private const val ARG_RECEIPE_ID = "receipeId"
 
 
 class ReceipeFragment : Fragment() {
@@ -41,7 +37,7 @@ class ReceipeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            receipeId = it.getLong(ARG_RECEIPE_ID)
+            receipeId = it.getLong("receipeId")
         }
     }
 

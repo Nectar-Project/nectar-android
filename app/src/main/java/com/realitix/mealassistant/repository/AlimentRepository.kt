@@ -15,6 +15,10 @@ class AlimentRepository(val context: Context) {
         return MealDatabase.getInstance(context).alimentDao().search(name)
     }
 
+    fun getAliment(id: Long): LiveData<Aliment> {
+        return MealDatabase.getInstance(context).alimentDao().get(id)
+    }
+
     companion object {
         private var instance: AlimentRepository? = null
         @Synchronized

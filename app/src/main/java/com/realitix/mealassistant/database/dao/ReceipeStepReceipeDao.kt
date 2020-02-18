@@ -10,7 +10,7 @@ import com.realitix.mealassistant.database.entity.ReceipeStepReceipe
 interface ReceipeStepReceipeDao {
     class ReceipeStepReceipeFull : ReceipeStepReceipe() {
         @Relation(parentColumn = "receipeId", entityColumn = "id")
-        var receipeDetail: Receipe? = null
+        lateinit var receipe: Receipe
     }
 
     @Insert

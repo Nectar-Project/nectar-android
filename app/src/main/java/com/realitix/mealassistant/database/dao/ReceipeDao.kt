@@ -16,7 +16,7 @@ interface ReceipeDao {
     fun list(): LiveData<List<Receipe>>
 
     @Query("SELECT * FROM Receipe WHERE name LIKE '%' ||  :search || '%'")
-    fun search(search: String): List<Receipe>?
+    fun search(search: String): LiveData<List<Receipe>>
 
     @Query("SELECT * FROM Receipe WHERE id=:id")
     fun get(id: Long): LiveData<Receipe>

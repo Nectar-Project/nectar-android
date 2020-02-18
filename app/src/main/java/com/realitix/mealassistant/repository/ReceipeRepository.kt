@@ -7,12 +7,18 @@ import com.realitix.mealassistant.database.dao.ReceipeDao
 import com.realitix.mealassistant.database.dao.ReceipeStepDao
 import com.realitix.mealassistant.database.entity.Receipe
 import com.realitix.mealassistant.database.entity.ReceipeStep
+import com.realitix.mealassistant.database.entity.ReceipeStepAliment
+import com.realitix.mealassistant.database.entity.ReceipeStepReceipe
 
 class ReceipeRepository(val context: Context) {
     private val receipes: LiveData<List<Receipe>> = MealDatabase.getInstance(context).receipeDao().list()
 
     fun getReceipes(): LiveData<List<Receipe>> {
         return receipes
+    }
+
+    fun search(name: String): LiveData<List<Receipe>> {
+        return MealDatabase.getInstance(context).receipeDao().search(name)
     }
 
     fun getReceipe(receipeId: Long): LiveData<Receipe> {
@@ -49,6 +55,14 @@ class ReceipeRepository(val context: Context) {
 
     suspend fun createReceipeStep(receipeStep: ReceipeStep): Long {
         return MealDatabase.getInstance(context).receipeStepDao().insert(receipeStep)
+    }
+
+    suspend fun createReceipeStepAliment(receipeStepAliment: ReceipeStepAliment): Long {
+        return MealDatabase.getInstance(context).receipeStepAlimentDao().insert(receipeStepAliment)
+    }
+
+    suspend fun createReceipeStepReceipe(receipeStepReceipe: ReceipeStepReceipe): Long {
+        return MealDatabase.getInstance(context).receipeStepReceipeDao().insert(receipeStepReceipe)
     }
 
     companion object {

@@ -14,6 +14,9 @@ interface AlimentDao {
     @Query("SELECT * FROM Aliment WHERE name LIKE :name")
     fun getByName(name: String?): Aliment?
 
+    @Query("SELECT * FROM Aliment WHERE id = :id")
+    fun get(id: Long): LiveData<Aliment>
+
     @Insert
     fun insert(aliment: Aliment?): Long
 }

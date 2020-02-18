@@ -39,11 +39,43 @@
         <action
             android:id="@+id/action_receipeStepFragment_to_alimentAddSearchFragment"
             app:destination="@id/alimentAddSearchFragment" />
+        <action
+            android:id="@+id/action_receipeStepFragment_to_receipeAddFragment"
+            app:destination="@id/receipeAddFragment" />
     </fragment>
-    <action android:id="@+id/action_global_receipesFragment" app:destination="@id/receipesFragment"/>
     <fragment
         android:id="@+id/alimentAddSearchFragment"
         android:name="com.realitix.mealassistant.fragment.AlimentAddSearchFragment"
-        android:label="fragment_aliment_add_search"
-        tools:layout="@layout/fragment_aliment_add_search" />
+        android:label="Recherche d'un aliment"
+        tools:layout="@layout/fragment_aliment_add_search" >
+        <action
+            android:id="@+id/action_alimentAddSearchFragment_to_alimentAddQuantityFragment"
+            app:destination="@id/alimentAddQuantityFragment"
+            app:popUpTo="@+id/alimentAddSearchFragment"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="stepId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/alimentAddQuantityFragment"
+        android:name="com.realitix.mealassistant.fragment.AlimentAddQuantityFragment"
+        android:label="Quantité de l'aliment"
+        tools:layout="@layout/fragment_aliment_add_quantity" >
+        <argument
+            android:name="alimentId"
+            app:argType="long" />
+        <argument
+            android:name="stepId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/receipeAddFragment"
+        android:name="com.realitix.mealassistant.fragment.ReceipeAddFragment"
+        android:label="fragment_receipe_add"
+        tools:layout="@layout/fragment_receipe_add_search" >
+        <argument
+            android:name="stepId"
+            app:argType="long" />
+    </fragment>
 </navigation>
