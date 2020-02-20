@@ -6,12 +6,8 @@
         android:title="Recettes" />
 
     <item
-        android:id="@+id/receipeFragment"
+        android:id="@+id/mealsFragment"
         android:icon="@android:drawable/ic_dialog_email"
         android:title="Comment" />
 
-    <item
-        android:id="@+id/receipeStepFragment"
-        android:icon="@android:drawable/ic_menu_manage"
-        android:title="Stats" />
 </menu>

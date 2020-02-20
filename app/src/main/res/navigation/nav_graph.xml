@@ -71,11 +71,16 @@
     </fragment>
     <fragment
         android:id="@+id/receipeAddFragment"
-        android:name="com.realitix.mealassistant.fragment.ReceipeAddFragment"
+        android:name="com.realitix.mealassistant.fragment.ReceipeAddSearchFragment"
         android:label="fragment_receipe_add"
         tools:layout="@layout/fragment_receipe_add_search" >
         <argument
             android:name="stepId"
             app:argType="long" />
     </fragment>
+    <fragment
+        android:id="@+id/mealsFragment"
+        android:name="com.realitix.mealassistant.fragment.MealsFragment"
+        android:label="Planning"
+        tools:layout="@layout/fragment_meals" />
 </navigation>

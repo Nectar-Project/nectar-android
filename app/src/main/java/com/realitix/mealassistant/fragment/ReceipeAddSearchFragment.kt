@@ -24,7 +24,7 @@ import com.realitix.mealassistant.viewmodel.RepositoryViewModelFactory
 import kotlinx.android.synthetic.main.fragment_receipe_add_search.*
 
 
-class ReceipeAddFragment : Fragment() {
+class ReceipeAddSearchFragment : Fragment() {
     private var stepId: Long = -1
 
     private lateinit var adapter: GenericAdapter<SingleLineItemViewHolder, Receipe>
