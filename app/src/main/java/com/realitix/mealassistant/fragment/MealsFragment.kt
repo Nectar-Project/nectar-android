@@ -2,10 +2,12 @@ package com.realitix.mealassistant.fragment
 
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -25,7 +27,7 @@ import kotlinx.android.synthetic.main.fragment_meals.*
 class MealsFragment : Fragment() {
     private var timestamp: Long = -1
     private val adapter: ViewPagerAdapter by lazy {
-        ViewPagerAdapter(System.currentTimeMillis()/1000, activity!!.supportFragmentManager)
+        ViewPagerAdapter(System.currentTimeMillis()/1000, childFragmentManager)
     }
     private val timePicker by lazy {
         TimePickerDialog.newInstance(
@@ -38,10 +40,10 @@ class MealsFragment : Fragment() {
             0, 0, true
         )
     }
-    private val viewModel: MealsViewModel by viewModels(
+    private val viewModel: MealsViewModel by activityViewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                MealsViewModel(MealRepository.getInstance(context!!))
+                MealsViewModel(MealRepository.getInstance(context!!), findNavController())
             }
         }
     )
@@ -55,9 +57,12 @@ class MealsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         toolbar.setupWithNavController(findNavController())
 
+        // Force viewModel creation (must be set before viewpager fragments
+        viewModel
+
         // Set viewpager
-        reloadViewPager()
         tabLayout.setupWithViewPager(viewPager)
+        reloadViewPager()
 
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) { }

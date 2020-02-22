@@ -10,5 +10,4 @@ class AlimentAddSearchViewModel constructor(val repository: AlimentRepository) :
     fun searchAliments(name: String) {
         alimentSearchTerm.value = name
     }
-
 }

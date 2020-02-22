@@ -3,6 +3,7 @@ package com.realitix.mealassistant.util
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.viewpager.widget.PagerAdapter
 import com.realitix.mealassistant.fragment.MealPagerFragment
 import java.text.SimpleDateFormat
 import java.util.*

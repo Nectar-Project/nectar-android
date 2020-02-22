@@ -90,7 +90,7 @@
     <fragment
         android:id="@+id/mealFragment"
         android:name="com.realitix.mealassistant.fragment.MealFragment"
-        android:label="fragment_meal"
+        android:label="Repas"
         tools:layout="@layout/fragment_meal" >
         <argument
             android:name="mealId"
