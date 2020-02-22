@@ -1,0 +1,45 @@
+package com.realitix.mealassistant.util
+
+import com.realitix.mealassistant.database.dao.MealAlimentDao
+import com.realitix.mealassistant.database.dao.MealReceipeDao
+import com.realitix.mealassistant.database.dao.ReceipeStepAlimentDao
+import com.realitix.mealassistant.database.dao.ReceipeStepReceipeDao
+import com.realitix.mealassistant.database.entity.MealAliment
+
+class RecyclerViewMerger (var text: String, var secondary: String) {
+    companion object {
+        @JvmStatic
+        @JvmName("from1")
+        fun from(
+            aliments: List<ReceipeStepAlimentDao.ReceipeStepAlimentFull>,
+            receipes: List<ReceipeStepReceipeDao.ReceipeStepReceipeFull>
+        ): ArrayList<RecyclerViewMerger> {
+            val mergedList = ArrayList<RecyclerViewMerger>(aliments.size + receipes.size)
+            for (a in aliments) {
+                mergedList.add(RecyclerViewMerger(a.aliment.name, a.quantity.toString()+"g"))
+            }
+            for (r in receipes) {
+                mergedList.add(RecyclerViewMerger(r.receipe.name, "test"))
+            }
+
+            return mergedList
+        }
+
+        @JvmStatic
+        @JvmName("from2")
+        fun from(
+            aliments: List<MealAlimentDao.MealAlimentFull>,
+            receipes: List<MealReceipeDao.MealReceipeFull>
+        ): ArrayList<RecyclerViewMerger> {
+            val mergedList = ArrayList<RecyclerViewMerger>(aliments.size + receipes.size)
+            for (a in aliments) {
+                mergedList.add(RecyclerViewMerger(a.aliment.name, a.quantity.toString()+"g"))
+            }
+            for (r in receipes) {
+                mergedList.add(RecyclerViewMerger(r.receipe.name, "test"))
+            }
+
+            return mergedList
+        }
+    }
+}

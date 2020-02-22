@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.fragment_aliment_add_quantity.*
 
 class AlimentAddQuantityFragment : Fragment() {
     private var alimentId: Long = -1
-    private var stepId: Long = -1
+    private var objId: Long = -1
 
     private val viewModel: AlimentAddQuantityViewModel by viewModels(
         factoryProducer = {
@@ -29,7 +29,7 @@ class AlimentAddQuantityFragment : Fragment() {
                 AlimentAddQuantityViewModel(
                     ReceipeRepository.getInstance(context!!),
                     AlimentRepository.getInstance(context!!),
-                    alimentId, stepId
+                    alimentId, objId
                 )
             }
         }
@@ -39,7 +39,7 @@ class AlimentAddQuantityFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             alimentId = it.getLong("alimentId")
-            stepId = it.getLong("stepId")
+            objId = it.getLong("objId")
         }
     }
 

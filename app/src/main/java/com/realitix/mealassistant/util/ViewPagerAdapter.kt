@@ -12,11 +12,8 @@ class ViewPagerAdapter(var anchorTimestamp: Long, fm: FragmentManager):
     FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getCount(): Int  = 100
+    override fun getItem(position: Int): Fragment = MealPagerFragment.newInstance(getTimestampFromPosition(position))
 
-    override fun getItem(position: Int): Fragment {
-        val fragment = MealPagerFragment.newInstance(getTimestampFromPosition(position))
-        return fragment
-    }
 
     override fun getPageTitle(position: Int): CharSequence {
         val date = Date(getTimestampFromPosition(position)*1000)

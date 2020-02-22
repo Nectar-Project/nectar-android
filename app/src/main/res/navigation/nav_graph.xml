@@ -54,7 +54,7 @@
             app:popUpTo="@+id/alimentAddSearchFragment"
             app:popUpToInclusive="true" />
         <argument
-            android:name="stepId"
+            android:name="objId"
             app:argType="long" />
     </fragment>
     <fragment
@@ -66,7 +66,7 @@
             android:name="alimentId"
             app:argType="long" />
         <argument
-            android:name="stepId"
+            android:name="objId"
             app:argType="long" />
     </fragment>
     <fragment
@@ -75,12 +75,31 @@
         android:label="fragment_receipe_add"
         tools:layout="@layout/fragment_receipe_add_search" >
         <argument
-            android:name="stepId"
+            android:name="objId"
             app:argType="long" />
     </fragment>
     <fragment
         android:id="@+id/mealsFragment"
         android:name="com.realitix.mealassistant.fragment.MealsFragment"
         android:label="Planning"
-        tools:layout="@layout/fragment_meals" />
+        tools:layout="@layout/fragment_meals" >
+        <action
+            android:id="@+id/action_mealsFragment_to_mealFragment"
+            app:destination="@id/mealFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mealFragment"
+        android:name="com.realitix.mealassistant.fragment.MealFragment"
+        android:label="fragment_meal"
+        tools:layout="@layout/fragment_meal" >
+        <argument
+            android:name="mealId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_mealFragment_to_alimentAddSearchFragment"
+            app:destination="@id/alimentAddSearchFragment" />
+        <action
+            android:id="@+id/action_mealFragment_to_receipeAddFragment"
+            app:destination="@id/receipeAddFragment" />
+    </fragment>
 </navigation>

@@ -25,13 +25,13 @@ import kotlinx.android.synthetic.main.fragment_receipe_add_search.*
 
 
 class ReceipeAddSearchFragment : Fragment() {
-    private var stepId: Long = -1
+    private var objId: Long = -1
 
     private lateinit var adapter: GenericAdapter<SingleLineItemViewHolder, Receipe>
     private val viewModel: ReceipeAddSearchViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                ReceipeAddSearchViewModel(ReceipeRepository.getInstance(context!!), stepId)
+                ReceipeAddSearchViewModel(ReceipeRepository.getInstance(context!!), objId)
             }
         }
     )
@@ -39,7 +39,7 @@ class ReceipeAddSearchFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            stepId = it.getLong("stepId")
+            objId = it.getLong("stepId")
         }
     }
 

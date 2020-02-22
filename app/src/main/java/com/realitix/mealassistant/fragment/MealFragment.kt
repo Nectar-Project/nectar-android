@@ -1,39 +1,34 @@
 package com.realitix.mealassistant.fragment
 
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.realitix.mealassistant.R
-import com.realitix.mealassistant.repository.ReceipeRepository
+import com.realitix.mealassistant.repository.MealRepository
 import com.realitix.mealassistant.util.FabAnimation
 import com.realitix.mealassistant.util.GenericAdapter
 import com.realitix.mealassistant.util.RecyclerViewMerger
 import com.realitix.mealassistant.util.TwoLineItemViewHolder
-import com.realitix.mealassistant.viewmodel.ReceipeStepViewModel
+import com.realitix.mealassistant.viewmodel.MealViewModel
 import com.realitix.mealassistant.viewmodel.RepositoryViewModelFactory
-import kotlinx.android.synthetic.main.fragment_receipe_step.*
+import kotlinx.android.synthetic.main.fragment_meal.*
 
 
-class ReceipeStepFragment : Fragment() {
-
-    private var stepId: Long = -1
-    private var receipeId: Long = -1
+class MealFragment : Fragment() {
+    private var mealId: Long = -1
     private var isFabRotated: Boolean = false
-
-    private val viewModel: ReceipeStepViewModel by viewModels(
+    private val viewModel: MealViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                ReceipeStepViewModel(ReceipeRepository.getInstance(context!!), receipeId, stepId)
+                MealViewModel(MealRepository.getInstance(context!!), mealId)
             }
         }
     )
@@ -43,15 +38,14 @@ class ReceipeStepFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            stepId = it.getLong("stepId")
-            receipeId = it.getLong("receipeId")
+            mealId = it.getLong("mealId")
         }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View?  = inflater.inflate(R.layout.fragment_receipe_step, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_meal, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -74,12 +68,7 @@ class ReceipeStepFragment : Fragment() {
         recyclerView.adapter = adapter
         recyclerView.hasFixedSize()
 
-        viewModel.receipe.observe(viewLifecycleOwner) {
-            receipeName.text = it.name
-        }
-
-        viewModel.step.observe(viewLifecycleOwner) {
-            stepDescription.text = it.description
+        viewModel.meal.observe(viewLifecycleOwner) {
             adapter.setData(RecyclerViewMerger.from(it.aliments!!, it.receipes!!))
         }
 
@@ -96,12 +85,12 @@ class ReceipeStepFragment : Fragment() {
         }
 
         fabAliment.setOnClickListener {
-            val action = ReceipeStepFragmentDirections.actionReceipeStepFragmentToAlimentAddSearchFragment(stepId)
+            val action = MealFragmentDirections.actionMealFragmentToAlimentAddSearchFragment(mealId)
             findNavController().navigate(action)
         }
 
         fabReceipe.setOnClickListener {
-            val action = ReceipeStepFragmentDirections.actionReceipeStepFragmentToReceipeAddFragment(stepId)
+            val action = MealFragmentDirections.actionMealFragmentToReceipeAddFragment(mealId)
             findNavController().navigate(action)
         }
     }

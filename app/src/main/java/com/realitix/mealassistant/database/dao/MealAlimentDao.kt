@@ -10,9 +10,9 @@ import com.realitix.mealassistant.database.entity.MealAliment
 interface MealAlimentDao {
     class MealAlimentFull : MealAliment() {
         @Relation(parentColumn = "alimentId", entityColumn = "id")
-        var alimentDetail: Aliment? = null
+        lateinit var aliment: Aliment
     }
 
     @Insert
-    fun insert(mealAliment: MealAliment?): Long
+    fun insert(mealAliment: MealAliment): Long
 }

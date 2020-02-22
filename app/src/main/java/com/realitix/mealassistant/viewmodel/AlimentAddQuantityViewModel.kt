@@ -8,8 +8,8 @@ import com.realitix.mealassistant.repository.ReceipeRepository
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class AlimentAddQuantityViewModel constructor(
-    val receipeRepository: ReceipeRepository,
+class AlimentAddQuantityViewModel (
+    private val receipeRepository: ReceipeRepository,
     alimentRepository: AlimentRepository,
     val alimentId: Long,
     val stepId: Long

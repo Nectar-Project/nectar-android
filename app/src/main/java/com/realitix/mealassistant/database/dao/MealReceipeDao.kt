@@ -10,9 +10,9 @@ import com.realitix.mealassistant.database.entity.Receipe
 interface MealReceipeDao {
     class MealReceipeFull : MealReceipe() {
         @Relation(parentColumn = "receipeId", entityColumn = "id")
-        var receipeDetail: Receipe? = null
+        lateinit var receipe: Receipe
     }
 
     @Insert
-    fun insert(mealReceipe: MealReceipe?): Long
+    fun insert(mealReceipe: MealReceipe): Long
 }

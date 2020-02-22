@@ -72,7 +72,8 @@ class ReceipesFragment : Fragment() {
 
 
         fab.setOnClickListener {
-            val action = ReceipesFragmentDirections.actionReceipesToSingle(-1)
+            val receipeId = viewModel.createReceipe()
+            val action = ReceipesFragmentDirections.actionReceipesToSingle(receipeId)
             findNavController().navigate(action)
         }
     }

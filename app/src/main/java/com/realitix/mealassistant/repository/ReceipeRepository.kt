@@ -11,10 +11,8 @@ import com.realitix.mealassistant.database.entity.ReceipeStepAliment
 import com.realitix.mealassistant.database.entity.ReceipeStepReceipe
 
 class ReceipeRepository(val context: Context) {
-    private val receipes: LiveData<List<Receipe>> = MealDatabase.getInstance(context).receipeDao().list()
-
     fun getReceipes(): LiveData<List<Receipe>> {
-        return receipes
+        return MealDatabase.getInstance(context).receipeDao().list()
     }
 
     fun search(name: String): LiveData<List<Receipe>> {

@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_aliment_add_search.*
 
 
 class AlimentAddSearchFragment : Fragment() {
-    private var stepId: Long = -1
+    private var objId: Long = -1
 
     private lateinit var adapter: GenericAdapter<SingleLineItemViewHolder, Aliment>
     private val viewModel: AlimentAddSearchViewModel by viewModels(
@@ -36,7 +36,7 @@ class AlimentAddSearchFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            stepId = it.getLong("stepId")
+            objId = it.getLong("objId")
         }
     }
 
@@ -83,7 +83,7 @@ class AlimentAddSearchFragment : Fragment() {
         recyclerView.addOnItemTouchListener(RecyclerItemClickListener(context!!, recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val aliment = adapter.getAtPosition(position)
-                val action = AlimentAddSearchFragmentDirections.actionAlimentAddSearchFragmentToAlimentAddQuantityFragment(aliment.id, stepId)
+                val action = AlimentAddSearchFragmentDirections.actionAlimentAddSearchFragmentToAlimentAddQuantityFragment(aliment.id, objId)
                 findNavController().navigate(action)
             }
         }))
