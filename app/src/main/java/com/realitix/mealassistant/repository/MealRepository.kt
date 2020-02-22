@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import com.realitix.mealassistant.database.MealDatabase
 import com.realitix.mealassistant.database.dao.MealDao
 import com.realitix.mealassistant.database.entity.Meal
+import com.realitix.mealassistant.database.entity.MealAliment
 import com.realitix.mealassistant.util.MealMath
 import kotlin.math.floor
 
@@ -24,6 +25,10 @@ class MealRepository(val context: Context) {
 
     suspend fun createMeal(meal: Meal): Long {
         return MealDatabase.getInstance(context).mealDao().insert(meal)
+    }
+
+    suspend fun createMealAliment(aliment: MealAliment): Long {
+        return MealDatabase.getInstance(context).mealAlimentDao().insert(aliment)
     }
 
     companion object {

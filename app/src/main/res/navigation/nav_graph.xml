@@ -56,6 +56,9 @@
         <argument
             android:name="objId"
             app:argType="long" />
+        <argument
+            android:name="enumId"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/alimentAddQuantityFragment"
@@ -68,6 +71,9 @@
         <argument
             android:name="objId"
             app:argType="long" />
+        <argument
+            android:name="enumId"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/receipeAddFragment"

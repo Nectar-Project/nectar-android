@@ -13,6 +13,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.realitix.mealassistant.MainActivity
 import com.realitix.mealassistant.R
 import com.realitix.mealassistant.repository.AlimentRepository
+import com.realitix.mealassistant.repository.MealRepository
 import com.realitix.mealassistant.repository.ReceipeRepository
 import com.realitix.mealassistant.viewmodel.AlimentAddQuantityViewModel
 import com.realitix.mealassistant.viewmodel.RepositoryViewModelFactory
@@ -22,14 +23,16 @@ import kotlinx.android.synthetic.main.fragment_aliment_add_quantity.*
 class AlimentAddQuantityFragment : Fragment() {
     private var alimentId: Long = -1
     private var objId: Long = -1
+    private var enumId: Int = -1
 
     private val viewModel: AlimentAddQuantityViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
                 AlimentAddQuantityViewModel(
                     ReceipeRepository.getInstance(context!!),
+                    MealRepository.getInstance(context!!),
                     AlimentRepository.getInstance(context!!),
-                    alimentId, objId
+                    alimentId, objId, enumId
                 )
             }
         }
@@ -40,6 +43,7 @@ class AlimentAddQuantityFragment : Fragment() {
         arguments?.let {
             alimentId = it.getLong("alimentId")
             objId = it.getLong("objId")
+            enumId = it.getInt("enumId")
         }
     }
 
@@ -58,7 +62,7 @@ class AlimentAddQuantityFragment : Fragment() {
 
         button.setOnClickListener {
             val quantity = Integer.parseInt(quantityInput.text.toString())
-            viewModel.createReceipeStepAliment(quantity)
+            viewModel.create(quantity)
             (activity!! as MainActivity).toggleKeyboard()
             findNavController().popBackStack()
         }

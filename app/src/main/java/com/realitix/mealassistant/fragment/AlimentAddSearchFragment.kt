@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.fragment_aliment_add_search.*
 
 class AlimentAddSearchFragment : Fragment() {
     private var objId: Long = -1
+    private var enumId: Int = -1
 
     private lateinit var adapter: GenericAdapter<SingleLineItemViewHolder, Aliment>
     private val viewModel: AlimentAddSearchViewModel by viewModels(
@@ -37,6 +38,7 @@ class AlimentAddSearchFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             objId = it.getLong("objId")
+            enumId = it.getInt("enumId")
         }
     }
 
