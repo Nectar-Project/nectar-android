@@ -2,6 +2,7 @@ package com.realitix.mealassistant.fragment
 
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ import com.realitix.mealassistant.util.GenericAdapter
 import com.realitix.mealassistant.util.SingleLineItemViewHolder
 import com.realitix.mealassistant.viewmodel.MealPagerViewModel
 import com.realitix.mealassistant.viewmodel.RepositoryViewModelFactory
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
 import kotlinx.android.synthetic.main.fragment_meal_pager.*
 
 
@@ -30,6 +32,15 @@ class MealPagerFragment : Fragment() {
         }
     )
     private lateinit var adapter: GenericAdapter<SingleLineItemViewHolder, Meal>
+    private val timePicker by lazy {
+        TimePickerDialog.newInstance(
+            { _: TimePickerDialog, i: Int, i1: Int, i2: Int ->
+
+                Log.d("toto", i.toString() + " " + i1.toString() + " " + i2.toString())
+            },
+            0, 0, true
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +79,7 @@ class MealPagerFragment : Fragment() {
 
         // Set fab
         fab.setOnClickListener {
-            
+            timePicker.show(activity!!.supportFragmentManager, "TimePickerDialog")
         }
     }
 

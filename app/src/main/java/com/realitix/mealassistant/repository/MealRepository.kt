@@ -5,15 +5,12 @@ import androidx.lifecycle.LiveData
 import com.realitix.mealassistant.database.MealDatabase
 import com.realitix.mealassistant.database.dao.MealDao
 import com.realitix.mealassistant.database.entity.Meal
+import com.realitix.mealassistant.util.MealMath
 import kotlin.math.floor
 
 class MealRepository(val context: Context) {
-    fun listMeals(timestamp: Long): LiveData<List<Meal>> {
-        val nbSeconds: Long = 86400
-        val begin: Long = floor((timestamp / nbSeconds).toDouble()).toLong() * nbSeconds
-        val end = begin + nbSeconds
-        return MealDatabase.getInstance(context).mealDao().search(begin, end)
-    }
+    fun listMeals(timestamp: Long): LiveData<List<Meal>> = MealDatabase.getInstance(context).mealDao().search(
+        MealMath.beginDayTimestamp(timestamp), MealMath.endDayTimestamp(timestamp))
 
     suspend fun hasMeal(mealId: Long): Boolean {
         if(MealDatabase.getInstance(context).mealDao().has(mealId) != null)
