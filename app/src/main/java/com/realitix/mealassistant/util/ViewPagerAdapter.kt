@@ -22,7 +22,7 @@ class ViewPagerAdapter(var anchorTimestamp: Long, fm: FragmentManager):
         return simpleDateFormat.format(date)
     }
 
-    private fun getTimestampFromPosition(position: Int): Long {
+    fun getTimestampFromPosition(position: Int): Long {
         val decalPosition = position - count/2
         val oneDay: Long = 86400
         return anchorTimestamp + decalPosition.toLong()*oneDay
