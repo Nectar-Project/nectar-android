@@ -67,6 +67,7 @@ class MealFragment : Fragment() {
 
         viewModel.meal.observe(viewLifecycleOwner) {
             adapter.setData(RecyclerViewMerger.from(it.aliments!!, it.receipes!!))
+            datetime.text = MealUtil.dayMonthYearFromTimestamp(it.timestamp)
         }
 
         fab.setOnClickListener {
