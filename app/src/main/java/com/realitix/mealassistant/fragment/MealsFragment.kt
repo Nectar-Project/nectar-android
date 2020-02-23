@@ -57,8 +57,6 @@ class MealsFragment : Fragment() {
             adapter.anchorTimestamp = it/1000
             reloadViewPager()
         }
-
-
     }
 
     private fun reloadViewPager() {

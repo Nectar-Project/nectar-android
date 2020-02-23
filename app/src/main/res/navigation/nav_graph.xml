@@ -108,4 +108,9 @@
             android:id="@+id/action_mealFragment_to_receipeAddFragment"
             app:destination="@id/receipeAddFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/mealPagerFragment"
+        android:name="com.realitix.mealassistant.fragment.MealPagerFragment"
+        android:label="fragment_meal_pager"
+        tools:layout="@layout/fragment_meal_pager" />
 </navigation>

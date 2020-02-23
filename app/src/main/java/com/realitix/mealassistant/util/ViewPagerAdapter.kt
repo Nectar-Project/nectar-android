@@ -14,14 +14,7 @@ class ViewPagerAdapter(var anchorTimestamp: Long, fm: FragmentManager):
 
     override fun getCount(): Int  = 100
     override fun getItem(position: Int): Fragment = MealPagerFragment.newInstance(getTimestampFromPosition(position))
-
-
-    override fun getPageTitle(position: Int): CharSequence {
-        val date = Date(getTimestampFromPosition(position)*1000)
-        val pattern = "EEEE d MMMM"
-        val simpleDateFormat = SimpleDateFormat(pattern, Locale.getDefault())
-        return simpleDateFormat.format(date)
-    }
+    override fun getPageTitle(position: Int): CharSequence = MealUtil.dayMonthFromTimestamp(getTimestampFromPosition(position))
 
     fun getTimestampFromPosition(position: Int): Long {
         val decalPosition = position - count/2

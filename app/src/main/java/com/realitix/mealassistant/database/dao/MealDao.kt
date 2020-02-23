@@ -15,7 +15,7 @@ interface MealDao {
         var receipes: List<MealReceipeDao.MealReceipeFull>? = null
     }
 
-    @Query("SELECT * FROM Meal WHERE timestamp BETWEEN :begin AND :end")
+    @Query("SELECT * FROM Meal WHERE timestamp BETWEEN :begin AND :end ORDER BY timestamp")
     fun search(begin: Long, end: Long): LiveData<List<Meal>>
 
     @Insert

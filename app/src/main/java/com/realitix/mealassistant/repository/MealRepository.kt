@@ -6,12 +6,11 @@ import com.realitix.mealassistant.database.MealDatabase
 import com.realitix.mealassistant.database.dao.MealDao
 import com.realitix.mealassistant.database.entity.Meal
 import com.realitix.mealassistant.database.entity.MealAliment
-import com.realitix.mealassistant.util.MealMath
-import kotlin.math.floor
+import com.realitix.mealassistant.util.MealUtil
 
 class MealRepository(val context: Context) {
     fun listMeals(timestamp: Long): LiveData<List<Meal>> = MealDatabase.getInstance(context).mealDao().search(
-        MealMath.beginDayTimestamp(timestamp), MealMath.endDayTimestamp(timestamp))
+        MealUtil.beginDayTimestamp(timestamp), MealUtil.endDayTimestamp(timestamp))
 
     suspend fun hasMeal(mealId: Long): Boolean {
         if(MealDatabase.getInstance(context).mealDao().has(mealId) != null)

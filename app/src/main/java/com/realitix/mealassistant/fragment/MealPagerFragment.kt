@@ -15,7 +15,7 @@ import com.realitix.mealassistant.R
 import com.realitix.mealassistant.database.entity.Meal
 import com.realitix.mealassistant.repository.MealRepository
 import com.realitix.mealassistant.util.GenericAdapter
-import com.realitix.mealassistant.util.MealMath
+import com.realitix.mealassistant.util.MealUtil
 import com.realitix.mealassistant.util.RecyclerItemClickListener
 import com.realitix.mealassistant.util.SingleLineItemViewHolder
 import com.realitix.mealassistant.viewmodel.MealPagerViewModel
@@ -37,7 +37,7 @@ class MealPagerFragment : Fragment() {
     private val timePicker by lazy {
         TimePickerDialog.newInstance(
             { _: TimePickerDialog, i: Int, i1: Int, _: Int ->
-                val pickerTimestamp = MealMath.beginDayTimestamp(timestamp) + MealMath.hourTimestamp(i) + MealMath.minuteTimestamp(i1)
+                val pickerTimestamp = MealUtil.beginDayTimestamp(timestamp) + MealUtil.hourTimestamp(i) + MealUtil.minuteTimestamp(i1)
                 val mid = viewModel.createMeal(pickerTimestamp)
                 val action = MealsFragmentDirections.actionMealsFragmentToMealFragment(mid)
                 findNavController().navigate(action)
@@ -65,7 +65,7 @@ class MealPagerFragment : Fragment() {
         adapter = GenericAdapter(
             { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
             { holder, meal ->
-                holder.text.text = meal.timestamp.toString()
+                holder.text.text = MealUtil.hourMinuteFromTimestamp(meal.timestamp)
                 holder.icon.setImageDrawable(
                     ContextCompat.getDrawable(
                         context!!,
