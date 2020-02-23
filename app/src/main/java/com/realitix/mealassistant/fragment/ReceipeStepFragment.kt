@@ -98,7 +98,7 @@ class ReceipeStepFragment : Fragment() {
         }
 
         fabReceipe.setOnClickListener {
-            val action = ReceipeStepFragmentDirections.actionReceipeStepFragmentToReceipeAddFragment(stepId)
+            val action = ReceipeStepFragmentDirections.actionReceipeStepFragmentToReceipeAddFragment(stepId, MealReceipeEnum.RECEIPE)
             findNavController().navigate(action)
         }
     }

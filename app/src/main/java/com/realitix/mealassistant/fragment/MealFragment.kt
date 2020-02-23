@@ -87,7 +87,7 @@ class MealFragment : Fragment() {
         }
 
         fabReceipe.setOnClickListener {
-            val action = MealFragmentDirections.actionMealFragmentToReceipeAddFragment(mealId)
+            val action = MealFragmentDirections.actionMealFragmentToReceipeAddFragment(mealId, MealReceipeEnum.MEAL)
             findNavController().navigate(action)
         }
     }

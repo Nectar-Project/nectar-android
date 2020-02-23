@@ -6,6 +6,7 @@ import com.realitix.mealassistant.database.MealDatabase
 import com.realitix.mealassistant.database.dao.MealDao
 import com.realitix.mealassistant.database.entity.Meal
 import com.realitix.mealassistant.database.entity.MealAliment
+import com.realitix.mealassistant.database.entity.MealReceipe
 import com.realitix.mealassistant.util.MealUtil
 
 class MealRepository(val context: Context) {
@@ -28,6 +29,10 @@ class MealRepository(val context: Context) {
 
     suspend fun createMealAliment(aliment: MealAliment): Long {
         return MealDatabase.getInstance(context).mealAlimentDao().insert(aliment)
+    }
+
+    suspend fun createMealReceipe(receipe: MealReceipe): Long {
+        return MealDatabase.getInstance(context).mealReceipeDao().insert(receipe)
     }
 
     companion object {

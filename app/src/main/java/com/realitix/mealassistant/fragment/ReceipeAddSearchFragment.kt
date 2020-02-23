@@ -15,6 +15,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.realitix.mealassistant.MainActivity
 import com.realitix.mealassistant.R
 import com.realitix.mealassistant.database.entity.Receipe
+import com.realitix.mealassistant.repository.MealRepository
 import com.realitix.mealassistant.repository.ReceipeRepository
 import com.realitix.mealassistant.util.GenericAdapter
 import com.realitix.mealassistant.util.RecyclerItemClickListener
@@ -26,12 +27,17 @@ import kotlinx.android.synthetic.main.fragment_receipe_add_search.*
 
 class ReceipeAddSearchFragment : Fragment() {
     private var objId: Long = -1
+    private var enumId: Int = -1
 
     private lateinit var adapter: GenericAdapter<SingleLineItemViewHolder, Receipe>
     private val viewModel: ReceipeAddSearchViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                ReceipeAddSearchViewModel(ReceipeRepository.getInstance(context!!), objId)
+                ReceipeAddSearchViewModel(
+                    ReceipeRepository.getInstance(context!!),
+                    MealRepository.getInstance(context!!),
+                    objId, enumId
+                )
             }
         }
     )
@@ -39,7 +45,8 @@ class ReceipeAddSearchFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            objId = it.getLong("stepId")
+            objId = it.getLong("objId")
+            enumId = it.getInt("enumId")
         }
     }
 
@@ -86,7 +93,7 @@ class ReceipeAddSearchFragment : Fragment() {
         recyclerView.addOnItemTouchListener(RecyclerItemClickListener(context!!, recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val receipe = adapter.getAtPosition(position)
-                viewModel.createReceipeStepReceipe(receipe.id)
+                viewModel.create(receipe.id)
                 (activity!! as MainActivity).toggleKeyboard()
                 findNavController().popBackStack()
             }

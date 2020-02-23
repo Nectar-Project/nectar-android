@@ -14,5 +14,5 @@ interface MealReceipeDao {
     }
 
     @Insert
-    fun insert(mealReceipe: MealReceipe): Long
+    suspend fun insert(mealReceipe: MealReceipe): Long
 }
