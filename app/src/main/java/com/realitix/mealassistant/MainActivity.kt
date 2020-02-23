@@ -6,7 +6,10 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.realitix.mealassistant.command.AlimentUpdater
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class MainActivity: AppCompatActivity() {
@@ -16,10 +19,10 @@ class MainActivity: AppCompatActivity() {
         setContentView(R.layout.activity_main)
         navigation.setupWithNavController(findNavController(this, R.id.nav_host_fragment))
 
-        /*val au = AlimentUpdater()
+        val au = AlimentUpdater()
         GlobalScope.launch {
             au.update(applicationContext)
-        }*/
+        }
     }
 
     override fun onSupportNavigateUp() = findNavController(this, R.id.nav_host_fragment).navigateUp()
