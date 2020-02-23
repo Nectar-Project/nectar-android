@@ -15,10 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.realitix.mealassistant.R
 import com.realitix.mealassistant.repository.ReceipeRepository
-import com.realitix.mealassistant.util.FabAnimation
-import com.realitix.mealassistant.util.GenericAdapter
-import com.realitix.mealassistant.util.RecyclerViewMerger
-import com.realitix.mealassistant.util.TwoLineItemViewHolder
+import com.realitix.mealassistant.util.*
 import com.realitix.mealassistant.viewmodel.ReceipeStepViewModel
 import com.realitix.mealassistant.viewmodel.RepositoryViewModelFactory
 import kotlinx.android.synthetic.main.fragment_receipe_step.*
@@ -96,7 +93,7 @@ class ReceipeStepFragment : Fragment() {
         }
 
         fabAliment.setOnClickListener {
-            val action = ReceipeStepFragmentDirections.actionReceipeStepFragmentToAlimentAddSearchFragment(stepId)
+            val action = ReceipeStepFragmentDirections.actionReceipeStepFragmentToAlimentAddSearchFragment(stepId, MealReceipeEnum.RECEIPE)
             findNavController().navigate(action)
         }
 

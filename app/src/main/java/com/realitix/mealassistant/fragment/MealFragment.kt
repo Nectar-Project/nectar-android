@@ -13,10 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.realitix.mealassistant.R
 import com.realitix.mealassistant.repository.MealRepository
-import com.realitix.mealassistant.util.FabAnimation
-import com.realitix.mealassistant.util.GenericAdapter
-import com.realitix.mealassistant.util.RecyclerViewMerger
-import com.realitix.mealassistant.util.TwoLineItemViewHolder
+import com.realitix.mealassistant.util.*
 import com.realitix.mealassistant.viewmodel.MealViewModel
 import com.realitix.mealassistant.viewmodel.RepositoryViewModelFactory
 import kotlinx.android.synthetic.main.fragment_meal.*
@@ -85,7 +82,7 @@ class MealFragment : Fragment() {
         }
 
         fabAliment.setOnClickListener {
-            val action = MealFragmentDirections.actionMealFragmentToAlimentAddSearchFragment(mealId)
+            val action = MealFragmentDirections.actionMealFragmentToAlimentAddSearchFragment(mealId, MealReceipeEnum.MEAL)
             findNavController().navigate(action)
         }
 

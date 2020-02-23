@@ -7,26 +7,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
-import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.findNavController
 
 import com.realitix.mealassistant.R
 import com.realitix.mealassistant.database.entity.Meal
 import com.realitix.mealassistant.repository.MealRepository
 import com.realitix.mealassistant.util.GenericAdapter
+import com.realitix.mealassistant.util.MealMath
 import com.realitix.mealassistant.util.RecyclerItemClickListener
 import com.realitix.mealassistant.util.SingleLineItemViewHolder
 import com.realitix.mealassistant.viewmodel.MealPagerViewModel
-import com.realitix.mealassistant.viewmodel.MealsViewModel
 import com.realitix.mealassistant.viewmodel.RepositoryViewModelFactory
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
 import kotlinx.android.synthetic.main.fragment_meal_pager.*
 
 
 class MealPagerFragment : Fragment() {
     private var timestamp: Long = -1
-    private val sharedViewModel: MealsViewModel by activityViewModels()
     private val viewModel: MealPagerViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
@@ -35,6 +34,17 @@ class MealPagerFragment : Fragment() {
         }
     )
     private lateinit var adapter: GenericAdapter<SingleLineItemViewHolder, Meal>
+    private val timePicker by lazy {
+        TimePickerDialog.newInstance(
+            { _: TimePickerDialog, i: Int, i1: Int, _: Int ->
+                val pickerTimestamp = MealMath.beginDayTimestamp(timestamp) + MealMath.hourTimestamp(i) + MealMath.minuteTimestamp(i1)
+                val mid = viewModel.createMeal(pickerTimestamp)
+                val action = MealsFragmentDirections.actionMealsFragmentToMealFragment(mid)
+                findNavController().navigate(action)
+            },
+            0, 0, true
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,11 +81,16 @@ class MealPagerFragment : Fragment() {
             adapter.setData(it)
         }
 
+        // Set fab
+        fab.setOnClickListener {
+            timePicker.show(activity!!.supportFragmentManager, "TimePickerDialog")
+        }
+
         recyclerView.addOnItemTouchListener(RecyclerItemClickListener(context!!, recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val meal = adapter.getAtPosition(position)
                 val action = MealsFragmentDirections.actionMealsFragmentToMealFragment(meal.id)
-                sharedViewModel.navController.navigate(action)
+                findNavController().navigate(action)
             }
         }))
     }

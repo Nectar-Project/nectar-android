@@ -13,4 +13,12 @@ import kotlinx.coroutines.runBlocking
 
 class MealPagerViewModel constructor(val repository: MealRepository, timestamp: Long) : ViewModel() {
     val meals: LiveData<List<Meal>> = repository.listMeals(timestamp)
+
+    fun createMeal(timestamp: Long): Long {
+        var rid: Long = -1
+        runBlocking {
+            rid = repository.createMeal(Meal(timestamp, 1, "Description"))
+        }
+        return rid
+    }
 }

@@ -85,7 +85,7 @@ class AlimentAddSearchFragment : Fragment() {
         recyclerView.addOnItemTouchListener(RecyclerItemClickListener(context!!, recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val aliment = adapter.getAtPosition(position)
-                val action = AlimentAddSearchFragmentDirections.actionAlimentAddSearchFragmentToAlimentAddQuantityFragment(aliment.id, objId)
+                val action = AlimentAddSearchFragmentDirections.actionAlimentAddSearchFragmentToAlimentAddQuantityFragment(aliment.id, objId, enumId)
                 findNavController().navigate(action)
             }
         }))
