@@ -5,14 +5,10 @@ import androidx.room.Insert
 import androidx.room.Relation
 import com.realitix.mealassistant.database.entity.Aliment
 import com.realitix.mealassistant.database.entity.MealAliment
+import com.realitix.mealassistant.database.entity.MealAlimentRaw
 
 @Dao
 interface MealAlimentDao {
-    class MealAlimentFull : MealAliment() {
-        @Relation(parentColumn = "alimentId", entityColumn = "id")
-        lateinit var aliment: Aliment
-    }
-
     @Insert
-    suspend fun insert(mealAliment: MealAliment): Long
+    suspend fun insert(mealAliment: MealAlimentRaw): Long
 }

@@ -14,6 +14,7 @@ import com.realitix.mealassistant.MainActivity
 import com.realitix.mealassistant.R
 import com.realitix.mealassistant.util.GenericAdapter
 import com.realitix.mealassistant.database.dao.ReceipeStepDao
+import com.realitix.mealassistant.database.entity.ReceipeStep
 import com.realitix.mealassistant.repository.ReceipeRepository
 import com.realitix.mealassistant.util.RecyclerItemClickListener
 import com.realitix.mealassistant.util.SingleLineItemViewHolder
@@ -27,12 +28,12 @@ class ReceipeFragment : Fragment() {
     private val viewModel: ReceipeViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                ReceipeViewModel(ReceipeRepository.getInstance(context!!), receipeId)
+                ReceipeViewModel(ReceipeRepository.getInstance(requireContext()), receipeId)
             }
         }
     )
 
-    private lateinit var adapter: GenericAdapter<SingleLineItemViewHolder, ReceipeStepDao.ReceipeStepFull>
+    private lateinit var adapter: GenericAdapter<SingleLineItemViewHolder, ReceipeStep>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +58,7 @@ class ReceipeFragment : Fragment() {
                 holder.text.text = step.description
                 holder.icon.setImageDrawable(
                     ContextCompat.getDrawable(
-                        context!!,
+                        requireContext(),
                         R.drawable.ic_receipt_black_36dp
                     )
                 )
@@ -109,13 +110,13 @@ class ReceipeFragment : Fragment() {
             name.visibility = View.INVISIBLE
             nameContainer.visibility = View.VISIBLE
             nameTextInput.requestFocus()
-            (activity!! as MainActivity).toggleKeyboard()
+            (requireActivity() as MainActivity).toggleKeyboard()
         }
         else {
             name.visibility = View.VISIBLE
             nameTextInput.clearFocus()
             nameContainer.visibility = View.GONE
-            (activity!! as MainActivity).toggleKeyboard()
+            (requireActivity() as MainActivity).toggleKeyboard()
         }
     }
 
@@ -123,11 +124,11 @@ class ReceipeFragment : Fragment() {
         if(stepContainer.visibility == View.GONE) {
             stepContainer.visibility = View.VISIBLE
             stepTextInput.requestFocus()
-            (activity!! as MainActivity).toggleKeyboard()
+            (requireActivity() as MainActivity).toggleKeyboard()
         }
         else {
             stepContainer.visibility = View.GONE
-            (activity!! as MainActivity).toggleKeyboard()
+            (requireActivity() as MainActivity).toggleKeyboard()
         }
     }
 }

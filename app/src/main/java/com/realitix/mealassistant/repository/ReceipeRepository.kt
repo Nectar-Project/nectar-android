@@ -23,11 +23,11 @@ class ReceipeRepository(val context: Context) {
         return MealDatabase.getInstance(context).receipeDao().get(receipeId)
     }
 
-    fun getReceipeFull(receipeId: Long): LiveData<ReceipeDao.ReceipeFull> {
+    fun getReceipeFull(receipeId: Long): LiveData<Receipe> {
         return MealDatabase.getInstance(context).receipeDao().getFull(receipeId)
     }
 
-    fun getReceipeStepFull(stepId: Long): LiveData<ReceipeStepDao.ReceipeStepFull> {
+    fun getReceipeStepFull(stepId: Long): LiveData<ReceipeStep> {
         return MealDatabase.getInstance(context).receipeStepDao().getFull(stepId)
     }
 

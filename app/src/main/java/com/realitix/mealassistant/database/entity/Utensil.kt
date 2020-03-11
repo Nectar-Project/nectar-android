@@ -3,8 +3,11 @@ package com.realitix.mealassistant.database.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+
+class Utensil(name: String): UtensilRaw(name)
+
 @Entity
-class Utensil(var name: String) {
+open class UtensilRaw(var name: String) {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
 }

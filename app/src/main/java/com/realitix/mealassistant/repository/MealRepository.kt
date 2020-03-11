@@ -19,7 +19,7 @@ class MealRepository(val context: Context) {
         return false
     }
 
-    fun getMealFull(mealId: Long): LiveData<MealDao.MealFull> {
+    fun getMealFull(mealId: Long): LiveData<Meal> {
         return MealDatabase.getInstance(context).mealDao().getFull(mealId)
     }
 

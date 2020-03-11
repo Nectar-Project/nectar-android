@@ -4,15 +4,11 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Relation
 import com.realitix.mealassistant.database.entity.MealReceipe
+import com.realitix.mealassistant.database.entity.MealReceipeRaw
 import com.realitix.mealassistant.database.entity.Receipe
 
 @Dao
 interface MealReceipeDao {
-    class MealReceipeFull : MealReceipe() {
-        @Relation(parentColumn = "receipeId", entityColumn = "id")
-        lateinit var receipe: Receipe
-    }
-
     @Insert
-    suspend fun insert(mealReceipe: MealReceipe): Long
+    suspend fun insert(mealReceipe: MealReceipeRaw): Long
 }

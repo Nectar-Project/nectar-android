@@ -25,7 +25,7 @@ class MealFragment : Fragment() {
     private val viewModel: MealViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                MealViewModel(MealRepository.getInstance(context!!), mealId)
+                MealViewModel(MealRepository.getInstance(requireContext()), mealId)
             }
         }
     )
@@ -56,7 +56,7 @@ class MealFragment : Fragment() {
                 holder.secondary.text = merger.secondary
                 holder.icon.setImageDrawable(
                     ContextCompat.getDrawable(
-                        context!!,
+                        requireContext(),
                         R.drawable.ic_receipt_black_36dp
                     )
                 )

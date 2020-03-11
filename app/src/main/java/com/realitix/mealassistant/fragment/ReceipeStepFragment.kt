@@ -30,7 +30,7 @@ class ReceipeStepFragment : Fragment() {
     private val viewModel: ReceipeStepViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                ReceipeStepViewModel(ReceipeRepository.getInstance(context!!), receipeId, stepId)
+                ReceipeStepViewModel(ReceipeRepository.getInstance(requireContext()), receipeId, stepId)
             }
         }
     )
@@ -62,7 +62,7 @@ class ReceipeStepFragment : Fragment() {
                 holder.secondary.text = merger.secondary
                 holder.icon.setImageDrawable(
                     ContextCompat.getDrawable(
-                        context!!,
+                        requireContext(),
                         R.drawable.ic_receipt_black_36dp
                     )
                 )

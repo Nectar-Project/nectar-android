@@ -1,30 +1,29 @@
 package com.realitix.mealassistant.database.entity
 
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room.*
+
+
+class ReceipeStepReceipe(receipeId: Long, stepId: Long): ReceipeStepReceipeRaw(receipeId, stepId) {
+    @Relation(parentColumn = "receipeId", entityColumn = "id", entity = ReceipeRaw::class)
+    lateinit var receipe: ReceipeRaw
+}
 
 @Entity(
-    foreignKeys = arrayOf(ForeignKey(
-        entity = Receipe::class,
+    primaryKeys = ["stepId", "receipeId"],
+    foreignKeys = [ForeignKey(
+        entity = ReceipeRaw::class,
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("receipeId"),
         onDelete = ForeignKey.CASCADE
     ), ForeignKey(
-        entity = ReceipeStep::class,
+        entity = ReceipeStepRaw::class,
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("stepId"),
         onDelete = ForeignKey.CASCADE
-    )),
-    indices = arrayOf(
+    )],
+    indices = [
         Index(value=["receipeId"]),
         Index(value=["stepId"])
-    )
+    ]
 )
-open class ReceipeStepReceipe(var receipeId: Long, var stepId: Long) {
-    @PrimaryKey(autoGenerate = true)
-    var id: Long = 0
-
-    constructor(): this(0, 0)
-}
+open class ReceipeStepReceipeRaw(var receipeId: Long, var stepId: Long)

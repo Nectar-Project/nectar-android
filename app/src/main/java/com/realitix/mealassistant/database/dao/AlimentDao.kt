@@ -4,19 +4,24 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import com.realitix.mealassistant.database.entity.Aliment
+import com.realitix.mealassistant.database.entity.AlimentRaw
 
 @Dao
 interface AlimentDao {
-    @Query("SELECT * FROM Aliment WHERE nameSearch LIKE '%' ||  :search || '%'")
+    @Transaction
+    @Query("SELECT * FROM AlimentRaw WHERE nameSearch LIKE '%' ||  :search || '%'")
     fun search(search: String): LiveData<List<Aliment>>
 
-    @Query("SELECT * FROM Aliment WHERE name LIKE :name")
+    @Transaction
+    @Query("SELECT * FROM AlimentRaw WHERE name LIKE :name")
     fun getByName(name: String?): Aliment?
 
-    @Query("SELECT * FROM Aliment WHERE id = :id")
+    @Transaction
+    @Query("SELECT * FROM AlimentRaw WHERE id = :id")
     fun get(id: Long): LiveData<Aliment>
 
     @Insert
-    fun insert(aliment: Aliment?): Long
+    fun insert(aliment: AlimentRaw?): Long
 }

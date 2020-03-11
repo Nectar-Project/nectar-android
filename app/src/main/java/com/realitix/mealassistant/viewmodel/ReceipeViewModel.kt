@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class ReceipeViewModel constructor(val repository: ReceipeRepository, receipeId: Long) : ViewModel() {
-    val receipe: LiveData<ReceipeDao.ReceipeFull> = repository.getReceipeFull(receipeId)
+    val receipe: LiveData<Receipe> = repository.getReceipeFull(receipeId)
 
     fun updateReceipeName(newName: String) {
         val r = receipe.value!!

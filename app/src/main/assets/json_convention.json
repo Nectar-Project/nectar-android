@@ -1,0 +1,16 @@
+{
+    "aliments": [
+        {
+            "category": "CAT_NAME",
+            "id": "ORIGINAL_ID",
+            "measures": {
+                "MEASURE_KEY": "FLOAT_GRAM"
+            },
+            "names_en": [["NAME", "RANK"]],
+            "names_fr": [["NAME", "RANK"]],
+            "nutritions": [
+                {"name":  "NUTRIENT_NAME", "value":  "VALUE_FOR_100G", "unit": "UNIT"}
+            ]
+        }
+    ]
+}

@@ -38,7 +38,7 @@ interface AlimentService {
 }
 
 class AlimentUpdater {
-    suspend fun update(context: Context) {
+    fun update(context: Context) {
         Log.i("rawfood", "Update aliments")
         val retrofit = Retrofit.Builder()
             .baseUrl(ALIMENT_URL)
@@ -55,7 +55,7 @@ class AlimentUpdater {
         //}
     }
 
-    suspend fun updateInternal(context: Context, data: UAlimentRoot?) {
+    fun updateInternal(context: Context, data: UAlimentRoot?) {
         val db: MealDatabase = MealDatabase.getInstance(context)
         var nbAlimentsUpdated = 0
 

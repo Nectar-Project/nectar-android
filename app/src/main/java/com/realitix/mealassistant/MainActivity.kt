@@ -6,10 +6,13 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.work.*
 import com.realitix.mealassistant.command.AlimentUpdater
+import com.realitix.mealassistant.work.AlimentUpdaterWorker
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.time.Duration
 
 
 class MainActivity: AppCompatActivity() {
@@ -19,10 +22,19 @@ class MainActivity: AppCompatActivity() {
         setContentView(R.layout.activity_main)
         navigation.setupWithNavController(findNavController(this, R.id.nav_host_fragment))
 
-        val au = AlimentUpdater()
-        GlobalScope.launch {
-            au.update(applicationContext)
-        }
+        startAlimentUpdaterWorker()
+    }
+
+    private fun startAlimentUpdaterWorker() {
+        val constraints = Constraints.Builder()
+            .setRequiresStorageNotLow(true)
+            .build()
+
+        val alimentUpdaterWork = OneTimeWorkRequestBuilder<AlimentUpdaterWorker>()
+            .setConstraints(constraints)
+            .build()
+
+        WorkManager.getInstance(this).enqueue(alimentUpdaterWork)
     }
 
     override fun onSupportNavigateUp() = findNavController(this, R.id.nav_host_fragment).navigateUp()

@@ -13,5 +13,5 @@ import kotlinx.coroutines.runBlocking
 
 class ReceipeStepViewModel constructor(var repository: ReceipeRepository, receipeId: Long, stepId: Long) : ViewModel() {
     val receipe: LiveData<Receipe> = repository.getReceipe(receipeId)
-    val step: LiveData<ReceipeStepDao.ReceipeStepFull> = repository.getReceipeStepFull(stepId)
+    val step: LiveData<ReceipeStep> = repository.getReceipeStepFull(stepId)
 }
