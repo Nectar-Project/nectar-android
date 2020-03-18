@@ -5,28 +5,23 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 
 
-class AlimentName(alimentUuid: String, languageUuid: String, name: String): AlimentNameRaw(alimentUuid, languageUuid, name)
+class AlimentName(alimentUuid: String, language: String, name: String): AlimentNameRaw(alimentUuid, language, name)
 
 @Entity(
-    primaryKeys = ["alimentUuid", "languageUuid"],
+    primaryKeys = ["alimentUuid", "language"],
     foreignKeys = [ForeignKey(
         entity = AlimentRaw::class,
         parentColumns = ["uuid"],
         childColumns = ["alimentUuid"],
         onDelete = ForeignKey.CASCADE
-    ), ForeignKey(
-        entity = LanguageRaw::class,
-        parentColumns = ["uuid"],
-        childColumns = ["languageUuid"],
-        onDelete = ForeignKey.CASCADE
     )],
     indices = [
         Index(value=["alimentUuid"]),
-        Index(value=["languageUuid"])
+        Index(value=["language"])
     ]
 )
 open class AlimentNameRaw (
     var alimentUuid: String,
-    var languageUuid: String,
+    var language: String,
     var name: String
 )

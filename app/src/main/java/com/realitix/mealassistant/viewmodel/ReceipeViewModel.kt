@@ -14,10 +14,10 @@ class ReceipeViewModel constructor(val repository: ReceipeRepository, receipeUui
     val receipe: LiveData<Receipe> = repository.getReceipeFull(receipeUuid)
 
     fun updateReceipeName(newName: String) {
-        val r = receipe.value!!
+        val r = receipe.value!!.getReceipeName()
         r.name = newName
         GlobalScope.launch {
-            repository.update(r)
+            repository.updateReceipeName(r)
         }
     }
 

@@ -3,6 +3,7 @@ package com.realitix.mealassistant.database.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.realitix.mealassistant.database.entity.Receipe
+import com.realitix.mealassistant.database.entity.ReceipeNameRaw
 import com.realitix.mealassistant.database.entity.ReceipeRaw
 import com.realitix.mealassistant.database.entity.ReceipeStep
 
@@ -13,8 +14,14 @@ interface ReceipeDao {
     fun list(): LiveData<List<Receipe>>
 
     @Transaction
-    @Query("SELECT * FROM ReceipeRaw WHERE name LIKE '%' ||  :search || '%'")
-    fun search(search: String): LiveData<List<Receipe>>
+    @Query("""
+        SELECT ReceipeRaw.*
+        FROM ReceipeRaw
+        INNER JOIN ReceipeNameRaw ON ReceipeNameRaw.receipeUuid = ReceipeRaw.uuid
+        INNER JOIN ReceipeNameFts ON ReceipeNameRaw.rowid = ReceipeNameFts.rowid
+        WHERE ReceipeNameFts MATCH :term
+    """)
+    fun search(term: String): LiveData<List<Receipe>>
 
     @Transaction
     @Query("SELECT * FROM ReceipeRaw WHERE uuid=:uuid")
@@ -23,12 +30,18 @@ interface ReceipeDao {
     @Update
     suspend fun update(receipe: ReceipeRaw)
 
+    @Update
+    suspend fun updateName(receipeName: ReceipeNameRaw)
+
     @Transaction
     @Query("SELECT * FROM ReceipeRaw WHERE uuid=:uuid")
     suspend fun has(uuid: String): Receipe?
 
     @Insert
-    suspend fun insert(receipe: ReceipeRaw): Long
+    suspend fun insert(receipe: ReceipeRaw)
+
+    @Insert
+    suspend fun insertName(receipeName: ReceipeNameRaw)
 
     @Transaction
     @Query("SELECT * FROM ReceipeRaw WHERE ReceipeRaw.uuid=:uuid")

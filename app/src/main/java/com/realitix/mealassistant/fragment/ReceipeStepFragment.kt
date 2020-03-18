@@ -72,7 +72,7 @@ class ReceipeStepFragment : Fragment() {
         recyclerView.hasFixedSize()
 
         viewModel.receipe.observe(viewLifecycleOwner) {
-            receipeName.text = it.name
+            receipeName.text = it.getName()
         }
 
         viewModel.step.observe(viewLifecycleOwner) {

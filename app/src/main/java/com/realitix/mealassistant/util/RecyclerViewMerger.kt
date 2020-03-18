@@ -22,7 +22,7 @@ class RecyclerViewMerger (var text: String, var secondary: String) {
                 mergedList.add(RecyclerViewMerger(a.aliment.getName(), a.quantity.toString()+"g"))
             }
             for (r in receipes) {
-                mergedList.add(RecyclerViewMerger(r.receipe.name, "test"))
+                mergedList.add(RecyclerViewMerger(r.receipe.getName(), "test"))
             }
 
             return mergedList
@@ -39,7 +39,7 @@ class RecyclerViewMerger (var text: String, var secondary: String) {
                 mergedList.add(RecyclerViewMerger(a.aliment.getName(), a.quantity.toString()+"g"))
             }
             for (r in receipes) {
-                mergedList.add(RecyclerViewMerger(r.receipe.name, "test"))
+                mergedList.add(RecyclerViewMerger(r.receipe.getName(), "test"))
             }
 
             return mergedList

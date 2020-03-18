@@ -5,23 +5,23 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 
 
-class MeasureName(measureUuid: String, language: String, name: String): TagNameRaw(measureUuid, language, name)
+class ReceipeName(receipeUuid: String, language: String, name: String): ReceipeNameRaw(receipeUuid, language, name)
 
 @Entity(
-    primaryKeys = ["measureUuid", "language"],
+    primaryKeys = ["receipeUuid", "language"],
     foreignKeys = [ForeignKey(
-        entity = TagRaw::class,
+        entity = ReceipeRaw::class,
         parentColumns = ["uuid"],
-        childColumns = ["measureUuid"],
+        childColumns = ["receipeUuid"],
         onDelete = ForeignKey.CASCADE
     )],
     indices = [
-        Index(value=["measureUuid"]),
+        Index(value=["receipeUuid"]),
         Index(value=["language"])
     ]
 )
-open class MeasureNameRaw (
-    var measureUuid: String,
+open class ReceipeNameRaw (
+    var receipeUuid: String,
     var language: String,
     var name: String
 )

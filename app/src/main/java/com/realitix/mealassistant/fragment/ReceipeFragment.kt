@@ -68,10 +68,10 @@ class ReceipeFragment : Fragment() {
         recyclerView.adapter = adapter
 
         viewModel.receipe.observe(viewLifecycleOwner) {
-            name.text = it.name
+            name.text = it.getName()
             nbPeople.text = it.nb_people.toString()
             stars.text = it.stars.toString()
-            nameTextInput.setText(it.name)
+            nameTextInput.setText(it.getName())
             adapter.setData(it.steps!!)
         }
 

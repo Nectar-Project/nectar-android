@@ -6,28 +6,23 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 
-class TagName(tagUuid: String, languageUuid: String, name: String): TagNameRaw(tagUuid, languageUuid, name)
+class TagName(tagUuid: String, language: String, name: String): TagNameRaw(tagUuid, language, name)
 
 @Entity(
-    primaryKeys = ["tagUuid", "languageUuid"],
+    primaryKeys = ["tagUuid", "language"],
     foreignKeys = [ForeignKey(
         entity = TagRaw::class,
         parentColumns = ["uuid"],
         childColumns = ["tagUuid"],
         onDelete = ForeignKey.CASCADE
-    ), ForeignKey(
-        entity = LanguageRaw::class,
-        parentColumns = ["uuid"],
-        childColumns = ["languageUuid"],
-        onDelete = ForeignKey.CASCADE
     )],
     indices = [
         Index(value=["tagUuid"]),
-        Index(value=["languageUuid"])
+        Index(value=["language"])
     ]
 )
 open class TagNameRaw (
     var tagUuid: String,
-    var languageUuid: String,
+    var language: String,
     var name: String
 )

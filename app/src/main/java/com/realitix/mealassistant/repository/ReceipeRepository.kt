@@ -5,10 +5,7 @@ import androidx.lifecycle.LiveData
 import com.realitix.mealassistant.database.MealDatabase
 import com.realitix.mealassistant.database.dao.ReceipeDao
 import com.realitix.mealassistant.database.dao.ReceipeStepDao
-import com.realitix.mealassistant.database.entity.Receipe
-import com.realitix.mealassistant.database.entity.ReceipeStep
-import com.realitix.mealassistant.database.entity.ReceipeStepAliment
-import com.realitix.mealassistant.database.entity.ReceipeStepReceipe
+import com.realitix.mealassistant.database.entity.*
 
 class ReceipeRepository(val context: Context) {
     fun getReceipes(): LiveData<List<Receipe>> {
@@ -35,6 +32,10 @@ class ReceipeRepository(val context: Context) {
         MealDatabase.getInstance(context).receipeDao().update(receipe)
     }
 
+    suspend fun updateReceipeName(receipeName: ReceipeName) {
+        MealDatabase.getInstance(context).receipeDao().updateName(receipeName)
+    }
+
     suspend fun hasReceipe(receipeUuid: String): Boolean {
         if(MealDatabase.getInstance(context).receipeDao().has(receipeUuid) != null)
             return true
@@ -47,8 +48,12 @@ class ReceipeRepository(val context: Context) {
         return false
     }
 
-    suspend fun createReceipe(receipe: Receipe): Long {
-        return MealDatabase.getInstance(context).receipeDao().insert(receipe)
+    suspend fun createReceipe(receipe: Receipe) {
+        MealDatabase.getInstance(context).receipeDao().insert(receipe)
+    }
+
+    suspend fun createReceipeName(receipeName: ReceipeNameRaw) {
+        MealDatabase.getInstance(context).receipeDao().insertName(receipeName)
     }
 
     suspend fun createReceipeStep(receipeStep: ReceipeStep): Long {

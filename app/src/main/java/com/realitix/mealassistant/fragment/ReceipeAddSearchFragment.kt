@@ -63,7 +63,7 @@ class ReceipeAddSearchFragment : Fragment() {
         adapter = GenericAdapter(
             { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
             { holder, receipe ->
-                holder.text.text = receipe.name
+                holder.text.text = receipe.getName()
                 holder.icon.setImageDrawable(
                     ContextCompat.getDrawable(
                         requireContext(),
