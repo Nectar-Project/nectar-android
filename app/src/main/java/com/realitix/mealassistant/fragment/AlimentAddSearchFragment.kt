@@ -22,14 +22,14 @@ import kotlinx.android.synthetic.main.fragment_aliment_add_search.*
 
 
 class AlimentAddSearchFragment : Fragment() {
-    private var objId: Long = -1
+    private lateinit var objUuid: String
     private var enumId: Int = -1
 
     private lateinit var adapter: GenericAdapter<SingleLineItemViewHolder, Aliment>
     private val viewModel: AlimentAddSearchViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                AlimentAddSearchViewModel(AlimentRepository.getInstance(context!!))
+                AlimentAddSearchViewModel(AlimentRepository.getInstance(requireContext()))
             }
         }
     )
@@ -37,7 +37,7 @@ class AlimentAddSearchFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            objId = it.getLong("objId")
+            objUuid = it.getString("objUuid")!!
             enumId = it.getInt("enumId")
         }
     }
@@ -55,10 +55,10 @@ class AlimentAddSearchFragment : Fragment() {
         adapter = GenericAdapter(
             { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
             { holder, aliment ->
-                holder.text.text = aliment.name
+                holder.text.text = aliment.getName()
                 holder.icon.setImageDrawable(
                     ContextCompat.getDrawable(
-                        context!!,
+                        requireContext(),
                         R.drawable.ic_receipt_black_36dp
                     )
                 )
@@ -82,10 +82,10 @@ class AlimentAddSearchFragment : Fragment() {
             }
         })
 
-        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(context!!, recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
+        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val aliment = adapter.getAtPosition(position)
-                val action = AlimentAddSearchFragmentDirections.actionAlimentAddSearchFragmentToAlimentAddQuantityFragment(aliment.id, objId, enumId)
+                val action = AlimentAddSearchFragmentDirections.actionAlimentAddSearchFragmentToAlimentAddQuantityFragment(aliment.uuid, objUuid, enumId)
                 findNavController().navigate(action)
             }
         }))

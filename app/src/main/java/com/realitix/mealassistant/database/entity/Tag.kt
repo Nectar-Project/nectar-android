@@ -3,12 +3,10 @@ package com.realitix.mealassistant.database.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-
-class Utensil(uuid: String, name: String): UtensilRaw(uuid, name)
+class Tag(uuid: String): TagRaw(uuid)
 
 @Entity
-open class UtensilRaw(
+open class TagRaw (
     @PrimaryKey
-    var uuid: String,
-    var name: String
+    var uuid: String
 )

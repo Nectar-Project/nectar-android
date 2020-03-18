@@ -14,17 +14,17 @@ interface MealDao {
     fun search(begin: Long, end: Long): LiveData<List<Meal>>
 
     @Insert
-    suspend fun insert(meal: MealRaw): Long
+    suspend fun insert(meal: MealRaw)
 
     @Transaction
-    @Query("SELECT * FROM MealRaw WHERE id=:id")
-    suspend fun has(id: Long): Meal?
+    @Query("SELECT * FROM MealRaw WHERE uuid=:uuid")
+    suspend fun has(uuid: String): Meal?
 
     @Transaction
-    @Query("SELECT * FROM MealRaw WHERE id=:id")
-    operator fun get(id: Long): Meal?
+    @Query("SELECT * FROM MealRaw WHERE uuid=:uuid")
+    operator fun get(uuid: String): Meal?
 
     @Transaction
-    @Query("SELECT * FROM MealRaw WHERE id=:id")
-    fun getFull(id: Long): LiveData<Meal>
+    @Query("SELECT * FROM MealRaw WHERE uuid=:uuid")
+    fun getFull(uuid: String): LiveData<Meal>
 }

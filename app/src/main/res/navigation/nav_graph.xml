@@ -10,8 +10,8 @@
         android:name="com.realitix.mealassistant.fragment.ReceipeFragment"
         android:label="Recette"
         tools:layout="@layout/fragment_receipe" >
-        <argument android:name="receipeId"
-            app:argType="long" />
+        <argument android:name="receipeUuid"
+            app:argType="string" />
         <action
             android:id="@+id/action_receipeFragment_to_receipeStepFragment"
             app:destination="@id/receipeStepFragment" />
@@ -31,11 +31,11 @@
         android:label="Etape"
         tools:layout="@layout/fragment_receipe_step" >
         <argument
-            android:name="stepId"
-            app:argType="long" />
+            android:name="stepUuid"
+            app:argType="string" />
         <argument
-            android:name="receipeId"
-            app:argType="long" />
+            android:name="receipeUuid"
+            app:argType="string" />
         <action
             android:id="@+id/action_receipeStepFragment_to_alimentAddSearchFragment"
             app:destination="@id/alimentAddSearchFragment" />
@@ -54,8 +54,8 @@
             app:popUpTo="@+id/alimentAddSearchFragment"
             app:popUpToInclusive="true" />
         <argument
-            android:name="objId"
-            app:argType="long" />
+            android:name="objUuid"
+            app:argType="string" />
         <argument
             android:name="enumId"
             app:argType="integer" />
@@ -66,11 +66,11 @@
         android:label="Quantité de l'aliment"
         tools:layout="@layout/fragment_aliment_add_quantity" >
         <argument
-            android:name="alimentId"
-            app:argType="long" />
+            android:name="alimentUuid"
+            app:argType="string" />
         <argument
-            android:name="objId"
-            app:argType="long" />
+            android:name="objUuid"
+            app:argType="string" />
         <argument
             android:name="enumId"
             app:argType="integer" />
@@ -81,8 +81,8 @@
         android:label="fragment_receipe_add"
         tools:layout="@layout/fragment_receipe_add_search" >
         <argument
-            android:name="objId"
-            app:argType="long" />
+            android:name="objUuid"
+            app:argType="string" />
         <argument android:name="enumId"
             app:argType="integer" />
     </fragment>
@@ -101,8 +101,8 @@
         android:label="Repas"
         tools:layout="@layout/fragment_meal" >
         <argument
-            android:name="mealId"
-            app:argType="long" />
+            android:name="mealUuid"
+            app:argType="string" />
         <action
             android:id="@+id/action_mealFragment_to_alimentAddSearchFragment"
             app:destination="@id/alimentAddSearchFragment" />

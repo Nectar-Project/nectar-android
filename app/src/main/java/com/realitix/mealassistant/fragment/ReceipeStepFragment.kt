@@ -23,14 +23,14 @@ import kotlinx.android.synthetic.main.fragment_receipe_step.*
 
 class ReceipeStepFragment : Fragment() {
 
-    private var stepId: Long = -1
-    private var receipeId: Long = -1
+    private lateinit var stepUuid: String
+    private lateinit var receipeUuid: String
     private var isFabRotated: Boolean = false
 
     private val viewModel: ReceipeStepViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                ReceipeStepViewModel(ReceipeRepository.getInstance(requireContext()), receipeId, stepId)
+                ReceipeStepViewModel(ReceipeRepository.getInstance(requireContext()), receipeUuid, stepUuid)
             }
         }
     )
@@ -40,8 +40,8 @@ class ReceipeStepFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            stepId = it.getLong("stepId")
-            receipeId = it.getLong("receipeId")
+            stepUuid = it.getString("stepUuid")!!
+            receipeUuid = it.getString("receipeUuid")!!
         }
     }
 
@@ -93,12 +93,12 @@ class ReceipeStepFragment : Fragment() {
         }
 
         fabAliment.setOnClickListener {
-            val action = ReceipeStepFragmentDirections.actionReceipeStepFragmentToAlimentAddSearchFragment(stepId, MealReceipeEnum.RECEIPE)
+            val action = ReceipeStepFragmentDirections.actionReceipeStepFragmentToAlimentAddSearchFragment(stepUuid, MealReceipeEnum.RECEIPE)
             findNavController().navigate(action)
         }
 
         fabReceipe.setOnClickListener {
-            val action = ReceipeStepFragmentDirections.actionReceipeStepFragmentToReceipeAddFragment(stepId, MealReceipeEnum.RECEIPE)
+            val action = ReceipeStepFragmentDirections.actionReceipeStepFragmentToReceipeAddFragment(stepUuid, MealReceipeEnum.RECEIPE)
             findNavController().navigate(action)
         }
     }

@@ -11,17 +11,28 @@ import com.realitix.mealassistant.database.entity.AlimentRaw
 @Dao
 interface AlimentDao {
     @Transaction
-    @Query("SELECT * FROM AlimentRaw WHERE nameSearch LIKE '%' ||  :search || '%'")
-    fun search(search: String): LiveData<List<Aliment>>
+    @Query("""
+        SELECT AlimentRaw.*
+        FROM AlimentRaw
+        INNER JOIN AlimentNameRaw ON AlimentNameRaw.alimentUuid = AlimentRaw.uuid
+        INNER JOIN AlimentNameFts ON AlimentNameRaw.rowid = AlimentNameFts.rowid
+        WHERE AlimentNameFts MATCH :term
+    """)
+    fun search(term: String): LiveData<List<Aliment>>
 
     @Transaction
-    @Query("SELECT * FROM AlimentRaw WHERE name LIKE :name")
-    fun getByName(name: String?): Aliment?
+    @Query("""
+        SELECT AlimentRaw.*
+        FROM AlimentRaw
+        INNER JOIN AlimentNameRaw ON AlimentNameRaw.alimentUuid = AlimentRaw.uuid
+        WHERE AlimentNameRaw.name LIKE :name
+    """)
+    fun getByName(name: String): Aliment?
 
     @Transaction
-    @Query("SELECT * FROM AlimentRaw WHERE id = :id")
-    fun get(id: Long): LiveData<Aliment>
+    @Query("SELECT * FROM AlimentRaw WHERE uuid = :uuid")
+    fun get(uuid: String): LiveData<Aliment>
 
     @Insert
-    fun insert(aliment: AlimentRaw?): Long
+    fun insert(aliment: AlimentRaw): Long
 }

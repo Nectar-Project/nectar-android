@@ -20,12 +20,12 @@ import kotlinx.android.synthetic.main.fragment_meal.*
 
 
 class MealFragment : Fragment() {
-    private var mealId: Long = -1
+    private lateinit var mealUuid: String
     private var isFabRotated: Boolean = false
     private val viewModel: MealViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                MealViewModel(MealRepository.getInstance(requireContext()), mealId)
+                MealViewModel(MealRepository.getInstance(requireContext()), mealUuid)
             }
         }
     )
@@ -35,7 +35,7 @@ class MealFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            mealId = it.getLong("mealId")
+            mealUuid = it.getString("mealUuid")!!
         }
     }
 
@@ -83,12 +83,12 @@ class MealFragment : Fragment() {
         }
 
         fabAliment.setOnClickListener {
-            val action = MealFragmentDirections.actionMealFragmentToAlimentAddSearchFragment(mealId, MealReceipeEnum.MEAL)
+            val action = MealFragmentDirections.actionMealFragmentToAlimentAddSearchFragment(mealUuid, MealReceipeEnum.MEAL)
             findNavController().navigate(action)
         }
 
         fabReceipe.setOnClickListener {
-            val action = MealFragmentDirections.actionMealFragmentToReceipeAddFragment(mealId, MealReceipeEnum.MEAL)
+            val action = MealFragmentDirections.actionMealFragmentToReceipeAddFragment(mealUuid, MealReceipeEnum.MEAL)
             findNavController().navigate(action)
         }
     }

@@ -20,6 +20,7 @@ class MealUtil {
         fun dayMonthFromTimestamp(timestamp: Long): String = pattern1.format(Date(timestamp*1000))
         fun dayMonthYearFromTimestamp(timestamp: Long): String = pattern3.format(Date(timestamp*1000))
         fun hourMinuteFromTimestamp(timestamp: Long): String = pattern2.format(Date(timestamp*1000))
+        fun generateUuid(): String = UUID.randomUUID().toString()
 
         private fun initSimpleDate(pattern: String): SimpleDateFormat {
             val r = SimpleDateFormat(pattern, Locale.getDefault())

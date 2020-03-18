@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import com.realitix.mealassistant.database.MealDatabase
 import com.realitix.mealassistant.database.entity.Aliment
-import com.realitix.mealassistant.database.entity.AlimentCategory
 import com.realitix.mealassistant.database.entity.AlimentNutrition
 import com.realitix.mealassistant.database.entity.Receipe
 import kotlinx.coroutines.GlobalScope
@@ -63,7 +62,7 @@ class AlimentUpdater {
         //val rt = Receipe("Popolopo", 1, 3)
         //db.receipeDao().insert(rt)
 
-        for (aliment in data!!.aliments) {
+        /*for (aliment in data!!.aliments) {
             // Get category
             val group_name = aliment.group_name_fr
             var ac: AlimentCategory? = db.alimentCategoryDao().getByName(group_name)
@@ -83,7 +82,7 @@ class AlimentUpdater {
                 db.alimentDao().insert(a_insert)
                 nbAlimentsUpdated++
             }
-        }
+        }*/
 
         Log.i("rawfood", "$nbAlimentsUpdated aliments updated")
     }

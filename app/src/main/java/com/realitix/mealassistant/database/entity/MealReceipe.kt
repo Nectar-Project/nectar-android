@@ -6,27 +6,27 @@ import androidx.room.Index
 import androidx.room.Relation
 
 
-class MealReceipe(receipeId: Long, mealId: Long): MealReceipeRaw(receipeId, mealId) {
-    @Relation(parentColumn = "receipeId", entityColumn = "id", entity = ReceipeRaw::class)
+class MealReceipe(receipeUuid: String, mealUuid: String): MealReceipeRaw(receipeUuid, mealUuid) {
+    @Relation(parentColumn = "receipeUuid", entityColumn = "uuid", entity = ReceipeRaw::class)
     lateinit var receipe: Receipe
 }
 
 @Entity(
-    primaryKeys = ["receipeId", "mealId"],
+    primaryKeys = ["receipeUuid", "mealUuid"],
     foreignKeys = [ForeignKey(
         entity = ReceipeRaw::class,
-        parentColumns = arrayOf("id"),
-        childColumns = arrayOf("receipeId"),
+        parentColumns = ["uuid"],
+        childColumns = ["receipeUuid"],
         onDelete = ForeignKey.CASCADE
     ), ForeignKey(
         entity = MealRaw::class,
-        parentColumns = arrayOf("id"),
-        childColumns = arrayOf("mealId"),
+        parentColumns = ["uuid"],
+        childColumns = ["mealUuid"],
         onDelete = ForeignKey.CASCADE
     )],
     indices = [
-        Index(value=["receipeId"]),
-        Index(value=["mealId"])
+        Index(value=["receipeUuid"]),
+        Index(value=["mealUuid"])
     ]
 )
-open class MealReceipeRaw(var receipeId: Long, var mealId: Long)
+open class MealReceipeRaw(var receipeUuid: String, var mealUuid: String)

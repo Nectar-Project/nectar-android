@@ -4,11 +4,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 
-class Utensil(uuid: String, name: String): UtensilRaw(uuid, name)
+class Language(uuid: String, code: String): LanguageRaw(uuid, code)
 
 @Entity
-open class UtensilRaw(
+open class LanguageRaw (
     @PrimaryKey
     var uuid: String,
-    var name: String
+    var code: String
 )

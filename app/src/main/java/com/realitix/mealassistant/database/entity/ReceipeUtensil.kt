@@ -5,24 +5,24 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 
 
-class ReceipeUtensil(receipeId: Long, utensilId: Long): ReceipeUtensilRaw(receipeId, utensilId)
+class ReceipeUtensil(receipeUuid: String, utensilUuid: String): ReceipeUtensilRaw(receipeUuid, utensilUuid)
 
 @Entity(
-    primaryKeys = ["receipeId", "utensilId"],
+    primaryKeys = ["receipeUuid", "utensilUuid"],
     foreignKeys = [ForeignKey(
         entity = ReceipeRaw::class,
-        parentColumns = arrayOf("id"),
-        childColumns = arrayOf("receipeId"),
+        parentColumns = ["uuid"],
+        childColumns = ["receipeUuid"],
         onDelete = ForeignKey.CASCADE
     ), ForeignKey(
         entity = UtensilRaw::class,
-        parentColumns = arrayOf("id"),
-        childColumns = arrayOf("utensilId"),
+        parentColumns = ["uuid"],
+        childColumns = ["utensilUuid"],
         onDelete = ForeignKey.CASCADE
     )],
     indices = [
-        Index(value=["receipeId"]),
-        Index(value=["utensilId"])
+        Index(value=["receipeUuid"]),
+        Index(value=["utensilUuid"])
     ]
 )
-open class ReceipeUtensilRaw(var receipeId: Long, var utensilId: Long)
+open class ReceipeUtensilRaw(var receipeUuid: String, var utensilUuid: String)

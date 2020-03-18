@@ -17,20 +17,20 @@ interface ReceipeDao {
     fun search(search: String): LiveData<List<Receipe>>
 
     @Transaction
-    @Query("SELECT * FROM ReceipeRaw WHERE id=:id")
-    fun get(id: Long): LiveData<Receipe>
+    @Query("SELECT * FROM ReceipeRaw WHERE uuid=:uuid")
+    fun get(uuid: String): LiveData<Receipe>
 
     @Update
     suspend fun update(receipe: ReceipeRaw)
 
     @Transaction
-    @Query("SELECT * FROM ReceipeRaw WHERE id=:id")
-    suspend fun has(id: Long): Receipe?
+    @Query("SELECT * FROM ReceipeRaw WHERE uuid=:uuid")
+    suspend fun has(uuid: String): Receipe?
 
     @Insert
     suspend fun insert(receipe: ReceipeRaw): Long
 
     @Transaction
-    @Query("SELECT * FROM ReceipeRaw WHERE ReceipeRaw.id=:id")
-    fun getFull(id: Long): LiveData<Receipe>
+    @Query("SELECT * FROM ReceipeRaw WHERE ReceipeRaw.uuid=:uuid")
+    fun getFull(uuid: String): LiveData<Receipe>
 }

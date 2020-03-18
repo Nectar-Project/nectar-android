@@ -24,11 +24,11 @@ import kotlinx.android.synthetic.main.fragment_receipe.*
 
 
 class ReceipeFragment : Fragment() {
-    private var receipeId: Long = -1
+    private lateinit var receipeUuid: String
     private val viewModel: ReceipeViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                ReceipeViewModel(ReceipeRepository.getInstance(requireContext()), receipeId)
+                ReceipeViewModel(ReceipeRepository.getInstance(requireContext()), receipeUuid)
             }
         }
     )
@@ -38,7 +38,7 @@ class ReceipeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            receipeId = it.getLong("receipeId")
+            receipeUuid = it.getString("receipeUuid")!!
         }
     }
 
@@ -95,10 +95,10 @@ class ReceipeFragment : Fragment() {
             switchStepAdd()
         }
 
-        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(context!!, recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
+        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val step = adapter.getAtPosition(position)
-                val action = ReceipeFragmentDirections.actionReceipeFragmentToReceipeStepFragment(step.id, receipeId)
+                val action = ReceipeFragmentDirections.actionReceipeFragmentToReceipeStepFragment(step.uuid, receipeUuid)
                 findNavController().navigate(action)
             }
         }))

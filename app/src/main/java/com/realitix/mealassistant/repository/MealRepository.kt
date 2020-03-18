@@ -13,17 +13,17 @@ class MealRepository(val context: Context) {
     fun listMeals(timestamp: Long): LiveData<List<Meal>> = MealDatabase.getInstance(context).mealDao().search(
         MealUtil.beginDayTimestamp(timestamp), MealUtil.endDayTimestamp(timestamp))
 
-    suspend fun hasMeal(mealId: Long): Boolean {
-        if(MealDatabase.getInstance(context).mealDao().has(mealId) != null)
+    suspend fun hasMeal(mealUuid: String): Boolean {
+        if(MealDatabase.getInstance(context).mealDao().has(mealUuid) != null)
             return true
         return false
     }
 
-    fun getMealFull(mealId: Long): LiveData<Meal> {
-        return MealDatabase.getInstance(context).mealDao().getFull(mealId)
+    fun getMealFull(mealUuid: String): LiveData<Meal> {
+        return MealDatabase.getInstance(context).mealDao().getFull(mealUuid)
     }
 
-    suspend fun createMeal(meal: Meal): Long {
+    suspend fun createMeal(meal: Meal) {
         return MealDatabase.getInstance(context).mealDao().insert(meal)
     }
 

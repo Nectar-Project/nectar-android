@@ -10,21 +10,29 @@ import com.realitix.mealassistant.database.entity.*
 @Database(
     entities = [
         AlimentRaw::class,
-        AlimentCategoryRaw::class,
+        AlimentNameFts::class,
+        AlimentNameRaw::class,
+        AlimentStateRaw::class,
+        AlimentTagRaw::class,
+        LanguageRaw::class,
+        MealRaw::class,
+        MealAlimentRaw::class,
+        MealReceipeRaw::class,
+        MeasureRaw::class,
+        MeasureNameRaw::class,
         ReceipeRaw::class,
         ReceipeStepRaw::class,
         ReceipeStepAlimentRaw::class,
         ReceipeStepReceipeRaw::class,
-        MealRaw::class,
-        MealAlimentRaw::class,
-        MealReceipeRaw::class,
+        ReceipeUtensilRaw::class,
+        TagRaw::class,
+        TagNameRaw::class,
         UtensilRaw::class
     ],
     exportSchema = false,
     version = 3
 )
 abstract class MealDatabase : RoomDatabase() {
-    abstract fun alimentCategoryDao(): AlimentCategoryDao
     abstract fun alimentDao(): AlimentDao
     abstract fun mealDao(): MealDao
     abstract fun receipeDao(): ReceipeDao

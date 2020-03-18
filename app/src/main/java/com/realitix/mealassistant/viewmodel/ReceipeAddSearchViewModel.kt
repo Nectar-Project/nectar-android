@@ -12,8 +12,8 @@ import kotlinx.coroutines.launch
 class ReceipeAddSearchViewModel (
     private val receipeRepository: ReceipeRepository,
     private val mealRepository: MealRepository,
-    val objId: Long,
-    val enumId: Int
+    private val objUuid: String,
+    private val enumId: Int
 ) : ViewModel() {
     private val receipeSearchTerm: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val receipes = receipeSearchTerm.switchMap { receipeRepository.search(it) }
@@ -22,22 +22,22 @@ class ReceipeAddSearchViewModel (
         receipeSearchTerm.value = name
     }
 
-    fun create(linkedReceipeId: Long) {
+    fun create(linkedReceipeUuid: String) {
         when (enumId) {
-            MealReceipeEnum.RECEIPE -> createReceipeStepReceipe(linkedReceipeId)
-            MealReceipeEnum.MEAL -> createMealReceipe(linkedReceipeId)
+            MealReceipeEnum.RECEIPE -> createReceipeStepReceipe(linkedReceipeUuid)
+            MealReceipeEnum.MEAL -> createMealReceipe(linkedReceipeUuid)
         }
     }
 
-    private fun createReceipeStepReceipe(linkedReceipeId: Long) {
-        val c = ReceipeStepReceipe(linkedReceipeId, objId)
+    private fun createReceipeStepReceipe(linkedReceipeUuid: String) {
+        val c = ReceipeStepReceipe(linkedReceipeUuid, objUuid)
         GlobalScope.launch {
             receipeRepository.createReceipeStepReceipe(c)
         }
     }
 
-    private fun createMealReceipe(linkedReceipeId: Long) {
-        val c = MealReceipe(linkedReceipeId, objId)
+    private fun createMealReceipe(linkedReceipeUuid: String) {
+        val c = MealReceipe(linkedReceipeUuid, objUuid)
         GlobalScope.launch {
             mealRepository.createMealReceipe(c)
         }

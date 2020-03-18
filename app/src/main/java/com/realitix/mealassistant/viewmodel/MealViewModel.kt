@@ -14,6 +14,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class MealViewModel constructor(var repository: MealRepository, mealId: Long) : ViewModel() {
-    val meal: LiveData<Meal> = repository.getMealFull(mealId)
+class MealViewModel constructor(var repository: MealRepository, mealUuid: String) : ViewModel() {
+    val meal: LiveData<Meal> = repository.getMealFull(mealUuid)
 }

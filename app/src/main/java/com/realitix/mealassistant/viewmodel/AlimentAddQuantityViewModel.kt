@@ -16,11 +16,11 @@ class AlimentAddQuantityViewModel (
     private val receipeRepository: ReceipeRepository,
     private val mealRepository: MealRepository,
     alimentRepository: AlimentRepository,
-    val alimentId: Long,
-    val objId: Long,
-    val enumId: Int
+    private val alimentUuid: String,
+    private val objUuid: String,
+    private val enumId: Int
 ) : ViewModel() {
-    val aliment: LiveData<Aliment> = alimentRepository.getAliment(alimentId)
+    val aliment: LiveData<Aliment> = alimentRepository.getAliment(alimentUuid)
 
     fun create(quantity: Int) {
         when (enumId) {
@@ -30,14 +30,14 @@ class AlimentAddQuantityViewModel (
     }
 
     private fun createReceipeStepAliment(quantity: Int) {
-        val c = ReceipeStepAliment(alimentId, objId, quantity)
+        val c = ReceipeStepAliment(alimentUuid, objUuid, quantity)
         GlobalScope.launch {
             receipeRepository.createReceipeStepAliment(c)
         }
     }
 
     private fun createMealAliment(quantity: Int) {
-        val c = MealAliment(alimentId, objId, quantity)
+        val c = MealAliment(alimentUuid, objUuid, quantity)
         GlobalScope.launch {
             mealRepository.createMealAliment(c)
         }

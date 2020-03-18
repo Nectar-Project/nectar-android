@@ -25,7 +25,7 @@ class ReceipesFragment : Fragment() {
     private val viewModel: ReceipeListViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                ReceipeListViewModel(ReceipeRepository.getInstance(context!!))
+                ReceipeListViewModel(ReceipeRepository.getInstance(requireContext()))
             }
         }
     )
@@ -49,7 +49,7 @@ class ReceipesFragment : Fragment() {
                 holder.text.text = receipe.name
                 holder.icon.setImageDrawable(
                     ContextCompat.getDrawable(
-                        context!!,
+                        requireContext(),
                         R.drawable.ic_receipt_black_36dp
                     )
                 )
@@ -62,18 +62,18 @@ class ReceipesFragment : Fragment() {
             adapter.setData(it)
         }
 
-        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(context!!, recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
+        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val receipe = adapter.getAtPosition(position)
-                val action = ReceipesFragmentDirections.actionReceipesToSingle(receipe.id)
+                val action = ReceipesFragmentDirections.actionReceipesToSingle(receipe.uuid)
                 view.findNavController().navigate(action)
             }
         }))
 
 
         fab.setOnClickListener {
-            val receipeId = viewModel.createReceipe()
-            val action = ReceipesFragmentDirections.actionReceipesToSingle(receipeId)
+            val receipeUuid = viewModel.createReceipe()
+            val action = ReceipesFragmentDirections.actionReceipesToSingle(receipeUuid)
             findNavController().navigate(action)
         }
     }

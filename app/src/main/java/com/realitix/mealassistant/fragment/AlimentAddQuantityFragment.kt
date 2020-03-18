@@ -21,18 +21,18 @@ import kotlinx.android.synthetic.main.fragment_aliment_add_quantity.*
 
 
 class AlimentAddQuantityFragment : Fragment() {
-    private var alimentId: Long = -1
-    private var objId: Long = -1
+    private lateinit var alimentUuid: String
+    private lateinit var objUuid: String
     private var enumId: Int = -1
 
     private val viewModel: AlimentAddQuantityViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
                 AlimentAddQuantityViewModel(
-                    ReceipeRepository.getInstance(context!!),
-                    MealRepository.getInstance(context!!),
-                    AlimentRepository.getInstance(context!!),
-                    alimentId, objId, enumId
+                    ReceipeRepository.getInstance(requireContext()),
+                    MealRepository.getInstance(requireContext()),
+                    AlimentRepository.getInstance(requireContext()),
+                    alimentUuid, objUuid, enumId
                 )
             }
         }
@@ -41,8 +41,8 @@ class AlimentAddQuantityFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            alimentId = it.getLong("alimentId")
-            objId = it.getLong("objId")
+            alimentUuid = it.getString("alimentUuid")!!
+            objUuid = it.getString("objUuid")!!
             enumId = it.getInt("enumId")
         }
     }
@@ -57,13 +57,13 @@ class AlimentAddQuantityFragment : Fragment() {
         toolbar.setupWithNavController(findNavController())
 
         viewModel.aliment.observe(viewLifecycleOwner) {
-            alimentName.text = it.name
+            alimentName.text = it.getName()
         }
 
         button.setOnClickListener {
             val quantity = Integer.parseInt(quantityInput.text.toString())
             viewModel.create(quantity)
-            (activity!! as MainActivity).toggleKeyboard()
+            (requireActivity() as MainActivity).toggleKeyboard()
             findNavController().popBackStack()
         }
     }

@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.fragment_receipe_add_search.*
 
 
 class ReceipeAddSearchFragment : Fragment() {
-    private var objId: Long = -1
+    private lateinit var objUuid: String
     private var enumId: Int = -1
 
     private lateinit var adapter: GenericAdapter<SingleLineItemViewHolder, Receipe>
@@ -34,9 +34,9 @@ class ReceipeAddSearchFragment : Fragment() {
         factoryProducer = {
             RepositoryViewModelFactory {
                 ReceipeAddSearchViewModel(
-                    ReceipeRepository.getInstance(context!!),
-                    MealRepository.getInstance(context!!),
-                    objId, enumId
+                    ReceipeRepository.getInstance(requireContext()),
+                    MealRepository.getInstance(requireContext()),
+                    objUuid, enumId
                 )
             }
         }
@@ -45,7 +45,7 @@ class ReceipeAddSearchFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            objId = it.getLong("objId")
+            objUuid = it.getString("objUuid")!!
             enumId = it.getInt("enumId")
         }
     }
@@ -66,7 +66,7 @@ class ReceipeAddSearchFragment : Fragment() {
                 holder.text.text = receipe.name
                 holder.icon.setImageDrawable(
                     ContextCompat.getDrawable(
-                        context!!,
+                        requireContext(),
                         R.drawable.ic_receipt_black_36dp
                     )
                 )
@@ -90,10 +90,10 @@ class ReceipeAddSearchFragment : Fragment() {
             }
         })
 
-        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(context!!, recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
+        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val receipe = adapter.getAtPosition(position)
-                viewModel.create(receipe.id)
+                viewModel.create(receipe.uuid)
                 (activity!! as MainActivity).toggleKeyboard()
                 findNavController().popBackStack()
             }

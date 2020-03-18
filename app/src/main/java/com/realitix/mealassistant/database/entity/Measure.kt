@@ -4,11 +4,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 
-class Utensil(uuid: String, name: String): UtensilRaw(uuid, name)
+class Measure(uuid: String): MeasureRaw(uuid)
 
 @Entity
-open class UtensilRaw(
+open class MeasureRaw (
     @PrimaryKey
-    var uuid: String,
-    var name: String
+    var uuid: String
 )

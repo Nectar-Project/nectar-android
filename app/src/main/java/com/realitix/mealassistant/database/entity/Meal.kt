@@ -5,15 +5,18 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 
 
-class Meal(timestamp: Long, nb_people: Int, description: String): MealRaw(timestamp, nb_people, description) {
-    @Relation(parentColumn = "id", entityColumn = "mealId", entity = MealAlimentRaw::class)
+class Meal(uuid: String, timestamp: Long, nb_people: Int, description: String): MealRaw(uuid, timestamp, nb_people, description) {
+    @Relation(parentColumn = "uuid", entityColumn = "mealUuid", entity = MealAlimentRaw::class)
     var aliments: List<MealAliment>? = null
-    @Relation(parentColumn = "id", entityColumn = "mealId", entity = MealReceipeRaw::class)
+    @Relation(parentColumn = "uuid", entityColumn = "mealUuid", entity = MealReceipeRaw::class)
     var receipes: List<MealReceipe>? = null
 }
 
 @Entity
-open class MealRaw(var timestamp: Long, var nb_people: Int, var description: String) {
-    @PrimaryKey(autoGenerate = true)
-    var id: Long = 0
-}
+open class MealRaw(
+    @PrimaryKey
+    var uuid: String,
+    var timestamp: Long,
+    var nb_people: Int,
+    var description: String
+)

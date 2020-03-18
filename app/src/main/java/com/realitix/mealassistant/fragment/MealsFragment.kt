@@ -51,7 +51,7 @@ class MealsFragment : Fragment() {
         val builder = MaterialDatePicker.Builder.datePicker()
         val picker = builder.build()
         agenda.setOnClickListener {
-            picker.show(activity!!.supportFragmentManager, picker.toString())
+            picker.show(requireActivity().supportFragmentManager, picker.toString())
         }
         picker.addOnPositiveButtonClickListener {
             adapter.anchorTimestamp = it/1000

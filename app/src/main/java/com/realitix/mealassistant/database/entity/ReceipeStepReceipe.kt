@@ -3,27 +3,27 @@ package com.realitix.mealassistant.database.entity
 import androidx.room.*
 
 
-class ReceipeStepReceipe(receipeId: Long, stepId: Long): ReceipeStepReceipeRaw(receipeId, stepId) {
-    @Relation(parentColumn = "receipeId", entityColumn = "id", entity = ReceipeRaw::class)
+class ReceipeStepReceipe(receipeUuid: String, stepUuid: String): ReceipeStepReceipeRaw(receipeUuid, stepUuid) {
+    @Relation(parentColumn = "receipeUuid", entityColumn = "uuid", entity = ReceipeRaw::class)
     lateinit var receipe: ReceipeRaw
 }
 
 @Entity(
-    primaryKeys = ["stepId", "receipeId"],
+    primaryKeys = ["stepUuid", "receipeUuid"],
     foreignKeys = [ForeignKey(
         entity = ReceipeRaw::class,
-        parentColumns = arrayOf("id"),
-        childColumns = arrayOf("receipeId"),
+        parentColumns = ["uuid"],
+        childColumns = ["receipeUuid"],
         onDelete = ForeignKey.CASCADE
     ), ForeignKey(
         entity = ReceipeStepRaw::class,
-        parentColumns = arrayOf("id"),
-        childColumns = arrayOf("stepId"),
+        parentColumns = ["uuid"],
+        childColumns = ["stepUuid"],
         onDelete = ForeignKey.CASCADE
     )],
     indices = [
-        Index(value=["receipeId"]),
-        Index(value=["stepId"])
+        Index(value=["receipeUuid"]),
+        Index(value=["stepUuid"])
     ]
 )
-open class ReceipeStepReceipeRaw(var receipeId: Long, var stepId: Long)
+open class ReceipeStepReceipeRaw(var receipeUuid: String, var stepUuid: String)

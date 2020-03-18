@@ -7,16 +7,16 @@ import com.realitix.mealassistant.database.entity.*
 @Dao
 interface ReceipeStepDao {
     @Transaction
-    @Query("SELECT * FROM ReceipeStepRaw WHERE id=:id")
-    operator fun get(id: Long): ReceipeStep?
+    @Query("SELECT * FROM ReceipeStepRaw WHERE uuid=:uuid")
+    operator fun get(uuid: String): ReceipeStep?
 
     @Transaction
-    @Query("SELECT * FROM ReceipeStepRaw WHERE id=:id")
-    fun getFull(id: Long): LiveData<ReceipeStep>
+    @Query("SELECT * FROM ReceipeStepRaw WHERE uuid=:uuid")
+    fun getFull(uuid: String): LiveData<ReceipeStep>
 
     @Transaction
-    @Query("SELECT * FROM ReceipeStepRaw WHERE id=:id")
-    suspend fun has(id: Long): ReceipeStep?
+    @Query("SELECT * FROM ReceipeStepRaw WHERE uuid=:uuid")
+    suspend fun has(uuid: String): ReceipeStep?
 
     @Insert
     suspend fun insert(receipeStep: ReceipeStepRaw): Long

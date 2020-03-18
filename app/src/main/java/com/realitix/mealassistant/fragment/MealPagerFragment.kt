@@ -29,7 +29,7 @@ class MealPagerFragment : Fragment() {
     private val viewModel: MealPagerViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                MealPagerViewModel(MealRepository.getInstance(context!!), timestamp)
+                MealPagerViewModel(MealRepository.getInstance(requireContext()), timestamp)
             }
         }
     )
@@ -68,7 +68,7 @@ class MealPagerFragment : Fragment() {
                 holder.text.text = MealUtil.hourMinuteFromTimestamp(meal.timestamp)
                 holder.icon.setImageDrawable(
                     ContextCompat.getDrawable(
-                        context!!,
+                        requireContext(),
                         R.drawable.ic_receipt_black_36dp
                     )
                 )
@@ -83,13 +83,13 @@ class MealPagerFragment : Fragment() {
 
         // Set fab
         fab.setOnClickListener {
-            timePicker.show(activity!!.supportFragmentManager, "TimePickerDialog")
+            timePicker.show(requireActivity().supportFragmentManager, "TimePickerDialog")
         }
 
-        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(context!!, recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
+        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val meal = adapter.getAtPosition(position)
-                val action = MealsFragmentDirections.actionMealsFragmentToMealFragment(meal.id)
+                val action = MealsFragmentDirections.actionMealsFragmentToMealFragment(meal.uuid)
                 findNavController().navigate(action)
             }
         }))

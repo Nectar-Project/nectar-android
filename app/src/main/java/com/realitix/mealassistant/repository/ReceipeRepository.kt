@@ -19,30 +19,30 @@ class ReceipeRepository(val context: Context) {
         return MealDatabase.getInstance(context).receipeDao().search(name)
     }
 
-    fun getReceipe(receipeId: Long): LiveData<Receipe> {
-        return MealDatabase.getInstance(context).receipeDao().get(receipeId)
+    fun getReceipe(receipeUuid: String): LiveData<Receipe> {
+        return MealDatabase.getInstance(context).receipeDao().get(receipeUuid)
     }
 
-    fun getReceipeFull(receipeId: Long): LiveData<Receipe> {
-        return MealDatabase.getInstance(context).receipeDao().getFull(receipeId)
+    fun getReceipeFull(receipeUuid: String): LiveData<Receipe> {
+        return MealDatabase.getInstance(context).receipeDao().getFull(receipeUuid)
     }
 
-    fun getReceipeStepFull(stepId: Long): LiveData<ReceipeStep> {
-        return MealDatabase.getInstance(context).receipeStepDao().getFull(stepId)
+    fun getReceipeStepFull(stepUuid: String): LiveData<ReceipeStep> {
+        return MealDatabase.getInstance(context).receipeStepDao().getFull(stepUuid)
     }
 
     suspend fun update(receipe: Receipe) {
         MealDatabase.getInstance(context).receipeDao().update(receipe)
     }
 
-    suspend fun hasReceipe(receipeId: Long): Boolean {
-        if(MealDatabase.getInstance(context).receipeDao().has(receipeId) != null)
+    suspend fun hasReceipe(receipeUuid: String): Boolean {
+        if(MealDatabase.getInstance(context).receipeDao().has(receipeUuid) != null)
             return true
         return false
     }
 
-    suspend fun hasReceipeStep(stepId: Long): Boolean {
-        if(MealDatabase.getInstance(context).receipeStepDao().has(stepId) != null)
+    suspend fun hasReceipeStep(stepUuid: String): Boolean {
+        if(MealDatabase.getInstance(context).receipeStepDao().has(stepUuid) != null)
             return true
         return false
     }

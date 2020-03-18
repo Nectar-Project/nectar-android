@@ -6,27 +6,27 @@ import androidx.room.Index
 import androidx.room.Relation
 
 
-class MealAliment(alimentId: Long, mealId: Long, quantity: Int): MealAlimentRaw(alimentId, mealId, quantity) {
-    @Relation(parentColumn = "alimentId", entityColumn = "id",  entity = AlimentRaw::class)
+class MealAliment(alimentUuid: String, mealUuid: String, quantity: Int): MealAlimentRaw(alimentUuid, mealUuid, quantity) {
+    @Relation(parentColumn = "alimentUuid", entityColumn = "uuid",  entity = AlimentRaw::class)
     lateinit var aliment: Aliment
 }
 
 @Entity(
-    primaryKeys = ["alimentId", "mealId"],
+    primaryKeys = ["alimentUuid", "mealUuid"],
     foreignKeys = [ForeignKey(
         entity = AlimentRaw::class,
-        parentColumns = arrayOf("id"),
-        childColumns = arrayOf("alimentId"),
+        parentColumns = ["uuid"],
+        childColumns = ["alimentUuid"],
         onDelete = ForeignKey.CASCADE
     ), ForeignKey(
         entity = MealRaw::class,
-        parentColumns = arrayOf("id"),
-        childColumns = arrayOf("mealId"),
+        parentColumns = ["uuid"],
+        childColumns = ["mealUuid"],
         onDelete = ForeignKey.CASCADE
     )],
     indices = [
-        Index(value=["alimentId"]),
-        Index(value=["mealId"])
+        Index(value=["alimentUuid"]),
+        Index(value=["mealUuid"])
     ]
 )
-open class MealAlimentRaw(var alimentId: Long, var mealId: Long, var quantity: Int)
+open class MealAlimentRaw(var alimentUuid: String, var mealUuid: String, var quantity: Int)
