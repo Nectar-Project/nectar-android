@@ -1,14 +1,13 @@
 package com.realitix.mealassistant.util
 
+import com.realitix.mealassistant.database.entity.GitCredentials
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
 import java.io.File
 
 
-class GitUtil(private val repoDir: File, private val url: String, private val credentials: Credentials?) {
-    class Credentials(val username: String, val password: String)
-
+class GitManager(private val repoDir: File, private val url: String, private val credentials: GitCredentials?) {
     private val git: Git by lazy {
         if(!repoDir.exists()) {
             val git = Git.cloneRepository()
@@ -27,6 +26,7 @@ class GitUtil(private val repoDir: File, private val url: String, private val cr
             val repo = builder.setGitDir(File(repoDir, ".git"))
                 .readEnvironment()
                 .findGitDir()
+                .setMustExist(true)
                 .build()
 
             Git(repo)

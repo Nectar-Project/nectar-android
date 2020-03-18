@@ -14,6 +14,7 @@ import com.realitix.mealassistant.database.entity.*
         AlimentNameRaw::class,
         AlimentStateRaw::class,
         AlimentTagRaw::class,
+        GitRepositoryRaw::class,
         MealRaw::class,
         MealAlimentRaw::class,
         MealReceipeRaw::class,
