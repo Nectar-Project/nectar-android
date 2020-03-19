@@ -1,11 +1,17 @@
 package com.realitix.mealassistant.database
 
+import android.content.ContentValues
 import android.content.Context
 import androidx.room.Database
+import androidx.room.OnConflictStrategy
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.realitix.mealassistant.database.dao.*
 import com.realitix.mealassistant.database.entity.*
+import com.realitix.mealassistant.util.MealUtil
+import com.realitix.mealassistant.util.MealUtil.Companion.generateUuid
+
 
 @Database(
     entities = [
@@ -46,17 +52,36 @@ abstract class MealDatabase : RoomDatabase() {
     abstract fun mealReceipeDao(): MealReceipeDao
 
     companion object {
-        private const val DB_NAME = "rawfood_db"
         private var instance: MealDatabase? = null
         @Synchronized
         fun getInstance(context: Context): MealDatabase {
             if (instance == null) {
+                val callback = object: Callback() {
+                    override fun onCreate(db: SupportSQLiteDatabase) {
+                        super.onCreate(db)
+                        val repo = GitRepository(
+                            generateUuid(),
+                            MealUtil.getProperty(context, "defaultGitRepositoryName"),
+                            MealUtil.getProperty(context, "defaultGitRepositoryUrl"),
+                            true,
+                            null
+                        )
+                        val contentValues = ContentValues()
+                        contentValues.put("uuid", repo.uuid)
+                        contentValues.put("name", repo.name)
+                        contentValues.put("url", repo.url)
+                        contentValues.put("readOnly", repo.readOnly)
+                        contentValues.putNull("credentials")
+                        db.insert("GitRepositoryRaw", OnConflictStrategy.IGNORE, contentValues)
+                    }
+                }
+
                 instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    MealDatabase::class.java,
-                    DB_NAME
-                )
+                        context.applicationContext,
+                        MealDatabase::class.java,
+                        MealUtil.getProperty(context, "databaseName"))
                     .fallbackToDestructiveMigration()
+                    .addCallback(callback)
                     .build()
             }
             return instance as MealDatabase

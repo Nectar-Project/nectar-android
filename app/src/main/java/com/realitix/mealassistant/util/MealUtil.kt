@@ -1,8 +1,10 @@
 package com.realitix.mealassistant.util
 
+import android.content.Context
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.floor
+
 
 class MealUtil {
     companion object {
@@ -26,6 +28,13 @@ class MealUtil {
             val r = SimpleDateFormat(pattern, Locale.getDefault())
             r.timeZone = TimeZone.getTimeZone("GMT")
             return r
+        }
+
+        fun getProperty(context: Context, key: String): String {
+            val inputStream = context.assets.open("config.properties")
+            val properties = Properties()
+            properties.load(inputStream)
+            return properties.getProperty(key)
         }
     }
 }
