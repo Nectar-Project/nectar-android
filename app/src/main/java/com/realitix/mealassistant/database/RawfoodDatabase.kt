@@ -39,7 +39,7 @@ import com.realitix.mealassistant.util.MealUtil.Companion.generateUuid
         UtensilRaw::class
     ],
     exportSchema = false,
-    version = 3
+    version = 4
 )
 abstract class MealDatabase : RoomDatabase() {
     abstract fun alimentDao(): AlimentDao
@@ -71,7 +71,8 @@ abstract class MealDatabase : RoomDatabase() {
                         contentValues.put("name", repo.name)
                         contentValues.put("url", repo.url)
                         contentValues.put("readOnly", repo.readOnly)
-                        contentValues.putNull("credentials")
+                        contentValues.putNull("credentials_username")
+                        contentValues.putNull("credentials_password")
                         db.insert("GitRepositoryRaw", OnConflictStrategy.IGNORE, contentValues)
                     }
                 }
