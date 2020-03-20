@@ -11,6 +11,8 @@ import com.realitix.mealassistant.database.dao.*
 import com.realitix.mealassistant.database.entity.*
 import com.realitix.mealassistant.util.MealUtil
 import com.realitix.mealassistant.util.MealUtil.Companion.generateUuid
+import com.realitix.mealassistant.util.ZipUtil
+import java.io.File
 
 
 @Database(
@@ -59,6 +61,8 @@ abstract class MealDatabase : RoomDatabase() {
                 val callback = object: Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)
+
+                        // Create DB Entry for default repository
                         val repo = GitRepository(
                             generateUuid(),
                             MealUtil.getProperty(context, "defaultGitRepositoryName"),
@@ -74,6 +78,11 @@ abstract class MealDatabase : RoomDatabase() {
                         contentValues.putNull("credentials_username")
                         contentValues.putNull("credentials_password")
                         db.insert("GitRepositoryRaw", OnConflictStrategy.IGNORE, contentValues)
+
+                        // Uncompress the default repository
+                        val zipName = MealUtil.getProperty(context, "defaultGitRepositoryName")
+                        val rName = MealUtil.getProperty(context, "repositoryNameFolder")
+                        ZipUtil.unzipFromAssets(context, zipName, File(context.filesDir.toString(), rName).toString())
                     }
                 }
 

@@ -1,17 +1,22 @@
 package com.realitix.mealassistant
 
 import android.content.Context
+import android.content.ContextWrapper
 import android.os.Bundle
+import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.work.*
 import com.realitix.mealassistant.command.AlimentUpdater
+import com.realitix.mealassistant.util.MealUtil
+import com.realitix.mealassistant.util.ZipUtil
 import com.realitix.mealassistant.work.AlimentUpdaterWorker
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.io.File
 import java.time.Duration
 
 
@@ -21,6 +26,7 @@ class MainActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         navigation.setupWithNavController(findNavController(this, R.id.nav_host_fragment))
+
 
         startAlimentUpdaterWorker()
     }
