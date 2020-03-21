@@ -10,6 +10,7 @@ import androidx.navigation.Navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.work.*
 import com.realitix.mealassistant.command.AlimentUpdater
+import com.realitix.mealassistant.util.GitManager
 import com.realitix.mealassistant.util.MealUtil
 import com.realitix.mealassistant.util.ZipUtil
 import com.realitix.mealassistant.work.AlimentUpdaterWorker
@@ -26,7 +27,6 @@ class MainActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         navigation.setupWithNavController(findNavController(this, R.id.nav_host_fragment))
-
 
         startAlimentUpdaterWorker()
     }

@@ -45,6 +45,7 @@ import java.io.File
 )
 abstract class MealDatabase : RoomDatabase() {
     abstract fun alimentDao(): AlimentDao
+    abstract fun gitRepositoryDao(): GitRepositoryDao
     abstract fun mealDao(): MealDao
     abstract fun receipeDao(): ReceipeDao
     abstract fun receipeStepDao(): ReceipeStepDao
@@ -68,6 +69,8 @@ abstract class MealDatabase : RoomDatabase() {
                             MealUtil.getProperty(context, "defaultGitRepositoryName"),
                             MealUtil.getProperty(context, "defaultGitRepositoryUrl"),
                             true,
+                            0,
+                            60*60*6,
                             null
                         )
                         val contentValues = ContentValues()
@@ -75,6 +78,8 @@ abstract class MealDatabase : RoomDatabase() {
                         contentValues.put("name", repo.name)
                         contentValues.put("url", repo.url)
                         contentValues.put("readOnly", repo.readOnly)
+                        contentValues.put("lastCheck", repo.lastCheck)
+                        contentValues.put("frequency", repo.frequency)
                         contentValues.putNull("credentials_username")
                         contentValues.putNull("credentials_password")
                         db.insert("GitRepositoryRaw", OnConflictStrategy.IGNORE, contentValues)
