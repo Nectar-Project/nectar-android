@@ -6,6 +6,7 @@ import androidx.work.WorkerParameters
 import com.realitix.mealassistant.database.entity.GitRepository
 import com.realitix.mealassistant.repository.GitRepoRepository
 import com.realitix.mealassistant.util.GitManager
+import com.realitix.mealassistant.work.parser.AlimentParser
 import java.io.File
 
 class GitRepositoryWorker(val context: Context, workerParams: WorkerParameters)
@@ -23,9 +24,10 @@ class GitRepositoryWorker(val context: Context, workerParams: WorkerParameters)
                 if (manager.fetch()) {
                     val diff = manager.diff()
                     if(diff.hasResult) {
+                        // add
                         for((dt, uuid) in diff.adds) {
                             when(dt) {
-                                GitManager.DiffType.ALIMENT -> addAliment(repo, uuid)
+                                GitManager.DiffType.ALIMENT -> AlimentParser.add(context, repo.name, uuid)
                             }
                         }
                     }
@@ -38,9 +40,5 @@ class GitRepositoryWorker(val context: Context, workerParams: WorkerParameters)
         }
 
         return Result.success()
-    }
-
-    private fun addAliment(repo: GitRepository, uuid: String) {
-
     }
 }

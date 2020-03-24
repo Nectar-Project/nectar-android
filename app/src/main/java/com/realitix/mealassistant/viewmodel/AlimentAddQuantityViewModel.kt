@@ -20,7 +20,7 @@ class AlimentAddQuantityViewModel (
     private val objUuid: String,
     private val enumId: Int
 ) : ViewModel() {
-    val aliment: LiveData<Aliment> = alimentRepository.getAliment(alimentUuid)
+    val aliment: LiveData<Aliment> = alimentRepository.getAlimentLive(alimentUuid)
 
     fun create(quantity: Int) {
         when (enumId) {

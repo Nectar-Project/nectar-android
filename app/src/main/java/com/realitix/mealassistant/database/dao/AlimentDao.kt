@@ -9,7 +9,7 @@ import com.realitix.mealassistant.database.entity.Aliment
 import com.realitix.mealassistant.database.entity.AlimentRaw
 
 @Dao
-interface AlimentDao {
+interface AlimentDao: BaseDao<AlimentRaw> {
     @Transaction
     @Query("""
         SELECT AlimentRaw.*
@@ -31,8 +31,9 @@ interface AlimentDao {
 
     @Transaction
     @Query("SELECT * FROM AlimentRaw WHERE uuid = :uuid")
-    fun get(uuid: String): LiveData<Aliment>
+    fun getLive(uuid: String): LiveData<Aliment>
 
-    @Insert
-    fun insert(aliment: AlimentRaw): Long
+    @Transaction
+    @Query("SELECT * FROM AlimentRaw WHERE uuid = :uuid")
+    fun get(uuid: String): Aliment?
 }

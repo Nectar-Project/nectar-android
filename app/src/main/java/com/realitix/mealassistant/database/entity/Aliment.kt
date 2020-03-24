@@ -9,6 +9,8 @@ class Aliment(uuid: String): AlimentRaw(uuid) {
     var names: List<AlimentName>? = null
     @Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentTagRaw::class)
     var tags: List<AlimentTag>? = null
+    @Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentStateRaw::class)
+    var states: List<AlimentState>? = null
 
     fun getName(): String {
         return names!![0].name

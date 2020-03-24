@@ -18,9 +18,10 @@ import java.io.File
 @Database(
     entities = [
         AlimentRaw::class,
-        AlimentNameFts::class,
         AlimentNameRaw::class,
+        AlimentNameFts::class,
         AlimentStateRaw::class,
+        AlimentStateMeasureRaw::class,
         AlimentTagRaw::class,
         GitRepositoryRaw::class,
         MealRaw::class,
@@ -36,6 +37,8 @@ import java.io.File
         ReceipeStepReceipeRaw::class,
         ReceipeTagRaw::class,
         ReceipeUtensilRaw::class,
+        StateRaw::class,
+        StateNameRaw::class,
         TagRaw::class,
         TagNameRaw::class,
         UtensilRaw::class
@@ -45,6 +48,8 @@ import java.io.File
 )
 abstract class MealDatabase : RoomDatabase() {
     abstract fun alimentDao(): AlimentDao
+    abstract fun alimentNameDao(): AlimentNameDao
+    abstract fun alimentTagDao(): AlimentTagDao
     abstract fun gitRepositoryDao(): GitRepositoryDao
     abstract fun mealDao(): MealDao
     abstract fun receipeDao(): ReceipeDao

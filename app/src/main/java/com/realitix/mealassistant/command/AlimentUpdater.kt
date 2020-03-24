@@ -3,27 +3,18 @@ package com.realitix.mealassistant.command
 import android.content.Context
 import android.util.Log
 import com.realitix.mealassistant.database.MealDatabase
-import com.realitix.mealassistant.database.entity.Aliment
-import com.realitix.mealassistant.database.entity.AlimentNutrition
-import com.realitix.mealassistant.database.entity.Receipe
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import org.json.JSONException
-import org.json.JSONObject
+import com.realitix.mealassistant.database.entity.Nutrition
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
-import java.io.IOException
-import java.text.Normalizer
-import java.util.*
 
 
 class UAliment {
     var ciqual_code: Int = 0
     lateinit var name_fr: String
     lateinit var group_name_fr: String
-    lateinit var nutrition: AlimentNutrition
+    lateinit var nutrition: Nutrition
 }
 
 class UAlimentRoot {
