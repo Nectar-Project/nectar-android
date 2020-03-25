@@ -3,7 +3,6 @@ package com.realitix.mealassistant.viewmodel
 import androidx.lifecycle.*
 import com.realitix.mealassistant.database.entity.Receipe
 import com.realitix.mealassistant.database.entity.ReceipeName
-import com.realitix.mealassistant.database.entity.ReceipeNameRaw
 import com.realitix.mealassistant.repository.ReceipeRepository
 import com.realitix.mealassistant.util.MealUtil.Companion.generateUuid
 import kotlinx.coroutines.runBlocking

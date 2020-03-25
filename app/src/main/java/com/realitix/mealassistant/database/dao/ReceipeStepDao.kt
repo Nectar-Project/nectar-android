@@ -19,5 +19,8 @@ interface ReceipeStepDao {
     suspend fun has(uuid: String): ReceipeStep?
 
     @Insert
-    suspend fun insert(receipeStep: ReceipeStepRaw): Long
+    suspend fun insertSuspended(receipeStep: ReceipeStepRaw)
+
+    @Insert
+    fun insert(receipeStep: ReceipeStepRaw)
 }

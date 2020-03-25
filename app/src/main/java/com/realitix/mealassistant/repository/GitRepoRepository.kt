@@ -21,7 +21,7 @@ class GitRepoRepository(val context: Context) {
             if (instance == null) {
                 instance = GitRepoRepository(context)
             }
-            return instance as GitRepoRepository
+            return instance!!
         }
     }
 }

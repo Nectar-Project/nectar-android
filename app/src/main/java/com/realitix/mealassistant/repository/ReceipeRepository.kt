@@ -3,8 +3,6 @@ package com.realitix.mealassistant.repository
 import android.content.Context
 import androidx.lifecycle.LiveData
 import com.realitix.mealassistant.database.MealDatabase
-import com.realitix.mealassistant.database.dao.ReceipeDao
-import com.realitix.mealassistant.database.dao.ReceipeStepDao
 import com.realitix.mealassistant.database.entity.*
 
 class ReceipeRepository(val context: Context) {
@@ -16,8 +14,12 @@ class ReceipeRepository(val context: Context) {
         return MealDatabase.getInstance(context).receipeDao().search(name)
     }
 
-    fun getReceipe(receipeUuid: String): LiveData<Receipe> {
-        return MealDatabase.getInstance(context).receipeDao().get(receipeUuid)
+    fun getReceipeLive(receipeUuid: String): LiveData<Receipe> {
+        return MealDatabase.getInstance(context).receipeDao().getLive(receipeUuid)
+    }
+
+    fun getReceipe(uuid: String): Receipe? {
+        return MealDatabase.getInstance(context).receipeDao().get(uuid)
     }
 
     fun getReceipeFull(receipeUuid: String): LiveData<Receipe> {
@@ -48,20 +50,44 @@ class ReceipeRepository(val context: Context) {
         return false
     }
 
-    suspend fun createReceipe(receipe: Receipe) {
+    suspend fun createReceipe(receipe: ReceipeRaw) {
+        MealDatabase.getInstance(context).receipeDao().insertSuspended(receipe)
+    }
+
+    fun insertReceipe(receipe: ReceipeRaw) {
         MealDatabase.getInstance(context).receipeDao().insert(receipe)
+    }
+
+    fun insertReceipeName(name: ReceipeNameRaw) {
+        MealDatabase.getInstance(context).receipeNameDao().insert(name)
+    }
+
+    fun insertReceipeTag(tag: ReceipeTagRaw) {
+        MealDatabase.getInstance(context).receipeTagDao().insert(tag)
+    }
+
+    fun insertReceipeUtensil(utensil: ReceipeUtensilRaw) {
+        MealDatabase.getInstance(context).receipeUtensilDao().insert(utensil)
+    }
+
+    fun insertReceipeStep(step: ReceipeStepRaw) {
+        return MealDatabase.getInstance(context).receipeStepDao().insert(step)
+    }
+
+    fun insertReceipeStepAliment(receipeStepAliment: ReceipeStepAlimentRaw) {
+        return MealDatabase.getInstance(context).receipeStepAlimentDao().insert(receipeStepAliment)
     }
 
     suspend fun createReceipeName(receipeName: ReceipeNameRaw) {
         MealDatabase.getInstance(context).receipeDao().insertName(receipeName)
     }
 
-    suspend fun createReceipeStep(receipeStep: ReceipeStep): Long {
-        return MealDatabase.getInstance(context).receipeStepDao().insert(receipeStep)
+    suspend fun createReceipeStep(receipeStep: ReceipeStep) {
+        return MealDatabase.getInstance(context).receipeStepDao().insertSuspended(receipeStep)
     }
 
-    suspend fun createReceipeStepAliment(receipeStepAliment: ReceipeStepAliment): Long {
-        return MealDatabase.getInstance(context).receipeStepAlimentDao().insert(receipeStepAliment)
+    suspend fun createReceipeStepAliment(receipeStepAliment: ReceipeStepAliment) {
+        return MealDatabase.getInstance(context).receipeStepAlimentDao().insertSuspended(receipeStepAliment)
     }
 
     suspend fun createReceipeStepReceipe(receipeStepReceipe: ReceipeStepReceipe): Long {
@@ -75,7 +101,7 @@ class ReceipeRepository(val context: Context) {
             if (instance == null) {
                 instance = ReceipeRepository(context)
             }
-            return instance as ReceipeRepository
+            return instance!!
         }
     }
 }

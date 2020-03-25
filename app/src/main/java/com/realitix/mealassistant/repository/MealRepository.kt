@@ -42,7 +42,7 @@ class MealRepository(val context: Context) {
             if (instance == null) {
                 instance = MealRepository(context)
             }
-            return instance as MealRepository
+            return instance!!
         }
     }
 }

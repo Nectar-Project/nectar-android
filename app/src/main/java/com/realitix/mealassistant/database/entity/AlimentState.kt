@@ -3,7 +3,7 @@ package com.realitix.mealassistant.database.entity
 import androidx.room.*
 
 
-class AlimentState(alimentUuid: String, stateUuid: String, nutrition: Nutrition): AlimentStateRaw(alimentUuid, stateUuid, nutrition) {
+class AlimentState(uuid: String, alimentUuid: String, stateUuid: String, nutrition: Nutrition): AlimentStateRaw(uuid, alimentUuid, stateUuid, nutrition) {
     @Relation(parentColumn = "id", entityColumn = "alimentStateId", entity = AlimentStateMeasureRaw::class)
     var measures: List<AlimentStateMeasure>? = null
 }
@@ -27,11 +27,10 @@ class AlimentState(alimentUuid: String, stateUuid: String, nutrition: Nutrition)
     ]
 )
 open class AlimentStateRaw (
+    @PrimaryKey
+    var uuid: String,
     var alimentUuid: String,
     var stateUuid: String,
     @Embedded(prefix="nutrition_")
     var nutrition: Nutrition
-) {
-    @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
-}
+)

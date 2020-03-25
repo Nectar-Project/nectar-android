@@ -2,15 +2,15 @@ package com.realitix.mealassistant.database.entity
 
 import androidx.room.*
 
-class AlimentStateMeasure(alimentStateId: Int, measureUuid: String, quantity: Int): AlimentStateMeasureRaw(alimentStateId, measureUuid, quantity)
+class AlimentStateMeasure(alimentStateUuid: String, measureUuid: String, quantity: Int): AlimentStateMeasureRaw(alimentStateUuid, measureUuid, quantity)
 
 @Entity(
-    primaryKeys = ["alimentStateId", "measureUuid"],
+    primaryKeys = ["alimentStateUuid", "measureUuid"],
     foreignKeys = [
         ForeignKey(
         entity = AlimentStateRaw::class,
         parentColumns = ["id"],
-        childColumns = ["alimentStateId"],
+        childColumns = ["alimentStateUuid"],
         onDelete = ForeignKey.CASCADE
     ), ForeignKey(
         entity = MeasureRaw::class,
@@ -19,12 +19,13 @@ class AlimentStateMeasure(alimentStateId: Int, measureUuid: String, quantity: In
         onDelete = ForeignKey.CASCADE
     )],
     indices = [
-        Index(value=["alimentStateId"]),
+        Index(value=["alimentStateUuid"]),
         Index(value=["measureUuid"])
     ]
 )
 open class AlimentStateMeasureRaw (
-    var alimentStateId: Int,
+    var alimentStateUuid: String,
     var measureUuid: String,
+    // quantity in g
     var quantity: Int
 )

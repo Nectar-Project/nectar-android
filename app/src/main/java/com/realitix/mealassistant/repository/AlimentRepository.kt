@@ -3,10 +3,7 @@ package com.realitix.mealassistant.repository
 import android.content.Context
 import androidx.lifecycle.LiveData
 import com.realitix.mealassistant.database.MealDatabase
-import com.realitix.mealassistant.database.entity.Aliment
-import com.realitix.mealassistant.database.entity.AlimentNameRaw
-import com.realitix.mealassistant.database.entity.AlimentRaw
-import com.realitix.mealassistant.database.entity.AlimentTagRaw
+import com.realitix.mealassistant.database.entity.*
 
 class AlimentRepository(val context: Context) {
 
@@ -34,6 +31,14 @@ class AlimentRepository(val context: Context) {
         return MealDatabase.getInstance(context).alimentTagDao().insert(alimentTag)
     }
 
+    fun insertAlimentState(alimentState: AlimentStateRaw): Long {
+        return MealDatabase.getInstance(context).alimentStateDao().insert(alimentState)
+    }
+
+    fun insertAlimentStateMeasure(alimentStateMeasure: AlimentStateMeasureRaw) {
+        return MealDatabase.getInstance(context).alimentStateMeasureDao().insert(alimentStateMeasure)
+    }
+
     companion object {
         private var instance: AlimentRepository? = null
         @Synchronized
@@ -41,7 +46,7 @@ class AlimentRepository(val context: Context) {
             if (instance == null) {
                 instance = AlimentRepository(context)
             }
-            return instance as AlimentRepository
+            return instance!!
         }
     }
 }

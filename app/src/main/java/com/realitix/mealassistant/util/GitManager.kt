@@ -1,6 +1,5 @@
 package com.realitix.mealassistant.util
 
-import android.util.Log
 import com.realitix.mealassistant.database.entity.GitCredentials
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.ResetCommand
@@ -12,20 +11,7 @@ import java.io.File
 
 
 class GitManager(private val repoDir: File, private val url: String, private val credentials: GitCredentials?) {
-    enum class DiffType {
-        UNKNOW, ALIMENT, RECEIPE, MEAL, MEASURE, TAG
-    }
-
-    private fun mapToDiffType(str: String): DiffType {
-        return when(str) {
-            "aliments" -> DiffType.ALIMENT
-            "receipes" -> DiffType.RECEIPE
-            "meals" -> DiffType.MEAL
-            "measures" -> DiffType.MEASURE
-            "tags" -> DiffType.TAG
-            else -> DiffType.UNKNOW
-        }
-    }
+    private fun mapToDiffType(str: String): EntityType = EntityType.values().find { it.folderName == str } ?: EntityType.UNKNOW
 
     private fun splitPath(str: String): List<String> {
         val l = str.split("/")
@@ -38,9 +24,8 @@ class GitManager(private val repoDir: File, private val url: String, private val
     // Contains list of uuid
     class DiffResult(
         val hasResult: Boolean,
-        val adds: List<Pair<DiffType, String>>,
-        val updates: List<Pair<DiffType, String>>,
-        val deletes: List<Pair<DiffType, String>>
+        val updates: List<Pair<EntityType, String>>,
+        val deletes: List<Pair<EntityType, String>>
     )
 
     private val git: Git by lazy {
@@ -87,28 +72,23 @@ class GitManager(private val repoDir: File, private val url: String, private val
             .call()
 
         val hasResult = entries.size > 0
-        val adds: ArrayList<Pair<DiffType, String>> = ArrayList()
-        val updates: ArrayList<Pair<DiffType, String>> = ArrayList()
-        val deletes: ArrayList<Pair<DiffType, String>> = ArrayList()
+        val updates: ArrayList<Pair<EntityType, String>> = ArrayList()
+        val deletes: ArrayList<Pair<EntityType, String>> = ArrayList()
         for(entry in entries) {
             when(entry.changeType) {
-                DiffEntry.ChangeType.ADD -> {
+                DiffEntry.ChangeType.ADD, DiffEntry.ChangeType.MODIFY -> {
                     val splitted = splitPath(entry.newPath)
-                    adds.add(mapToDiffType(splitted[0]) to splitted[1])
+                    updates.add(mapToDiffType(splitted[0]) to splitted[1])
                 }
                 DiffEntry.ChangeType.DELETE -> {
                     val splitted = splitPath(entry.oldPath)
                     deletes.add(mapToDiffType(splitted[0]) to splitted[1])
                 }
-                DiffEntry.ChangeType.MODIFY -> {
-                    val splitted = splitPath(entry.newPath)
-                    updates.add(mapToDiffType(splitted[0]) to splitted[1])
-                }
                 else -> {}
             }
         }
 
-        return DiffResult(hasResult, adds, updates, deletes)
+        return DiffResult(hasResult, updates, deletes)
     }
 
     private fun getBranch(rev: String): CanonicalTreeParser {

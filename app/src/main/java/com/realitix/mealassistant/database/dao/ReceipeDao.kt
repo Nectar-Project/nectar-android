@@ -25,7 +25,11 @@ interface ReceipeDao {
 
     @Transaction
     @Query("SELECT * FROM ReceipeRaw WHERE uuid=:uuid")
-    fun get(uuid: String): LiveData<Receipe>
+    fun getLive(uuid: String): LiveData<Receipe>
+
+    @Transaction
+    @Query("SELECT * FROM ReceipeRaw WHERE uuid=:uuid")
+    fun get(uuid: String): Receipe?
 
     @Update
     suspend fun update(receipe: ReceipeRaw)
@@ -38,7 +42,10 @@ interface ReceipeDao {
     suspend fun has(uuid: String): Receipe?
 
     @Insert
-    suspend fun insert(receipe: ReceipeRaw)
+    suspend fun insertSuspended(receipe: ReceipeRaw)
+
+    @Insert
+    fun insert(receipe: ReceipeRaw)
 
     @Insert
     suspend fun insertName(receipeName: ReceipeNameRaw)

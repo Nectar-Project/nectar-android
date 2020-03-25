@@ -10,5 +10,8 @@ import com.realitix.mealassistant.database.entity.ReceipeStepAlimentRaw
 @Dao
 interface ReceipeStepAlimentDao {
     @Insert
-    suspend fun insert(receipeStepAliment: ReceipeStepAlimentRaw): Long
+    suspend fun insertSuspended(receipeStepAliment: ReceipeStepAlimentRaw)
+
+    @Insert
+    fun insert(receipeStepAliment: ReceipeStepAlimentRaw)
 }

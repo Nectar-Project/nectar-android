@@ -41,7 +41,8 @@ import java.io.File
         StateNameRaw::class,
         TagRaw::class,
         TagNameRaw::class,
-        UtensilRaw::class
+        UtensilRaw::class,
+        UtensilNameRaw::class
     ],
     exportSchema = false,
     version = 4
@@ -49,15 +50,28 @@ import java.io.File
 abstract class MealDatabase : RoomDatabase() {
     abstract fun alimentDao(): AlimentDao
     abstract fun alimentNameDao(): AlimentNameDao
+    abstract fun alimentStateDao(): AlimentStateDao
+    abstract fun alimentStateMeasureDao(): AlimentStateMeasureDao
     abstract fun alimentTagDao(): AlimentTagDao
     abstract fun gitRepositoryDao(): GitRepositoryDao
-    abstract fun mealDao(): MealDao
-    abstract fun receipeDao(): ReceipeDao
-    abstract fun receipeStepDao(): ReceipeStepDao
-    abstract fun receipeStepAlimentDao(): ReceipeStepAlimentDao
-    abstract fun receipeStepReceipeDao(): ReceipeStepReceipeDao
     abstract fun mealAlimentDao(): MealAlimentDao
+    abstract fun mealDao(): MealDao
     abstract fun mealReceipeDao(): MealReceipeDao
+    abstract fun measureDao(): MeasureDao
+    abstract fun measureNameDao(): MeasureNameDao
+    abstract fun receipeDao(): ReceipeDao
+    abstract fun receipeNameDao(): ReceipeNameDao
+    abstract fun receipeTagDao(): ReceipeTagDao
+    abstract fun receipeUtensilDao(): ReceipeUtensilDao
+    abstract fun receipeStepAlimentDao(): ReceipeStepAlimentDao
+    abstract fun receipeStepDao(): ReceipeStepDao
+    abstract fun receipeStepReceipeDao(): ReceipeStepReceipeDao
+    abstract fun stateDao(): StateDao
+    abstract fun stateNameDao(): StateNameDao
+    abstract fun tagDao(): TagDao
+    abstract fun tagNameDao(): TagNameDao
+    abstract fun utensilDao(): UtensilDao
+    abstract fun utensilNameDao(): UtensilNameDao
 
     companion object {
         private var instance: MealDatabase? = null

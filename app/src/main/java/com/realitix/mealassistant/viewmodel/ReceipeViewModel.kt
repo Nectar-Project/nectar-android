@@ -16,15 +16,9 @@ class ReceipeViewModel constructor(val repository: ReceipeRepository, receipeUui
     fun updateReceipeName(newName: String) {
         val r = receipe.value!!.getReceipeName()
         r.name = newName
-        GlobalScope.launch {
+        viewModelScope.launch {
             repository.updateReceipeName(r)
         }
     }
-
-    fun createStep(description: String) {
-        val step = ReceipeStep(generateUuid(), receipe.value!!.uuid, 0, description, 0)
-        GlobalScope.launch {
-            repository.createReceipeStep(step)
-        }
-    }
+    fun createStep(description: String) = viewModelScope.launch { repository.createReceipeStep(ReceipeStep(generateUuid(), receipe.value!!.uuid, 0, description, 0)) }
 }

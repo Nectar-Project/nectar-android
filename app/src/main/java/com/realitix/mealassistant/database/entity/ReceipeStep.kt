@@ -29,5 +29,6 @@ open class ReceipeStepRaw(
     var receipeUuid: String,
     var order: Int,
     var description: String,
+    // Duration in minutes
     var duration: Int
 )
