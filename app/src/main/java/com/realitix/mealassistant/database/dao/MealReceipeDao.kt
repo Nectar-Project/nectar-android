@@ -8,7 +8,4 @@ import com.realitix.mealassistant.database.entity.MealReceipeRaw
 import com.realitix.mealassistant.database.entity.Receipe
 
 @Dao
-interface MealReceipeDao {
-    @Insert
-    suspend fun insert(mealReceipe: MealReceipeRaw): Long
-}
+interface MealReceipeDao: BaseDao<MealReceipeRaw>

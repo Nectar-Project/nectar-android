@@ -9,7 +9,7 @@ class AlimentStateMeasure(alimentStateUuid: String, measureUuid: String, quantit
     foreignKeys = [
         ForeignKey(
         entity = AlimentStateRaw::class,
-        parentColumns = ["id"],
+        parentColumns = ["uuid"],
         childColumns = ["alimentStateUuid"],
         onDelete = ForeignKey.CASCADE
     ), ForeignKey(

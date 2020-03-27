@@ -21,11 +21,11 @@ class MainActivity: AppCompatActivity() {
     }
 
     private fun startAlimentUpdaterWorker() {
-        val constraints = Constraints.Builder()
+        /*val constraints = Constraints.Builder()
             .setRequiresStorageNotLow(true)
             .build()
 
-        /*val alimentUpdaterWork = OneTimeWorkRequestBuilder<AlimentUpdaterWorker>()
+        val alimentUpdaterWork = OneTimeWorkRequestBuilder<AlimentUpdaterWorker>()
             .setConstraints(constraints)
             .build()
 

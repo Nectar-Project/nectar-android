@@ -45,7 +45,7 @@ abstract class NameBaseParser<U, V>: ParserInterface {
         val root = Parser().parse(FileReader(finalFile)) as JsonObject
 
         // uuid
-        val uuid = root.string("uuid")!!
+        val jsonUuid = root.string("uuid")!!
 
         // names
         val names: MutableMap<String, String> = mutableMapOf()
@@ -53,6 +53,6 @@ abstract class NameBaseParser<U, V>: ParserInterface {
             names[jsonName.key] = jsonName.value as String
         }
 
-        return ParseResult(uuid, names)
+        return ParseResult(jsonUuid, names)
     }
 }

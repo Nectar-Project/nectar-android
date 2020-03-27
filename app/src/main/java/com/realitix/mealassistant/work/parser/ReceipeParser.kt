@@ -55,10 +55,29 @@ class ReceipeParser: ParserInterface {
 
         // steps
         for(step in parseResult.steps) {
-            repo.insertReceipeStep(ReceipeStepRaw(step.uuid, parseResult.uuid, 0, step.description, step.duration))
+            repo.insertReceipeStep(
+                ReceipeStepRaw(
+                    step.uuid,
+                    parseResult.uuid,
+                    0,
+                    step.description,
+                    step.duration
+                )
+            )
             // aliments
-            for((alimentUuid, quantity) in step.aliments) {
-                repo.insertReceipeStepAliment(ReceipeStepAlimentRaw(alimentUuid, step.uuid, quantity))
+            for ((alimentUuid, quantity) in step.aliments) {
+                repo.insertReceipeStepAliment(
+                    ReceipeStepAlimentRaw(
+                        alimentUuid,
+                        step.uuid,
+                        quantity
+                    )
+                )
+            }
+
+            // receipes
+            for (receipeUuid in step.receipes) {
+                repo.insertReceipeStepReceipe(ReceipeStepReceipeRaw(receipeUuid, step.uuid))
             }
         }
     }
@@ -73,10 +92,10 @@ class ReceipeParser: ParserInterface {
         val uuid = root.string("uuid")!!
 
         // nb_people
-        val nbPeople = root.string("nb_people")!!
+        val nbPeople = root.int("nb_people")!!
 
         // stars
-        val stars = root.string("stars")!!
+        val stars = root.int("stars")!!
 
         // names
         val names: MutableMap<String, String> = mutableMapOf()
@@ -99,26 +118,28 @@ class ReceipeParser: ParserInterface {
         // steps
         val steps: ArrayList<Step> = ArrayList()
         for(jsonStep in root.array<JsonObject>("steps")!!) {
-            val stepUuid = jsonStep.string("step_uuid")
-            val previousStepUuid = jsonStep.string("previous_step_uuid")
-            val description = jsonStep.string("description")
-            val jsonStateValue = jsonState.value as JsonObject
+            val stepUuid = jsonStep.string("step_uuid")!!
+            val previousStepUuid = jsonStep.string("previous_step_uuid")!!
+            val description = jsonStep.string("description")!!
+            val duration = jsonStep.int("duration")!!
 
-            // measures
-            val measures: MutableMap<String, Int> = mutableMapOf()
-            for(jsonMeasure in jsonStateValue.obj("measures")!!.entries) {
-                val measureUuid = jsonMeasure.key
-                val measureValue = jsonMeasure.value as Int
-                measures[measureUuid] = measureValue
+            // aliments
+            val aliments: MutableMap<String, Int> = mutableMapOf()
+            for(jsonAliment in root.obj("aliments")!!.entries) {
+                aliments[jsonAliment.key] = jsonAliment.value as Int
             }
 
-            // nutrition
-            val nutrition = klaxon.parseFromJsonObject<Nutrition>(jsonStateValue.obj("nutrition")!!)!!
+            // receipes
+            val receipes: ArrayList<String> = ArrayList()
+            for(jsonReceipe in jsonStep.array<String>("receipes")!!) {
+                receipes.add(jsonReceipe)
+            }
+
 
             // add to state array
-            states.add(State(stateUuid, measures, nutrition))
+            steps.add(Step(stepUuid, previousStepUuid, description, duration, aliments, receipes))
         }
 
-        return ParseResult(uuid, names, altNames, tags, states)
+        return ParseResult(uuid, names, nbPeople, stars, tags, utensils, steps)
     }
 }

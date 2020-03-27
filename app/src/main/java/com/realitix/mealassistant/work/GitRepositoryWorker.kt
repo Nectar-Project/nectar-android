@@ -18,7 +18,9 @@ class GitRepositoryWorker(val context: Context, workerParams: WorkerParameters)
         EntityType.TAG to TagParser(),
         EntityType.MEASURE to MeasureParser(),
         EntityType.ALIMENT to AlimentParser(),
-        EntityType.UTENSIL to UtensilParser()
+        EntityType.UTENSIL to UtensilParser(),
+        EntityType.RECEIPE to ReceipeParser(),
+        EntityType.MEAL to MealParser()
     )
 
     override fun doWork(): Result {

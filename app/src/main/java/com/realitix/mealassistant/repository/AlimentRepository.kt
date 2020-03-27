@@ -31,7 +31,7 @@ class AlimentRepository(val context: Context) {
         return MealDatabase.getInstance(context).alimentTagDao().insert(alimentTag)
     }
 
-    fun insertAlimentState(alimentState: AlimentStateRaw): Long {
+    fun insertAlimentState(alimentState: AlimentStateRaw) {
         return MealDatabase.getInstance(context).alimentStateDao().insert(alimentState)
     }
 

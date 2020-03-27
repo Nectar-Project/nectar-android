@@ -9,10 +9,7 @@ import com.realitix.mealassistant.database.entity.GitRepositoryRaw
 import com.realitix.mealassistant.database.entity.ReceipeStepReceipeRaw
 
 @Dao
-interface GitRepositoryDao {
+interface GitRepositoryDao: BaseDao<GitRepositoryRaw> {
     @Query("SELECT * FROM GitRepositoryRaw")
     fun list(): List<GitRepository>
-
-    @Update
-    fun update(repo: GitRepositoryRaw)
 }

@@ -78,6 +78,10 @@ class ReceipeRepository(val context: Context) {
         return MealDatabase.getInstance(context).receipeStepAlimentDao().insert(receipeStepAliment)
     }
 
+    fun insertReceipeStepReceipe(r: ReceipeStepReceipeRaw) {
+        return MealDatabase.getInstance(context).receipeStepReceipeDao().insert(r)
+    }
+
     suspend fun createReceipeName(receipeName: ReceipeNameRaw) {
         MealDatabase.getInstance(context).receipeDao().insertName(receipeName)
     }
@@ -90,7 +94,7 @@ class ReceipeRepository(val context: Context) {
         return MealDatabase.getInstance(context).receipeStepAlimentDao().insertSuspended(receipeStepAliment)
     }
 
-    suspend fun createReceipeStepReceipe(receipeStepReceipe: ReceipeStepReceipe): Long {
+    suspend fun createReceipeStepReceipe(receipeStepReceipe: ReceipeStepReceipe) {
         return MealDatabase.getInstance(context).receipeStepReceipeDao().insert(receipeStepReceipe)
     }
 

@@ -1,9 +1,5 @@
 package com.realitix.mealassistant.util
 
-import com.realitix.mealassistant.database.dao.MealAlimentDao
-import com.realitix.mealassistant.database.dao.MealReceipeDao
-import com.realitix.mealassistant.database.dao.ReceipeStepAlimentDao
-import com.realitix.mealassistant.database.dao.ReceipeStepReceipeDao
 import com.realitix.mealassistant.database.entity.MealAliment
 import com.realitix.mealassistant.database.entity.MealReceipe
 import com.realitix.mealassistant.database.entity.ReceipeStepAliment
