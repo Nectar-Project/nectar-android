@@ -23,36 +23,34 @@ class AlimentSynchronizer: BaseSynchronizer<AlimentSynchronizer.ParseResult, Ali
     class State(val uuid: String, val measures: Map<String, Int>, val nutrition: Nutrition)
 
     override fun getEntityType(): EntityType = EntityType.ALIMENT
+    override fun getParseResult(context: Context, repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(context, repositoryName, uuid)
     override fun getRepository(context: Context): AlimentRepository = AlimentRepository.getInstance(context)
 
-    override fun fromGitToDb(context: Context, repositoryName: String, uuid: String) {
-        val aRepo = getRepository(context)
-        val parseResult = getParseResult<ParseResult>(context, repositoryName, uuid)
-
+    override fun updateDb(repo: AlimentRepository, parseResult: ParseResult) {
         // Create aliment only if not exists
-        if(aRepo.getAliment(parseResult.uuid) == null) {
-            aRepo.insertAliment(AlimentRaw(parseResult.uuid))
+        if(repo.getAliment(parseResult.uuid) == null) {
+            repo.insertAliment(AlimentRaw(parseResult.uuid))
         }
 
         // add names
         for((lang, name) in parseResult.names) {
-            aRepo.insertAlimentName(AlimentNameRaw(parseResult.uuid, lang, name))
+            repo.insertAlimentName(AlimentNameRaw(parseResult.uuid, lang, name))
         }
 
         // TODO add alternative names
 
         // tags
         for(tagUuid in parseResult.tags) {
-            aRepo.insertAlimentTag(AlimentTagRaw(parseResult.uuid, tagUuid))
+            repo.insertAlimentTag(AlimentTagRaw(parseResult.uuid, tagUuid))
         }
 
         // states
         for(state in parseResult.states) {
             // nutrition
             val alimentStateUuid = MealUtil.generateUuid()
-            aRepo.insertAlimentState(AlimentStateRaw(alimentStateUuid, parseResult.uuid, state.uuid, state.nutrition))
+            repo.insertAlimentState(AlimentStateRaw(alimentStateUuid, parseResult.uuid, state.uuid, state.nutrition))
             for((measureUuid, quantity) in state.measures) {
-                aRepo.insertAlimentStateMeasure(AlimentStateMeasureRaw(alimentStateUuid, measureUuid, quantity))
+                repo.insertAlimentStateMeasure(AlimentStateMeasureRaw(alimentStateUuid, measureUuid, quantity))
             }
         }
     }

@@ -12,10 +12,9 @@ abstract class NameBaseSynchronizer<U, V>: BaseSynchronizer<NameBaseSynchronizer
     abstract fun getNew(uuid: String): U
     abstract fun getNewName(uuid: String, lang: String, name: String): V
 
-    override fun fromGitToDb(context: Context, repositoryName: String, uuid: String) {
-        val repo = getRepository(context)
-        val parseResult = getParseResult<ParseResult>(context, repositoryName, uuid)
+    override fun getParseResult(context: Context, repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(context, repositoryName, uuid)
 
+    override fun updateDb(repo: NameRepositoryInterface<U, V>, parseResult: ParseResult) {
         // Create tag only if not exists
         if(repo.getRaw(parseResult.uuid) == null) {
             repo.insert(getNew(parseResult.uuid))

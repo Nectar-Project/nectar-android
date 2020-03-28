@@ -4,9 +4,10 @@ import android.content.Context
 import com.beust.klaxon.Klaxon
 import com.realitix.mealassistant.database.entity.*
 import com.realitix.mealassistant.repository.MealRepository
+import com.realitix.mealassistant.util.EntityType
 import java.io.File
 
-class MealSynchronizer: SynchronizerInterface {
+class MealSynchronizer: BaseSynchronizer<MealSynchronizer.ParseResult, MealRepository>() {
     data class ParseResult(
         val uuid: String,
         val nbPeople: Int,
@@ -16,10 +17,11 @@ class MealSynchronizer: SynchronizerInterface {
         val receipes: List<String>
     )
 
-    override fun fromGitToDb(context: Context, repositoryName: String, uuid: String) {
-        val repo = MealRepository.getInstance(context)
-        val parseResult = parse(getFileContent(context, repositoryName, uuid))
+    override fun getEntityType(): EntityType = EntityType.MEAL
+    override fun getParseResult(context: Context, repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(context, repositoryName, uuid)
+    override fun getRepository(context: Context): MealRepository = MealRepository.getInstance(context)
 
+    override fun updateDb(repo: MealRepository, parseResult: ParseResult) {
         // Create meal only if not exists
         if(repo.getMeal(parseResult.uuid) == null) {
             repo.insertMeal(MealRaw(parseResult.uuid, parseResult.timestamp, parseResult.nbPeople, parseResult.description))
@@ -34,16 +36,5 @@ class MealSynchronizer: SynchronizerInterface {
         for (receipeUuid in parseResult.receipes) {
             repo.insertMealReceipe(MealReceipeRaw(receipeUuid, parseResult.uuid))
         }
-    }
-
-    fun getFileContent(context: Context, repositoryName: String, uuid: String): String {
-        val repoFolder = File(context.filesDir, repositoryName)
-        val mealFolder = File(repoFolder, "meals")
-        val mealFile = File(mealFolder, uuid)
-        return mealFile.readText()
-    }
-
-    fun parse(json: String): ParseResult {
-        return Klaxon().parse<ParseResult>(json)!!
     }
 }

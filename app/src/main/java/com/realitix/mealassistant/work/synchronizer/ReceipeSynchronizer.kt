@@ -30,12 +30,9 @@ class ReceipeSynchronizer: BaseSynchronizer<ReceipeSynchronizer.ParseResult, Rec
     )
 
     override fun getEntityType(): EntityType = EntityType.RECEIPE
+    override fun getParseResult(context: Context, repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(context, repositoryName, uuid)
     override fun getRepository(context: Context): ReceipeRepository = ReceipeRepository.getInstance(context)
-
-    override fun fromGitToDb(context: Context, repositoryName: String, uuid: String) {
-        val repo = getRepository(context)
-        val parseResult = getParseResult<ParseResult>(context, repositoryName, uuid)
-
+    override fun updateDb(repo: ReceipeRepository, parseResult: ParseResult) {
         // Create receipe only if not exists
         if(repo.getReceipe(parseResult.uuid) == null) {
             repo.insertReceipe(ReceipeRaw(parseResult.uuid, parseResult.nbPeople, parseResult.stars))
@@ -84,6 +81,4 @@ class ReceipeSynchronizer: BaseSynchronizer<ReceipeSynchronizer.ParseResult, Rec
             }
         }
     }
-
-
 }

@@ -8,7 +8,9 @@ import java.io.File
 abstract class BaseSynchronizer<P, R>: SynchronizerInterface {
 
     abstract fun getEntityType(): EntityType
+    abstract fun getParseResult(context: Context, repositoryName: String, uuid: String): P
     abstract fun getRepository(context: Context): R
+    abstract fun updateDb(repo: R, parseResult: P)
 
     fun readFile(context: Context, repositoryName: String, uuid: String): String {
         val repoFolder = File(context.filesDir, repositoryName)
@@ -21,7 +23,11 @@ abstract class BaseSynchronizer<P, R>: SynchronizerInterface {
         return Klaxon().parse<P>(json)!!
     }
 
-    inline fun <reified P> getParseResult(context: Context, repositoryName: String, uuid: String): P {
+    inline fun <reified P> getInnerParseResult(context: Context, repositoryName: String, uuid: String): P {
         return parse(readFile(context, repositoryName, uuid))
+    }
+
+    override fun fromGitToDb(context: Context, repositoryName: String, uuid: String) {
+        updateDb(getRepository(context), getParseResult(context, repositoryName, uuid))
     }
 }

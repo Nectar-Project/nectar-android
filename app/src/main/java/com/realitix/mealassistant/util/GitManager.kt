@@ -91,6 +91,10 @@ class GitManager(private val repoDir: File, private val url: String, private val
         return DiffResult(hasResult, updates, deletes)
     }
 
+    fun clone() {
+        git.toString()
+    }
+
     private fun getBranch(rev: String): CanonicalTreeParser {
         val treeParser = CanonicalTreeParser()
         val treeId = git.repository.resolve("$rev^{tree}")

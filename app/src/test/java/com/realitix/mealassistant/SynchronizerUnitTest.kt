@@ -1,26 +1,50 @@
 package com.realitix.mealassistant
 
+import android.content.Context
+import com.realitix.mealassistant.util.GitManager
+import com.realitix.mealassistant.work.synchronizer.AlimentSynchronizer
 import com.realitix.mealassistant.work.synchronizer.MealSynchronizer
+import org.junit.AfterClass
+import org.junit.Assert.assertEquals
+import org.junit.BeforeClass
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mock
+import org.mockito.Mockito.`when`
+import org.mockito.runners.MockitoJUnitRunner
+import java.io.File
 
-import org.junit.Assert.*
-import org.junit.internal.Classes.getClass
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.util.stream.Collectors
+
+private const val TEST_RESSOURCES_DIR = "src/test/resources/synchronizer"
+private const val TEST_REPOSITORY_URL = "https://github.com/Nectar-Project/nectar-data.git"
 
 
+@RunWith(MockitoJUnitRunner::class)
 class SynchronizerUnitTest {
+    companion object {
+        val repositoryName = java.util.UUID.randomUUID().toString()
+        lateinit var repositoryFile: File
 
-    private fun getRessourceFileAsString(filename: String): String {
-        val inputStream = SynchronizerUnitTest::class.java.getResourceAsStream(filename)!!
-        return inputStream.bufferedReader().use(BufferedReader::readText)
+        @BeforeClass @JvmStatic fun setup() {
+            val ressourceDir = File(TEST_RESSOURCES_DIR)
+            repositoryFile = File(ressourceDir, repositoryName)
+            GitManager(repositoryFile, TEST_REPOSITORY_URL, null).clone()
+        }
+
+        @AfterClass @JvmStatic fun teardown() {
+            repositoryFile.deleteRecursively()
+        }
     }
+    @Mock
+    private lateinit var mockContext: Context
+
 
     @Test
-    fun parse() {
+    fun parseMeal() {
+        `when`(mockContext.filesDir).thenReturn(File(TEST_RESSOURCES_DIR))
+
         val ms = MealSynchronizer()
-        val result = ms.parse(getRessourceFileAsString("mealTest.json"))
+        val result = ms.getParseResult(mockContext, repositoryName, "eaa61552-e57c-49fa-a028-4ddc5b8d48c0")
         assertEquals("eaa61552-e57c-49fa-a028-4ddc5b8d48c0", result.uuid)
         assertEquals(2, result.nbPeople)
         assertEquals(1585322751, result.timestamp)
