@@ -1,13 +1,14 @@
-package com.realitix.mealassistant.work.parser
+package com.realitix.mealassistant.work.synchronizer
 
 import android.content.Context
 import com.realitix.mealassistant.database.entity.*
 import com.realitix.mealassistant.repository.MeasureRepository
 import com.realitix.mealassistant.repository.NameRepositoryInterface
+import com.realitix.mealassistant.util.EntityType
 
-class MeasureParser: NameBaseParser<MeasureRaw, MeasureNameRaw>() {
+class MeasureSynchronizer: NameBaseSynchronizer<MeasureRaw, MeasureNameRaw>() {
     override fun getRepository(context: Context): NameRepositoryInterface<MeasureRaw, MeasureNameRaw> = MeasureRepository.getInstance(context)
     override fun getNew(uuid: String): MeasureRaw = MeasureRaw(uuid)
     override fun getNewName(uuid: String, lang: String, name: String): MeasureNameRaw = MeasureNameRaw(uuid, lang, name)
-    override fun getSourceFolder(): String = "measures"
+    override fun getEntityType(): EntityType = EntityType.MEASURE
 }

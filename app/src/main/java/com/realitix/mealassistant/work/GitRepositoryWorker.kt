@@ -4,23 +4,22 @@ import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.realitix.mealassistant.repository.GitRepoRepository
-import com.realitix.mealassistant.repository.UtensilRepository
 import com.realitix.mealassistant.util.EntityType
 import com.realitix.mealassistant.util.GitManager
-import com.realitix.mealassistant.work.parser.*
+import com.realitix.mealassistant.work.synchronizer.*
 import java.io.File
 
 class GitRepositoryWorker(val context: Context, workerParams: WorkerParameters)
     : Worker(context, workerParams) {
 
     private val parserMap = mapOf(
-        EntityType.STATE to StateParser(),
-        EntityType.TAG to TagParser(),
-        EntityType.MEASURE to MeasureParser(),
-        EntityType.ALIMENT to AlimentParser(),
-        EntityType.UTENSIL to UtensilParser(),
-        EntityType.RECEIPE to ReceipeParser(),
-        EntityType.MEAL to MealParser()
+        EntityType.STATE to StateSynchronizer(),
+        EntityType.TAG to TagSynchronizer(),
+        EntityType.MEASURE to MeasureSynchronizer(),
+        EntityType.ALIMENT to AlimentSynchronizer(),
+        EntityType.UTENSIL to UtensilSynchronizer(),
+        EntityType.RECEIPE to ReceipeSynchronizer(),
+        EntityType.MEAL to MealSynchronizer()
     )
 
     override fun doWork(): Result {
@@ -39,7 +38,7 @@ class GitRepositoryWorker(val context: Context, workerParams: WorkerParameters)
                         // Sort the map by priority order
                         val sortedUpdates = diff.updates.sortedWith(compareBy{it.first.ordinal})
                         for((dt, uuid) in sortedUpdates) {
-                            parserMap[dt]?.update(context, repo.name, uuid)
+                            parserMap[dt]?.fromGitToDb(context, repo.name, uuid)
                         }
                     }
                     manager.sync()
