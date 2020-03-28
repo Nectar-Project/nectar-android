@@ -97,15 +97,4 @@ class ReceipeRepository(val context: Context) {
     suspend fun createReceipeStepReceipe(receipeStepReceipe: ReceipeStepReceipe) {
         return MealDatabase.getInstance(context).receipeStepReceipeDao().insert(receipeStepReceipe)
     }
-
-    companion object {
-        private var instance: ReceipeRepository? = null
-        @Synchronized
-        fun getInstance(context: Context): ReceipeRepository {
-            if (instance == null) {
-                instance = ReceipeRepository(context)
-            }
-            return instance!!
-        }
-    }
 }

@@ -3,7 +3,7 @@ package com.realitix.mealassistant.work
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.realitix.mealassistant.repository.GitRepoRepository
+import com.realitix.mealassistant.repository.*
 import com.realitix.mealassistant.util.EntityType
 import com.realitix.mealassistant.util.GitManager
 import com.realitix.mealassistant.work.synchronizer.*
@@ -13,17 +13,17 @@ class GitRepositoryWorker(val context: Context, workerParams: WorkerParameters)
     : Worker(context, workerParams) {
 
     private val parserMap = mapOf(
-        EntityType.STATE to StateSynchronizer(),
-        EntityType.TAG to TagSynchronizer(),
-        EntityType.MEASURE to MeasureSynchronizer(),
-        EntityType.ALIMENT to AlimentSynchronizer(),
-        EntityType.UTENSIL to UtensilSynchronizer(),
-        EntityType.RECEIPE to ReceipeSynchronizer(),
-        EntityType.MEAL to MealSynchronizer()
+        EntityType.STATE to StateSynchronizer(context, StateRepository(context)),
+        EntityType.TAG to TagSynchronizer(context, TagRepository(context)),
+        EntityType.MEASURE to MeasureSynchronizer(context, MeasureRepository(context)),
+        EntityType.ALIMENT to AlimentSynchronizer(context, AlimentRepository(context)),
+        EntityType.UTENSIL to UtensilSynchronizer(context, UtensilRepository(context)),
+        EntityType.RECEIPE to ReceipeSynchronizer(context, ReceipeRepository(context)),
+        EntityType.MEAL to MealSynchronizer(context, MealRepository(context))
     )
 
     override fun doWork(): Result {
-        val repos = GitRepoRepository.getInstance(context).listGitRepositories()
+        val repos = GitRepoRepository(context).listGitRepositories()
         for(repo in repos) {
             val currentTimestamp: Long = System.currentTimeMillis() / 1000
             if(currentTimestamp - repo.lastCheck >= repo.frequency) {
@@ -38,14 +38,14 @@ class GitRepositoryWorker(val context: Context, workerParams: WorkerParameters)
                         // Sort the map by priority order
                         val sortedUpdates = diff.updates.sortedWith(compareBy{it.first.ordinal})
                         for((dt, uuid) in sortedUpdates) {
-                            parserMap[dt]?.fromGitToDb(context, repo.name, uuid)
+                            parserMap[dt]?.fromGitToDb(repo.name, uuid)
                         }
                     }
                     manager.sync()
                 }
 
                 repo.lastCheck = currentTimestamp
-                GitRepoRepository.getInstance(context).updateGitRepository(repo)
+                GitRepoRepository(context).updateGitRepository(repo)
             }
         }
 

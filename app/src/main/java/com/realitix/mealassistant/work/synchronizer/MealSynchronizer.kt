@@ -7,7 +7,8 @@ import com.realitix.mealassistant.repository.MealRepository
 import com.realitix.mealassistant.util.EntityType
 import java.io.File
 
-class MealSynchronizer: BaseSynchronizer<MealSynchronizer.ParseResult, MealRepository>() {
+class MealSynchronizer(context: Context, repository: MealRepository):
+    BaseSynchronizer<MealSynchronizer.ParseResult, MealRepository>(context, repository) {
     data class ParseResult(
         val uuid: String,
         val nbPeople: Int,
@@ -19,7 +20,6 @@ class MealSynchronizer: BaseSynchronizer<MealSynchronizer.ParseResult, MealRepos
 
     override fun getEntityType(): EntityType = EntityType.MEAL
     override fun getParseResult(context: Context, repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(context, repositoryName, uuid)
-    override fun getRepository(context: Context): MealRepository = MealRepository.getInstance(context)
 
     override fun updateDb(repo: MealRepository, parseResult: ParseResult) {
         // Create meal only if not exists

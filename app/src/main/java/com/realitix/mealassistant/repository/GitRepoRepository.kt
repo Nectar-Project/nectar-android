@@ -13,15 +13,4 @@ class GitRepoRepository(val context: Context) {
     fun updateGitRepository(repo: GitRepository) {
         MealDatabase.getInstance(context).gitRepositoryDao().update(repo)
     }
-
-    companion object {
-        private var instance: GitRepoRepository? = null
-        @Synchronized
-        fun getInstance(context: Context): GitRepoRepository {
-            if (instance == null) {
-                instance = GitRepoRepository(context)
-            }
-            return instance!!
-        }
-    }
 }

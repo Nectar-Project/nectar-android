@@ -17,15 +17,4 @@ class UtensilRepository(val context: Context): NameRepositoryInterface<UtensilRa
     override fun getRaw(uuid: String): UtensilRaw? {
         return MealDatabase.getInstance(context).utensilDao().get(uuid)
     }
-
-    companion object {
-        private var instance: UtensilRepository? = null
-        @Synchronized
-        fun getInstance(context: Context): UtensilRepository {
-            if (instance == null) {
-                instance = UtensilRepository(context)
-            }
-            return instance!!
-        }
-    }
 }

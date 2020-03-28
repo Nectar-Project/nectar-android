@@ -9,7 +9,8 @@ import com.realitix.mealassistant.util.EntityType
 import java.io.File
 import java.io.FileReader
 
-class ReceipeSynchronizer: BaseSynchronizer<ReceipeSynchronizer.ParseResult, ReceipeRepository>() {
+class ReceipeSynchronizer(context: Context, repository: ReceipeRepository):
+    BaseSynchronizer<ReceipeSynchronizer.ParseResult, ReceipeRepository>(context, repository) {
     class ParseResult(
         val uuid: String,
         val names: Map<String, String>,
@@ -31,7 +32,7 @@ class ReceipeSynchronizer: BaseSynchronizer<ReceipeSynchronizer.ParseResult, Rec
 
     override fun getEntityType(): EntityType = EntityType.RECEIPE
     override fun getParseResult(context: Context, repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(context, repositoryName, uuid)
-    override fun getRepository(context: Context): ReceipeRepository = ReceipeRepository.getInstance(context)
+
     override fun updateDb(repo: ReceipeRepository, parseResult: ParseResult) {
         // Create receipe only if not exists
         if(repo.getReceipe(parseResult.uuid) == null) {

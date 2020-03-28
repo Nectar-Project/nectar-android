@@ -6,8 +6,8 @@ import com.realitix.mealassistant.repository.MeasureRepository
 import com.realitix.mealassistant.repository.NameRepositoryInterface
 import com.realitix.mealassistant.util.EntityType
 
-class MeasureSynchronizer: NameBaseSynchronizer<MeasureRaw, MeasureNameRaw>() {
-    override fun getRepository(context: Context): NameRepositoryInterface<MeasureRaw, MeasureNameRaw> = MeasureRepository.getInstance(context)
+class MeasureSynchronizer(context: Context, repository: MeasureRepository):
+    NameBaseSynchronizer<MeasureRaw, MeasureNameRaw>(context, repository) {
     override fun getNew(uuid: String): MeasureRaw = MeasureRaw(uuid)
     override fun getNewName(uuid: String, lang: String, name: String): MeasureNameRaw = MeasureNameRaw(uuid, lang, name)
     override fun getEntityType(): EntityType = EntityType.MEASURE

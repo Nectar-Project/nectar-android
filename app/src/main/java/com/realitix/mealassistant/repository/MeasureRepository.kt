@@ -17,15 +17,4 @@ class MeasureRepository(val context: Context): NameRepositoryInterface<MeasureRa
     override fun getRaw(uuid: String): MeasureRaw? {
         return MealDatabase.getInstance(context).measureDao().get(uuid)
     }
-
-    companion object {
-        private var instance: MeasureRepository? = null
-        @Synchronized
-        fun getInstance(context: Context): MeasureRepository {
-            if (instance == null) {
-                instance = MeasureRepository(context)
-            }
-            return instance!!
-        }
-    }
 }

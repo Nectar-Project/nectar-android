@@ -5,11 +5,10 @@ import com.beust.klaxon.Klaxon
 import com.realitix.mealassistant.util.EntityType
 import java.io.File
 
-abstract class BaseSynchronizer<P, R>: SynchronizerInterface {
+abstract class BaseSynchronizer<P, R>(private val context: Context, private val repository: R): SynchronizerInterface {
 
     abstract fun getEntityType(): EntityType
     abstract fun getParseResult(context: Context, repositoryName: String, uuid: String): P
-    abstract fun getRepository(context: Context): R
     abstract fun updateDb(repo: R, parseResult: P)
 
     fun readFile(context: Context, repositoryName: String, uuid: String): String {
@@ -27,7 +26,7 @@ abstract class BaseSynchronizer<P, R>: SynchronizerInterface {
         return parse(readFile(context, repositoryName, uuid))
     }
 
-    override fun fromGitToDb(context: Context, repositoryName: String, uuid: String) {
-        updateDb(getRepository(context), getParseResult(context, repositoryName, uuid))
+    override fun fromGitToDb(gitRepositoryName: String, uuid: String) {
+        updateDb(repository, getParseResult(context, gitRepositoryName, uuid))
     }
 }

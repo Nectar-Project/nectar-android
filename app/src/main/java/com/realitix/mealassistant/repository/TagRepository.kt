@@ -17,15 +17,4 @@ class TagRepository(val context: Context): NameRepositoryInterface<TagRaw, TagNa
     override fun getRaw(uuid: String): TagRaw? {
         return MealDatabase.getInstance(context).tagDao().get(uuid)
     }
-
-    companion object {
-        private var instance: TagRepository? = null
-        @Synchronized
-        fun getInstance(context: Context): TagRepository {
-            if (instance == null) {
-                instance = TagRepository(context)
-            }
-            return instance!!
-        }
-    }
 }

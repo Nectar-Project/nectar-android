@@ -38,15 +38,4 @@ class AlimentRepository(val context: Context) {
     fun insertAlimentStateMeasure(alimentStateMeasure: AlimentStateMeasureRaw) {
         return MealDatabase.getInstance(context).alimentStateMeasureDao().insert(alimentStateMeasure)
     }
-
-    companion object {
-        private var instance: AlimentRepository? = null
-        @Synchronized
-        fun getInstance(context: Context): AlimentRepository {
-            if (instance == null) {
-                instance = AlimentRepository(context)
-            }
-            return instance!!
-        }
-    }
 }

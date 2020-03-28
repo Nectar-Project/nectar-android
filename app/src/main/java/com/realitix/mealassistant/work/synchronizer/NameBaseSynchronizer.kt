@@ -3,7 +3,8 @@ package com.realitix.mealassistant.work.synchronizer
 import android.content.Context
 import com.realitix.mealassistant.repository.NameRepositoryInterface
 
-abstract class NameBaseSynchronizer<U, V>: BaseSynchronizer<NameBaseSynchronizer.ParseResult, NameRepositoryInterface<U, V>>() {
+abstract class NameBaseSynchronizer<U, V>(context: Context, repository: NameRepositoryInterface<U, V>):
+    BaseSynchronizer<NameBaseSynchronizer.ParseResult, NameRepositoryInterface<U, V>>(context, repository) {
     class ParseResult(
         val uuid: String,
         val names: Map<String, String>
@@ -11,7 +12,6 @@ abstract class NameBaseSynchronizer<U, V>: BaseSynchronizer<NameBaseSynchronizer
 
     abstract fun getNew(uuid: String): U
     abstract fun getNewName(uuid: String, lang: String, name: String): V
-
     override fun getParseResult(context: Context, repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(context, repositoryName, uuid)
 
     override fun updateDb(repo: NameRepositoryInterface<U, V>, parseResult: ParseResult) {

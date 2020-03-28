@@ -36,15 +36,4 @@ class MealRepository(val context: Context) {
     suspend fun createMealReceipe(receipe: MealReceipe) {
         return MealDatabase.getInstance(context).mealReceipeDao().insert(receipe)
     }
-
-    companion object {
-        private var instance: MealRepository? = null
-        @Synchronized
-        fun getInstance(context: Context): MealRepository {
-            if (instance == null) {
-                instance = MealRepository(context)
-            }
-            return instance!!
-        }
-    }
 }

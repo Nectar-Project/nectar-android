@@ -19,15 +19,4 @@ class StateRepository(val context: Context): NameRepositoryInterface<StateRaw, S
     override fun getRaw(uuid: String): StateRaw? {
         return MealDatabase.getInstance(context).stateDao().get(uuid)
     }
-
-    companion object {
-        private var instance: StateRepository? = null
-        @Synchronized
-        fun getInstance(context: Context): StateRepository {
-            if (instance == null) {
-                instance = StateRepository(context)
-            }
-            return instance!!
-        }
-    }
 }
