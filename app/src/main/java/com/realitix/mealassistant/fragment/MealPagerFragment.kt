@@ -29,7 +29,7 @@ class MealPagerFragment : Fragment() {
     private val viewModel: MealPagerViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                MealPagerViewModel(MealRepository.getInstance(requireContext()), timestamp)
+                MealPagerViewModel(MealRepository(requireContext()), timestamp)
             }
         }
     )

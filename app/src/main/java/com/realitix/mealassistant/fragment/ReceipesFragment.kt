@@ -25,7 +25,7 @@ class ReceipesFragment : Fragment() {
     private val viewModel: ReceipeListViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                ReceipeListViewModel(ReceipeRepository.getInstance(requireContext()))
+                ReceipeListViewModel(ReceipeRepository(requireContext()))
             }
         }
     )

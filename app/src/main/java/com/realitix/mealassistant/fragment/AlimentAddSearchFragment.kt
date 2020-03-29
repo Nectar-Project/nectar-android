@@ -29,7 +29,7 @@ class AlimentAddSearchFragment : Fragment() {
     private val viewModel: AlimentAddSearchViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                AlimentAddSearchViewModel(AlimentRepository.getInstance(requireContext()))
+                AlimentAddSearchViewModel(AlimentRepository(requireContext()))
             }
         }
     )

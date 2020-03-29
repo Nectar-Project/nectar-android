@@ -30,7 +30,7 @@ class ReceipeStepFragment : Fragment() {
     private val viewModel: ReceipeStepViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                ReceipeStepViewModel(ReceipeRepository.getInstance(requireContext()), receipeUuid, stepUuid)
+                ReceipeStepViewModel(ReceipeRepository(requireContext()), receipeUuid, stepUuid)
             }
         }
     )

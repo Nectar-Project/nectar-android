@@ -29,9 +29,9 @@ class AlimentAddQuantityFragment : Fragment() {
         factoryProducer = {
             RepositoryViewModelFactory {
                 AlimentAddQuantityViewModel(
-                    ReceipeRepository.getInstance(requireContext()),
-                    MealRepository.getInstance(requireContext()),
-                    AlimentRepository.getInstance(requireContext()),
+                    ReceipeRepository(requireContext()),
+                    MealRepository(requireContext()),
+                    AlimentRepository(requireContext()),
                     alimentUuid, objUuid, enumId
                 )
             }

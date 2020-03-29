@@ -25,7 +25,7 @@ class MealFragment : Fragment() {
     private val viewModel: MealViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                MealViewModel(MealRepository.getInstance(requireContext()), mealUuid)
+                MealViewModel(MealRepository(requireContext()), mealUuid)
             }
         }
     )

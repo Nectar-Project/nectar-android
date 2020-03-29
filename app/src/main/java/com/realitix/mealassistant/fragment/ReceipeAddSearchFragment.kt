@@ -34,8 +34,8 @@ class ReceipeAddSearchFragment : Fragment() {
         factoryProducer = {
             RepositoryViewModelFactory {
                 ReceipeAddSearchViewModel(
-                    ReceipeRepository.getInstance(requireContext()),
-                    MealRepository.getInstance(requireContext()),
+                    ReceipeRepository(requireContext()),
+                    MealRepository(requireContext()),
                     objUuid, enumId
                 )
             }
