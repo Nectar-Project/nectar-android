@@ -19,4 +19,26 @@ open class MealRaw(
     var timestamp: Long,
     var nb_people: Int,
     var description: String
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as MealRaw
+
+        if (uuid != other.uuid) return false
+        if (timestamp != other.timestamp) return false
+        if (nb_people != other.nb_people) return false
+        if (description != other.description) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = uuid.hashCode()
+        result = 31 * result + timestamp.hashCode()
+        result = 31 * result + nb_people
+        result = 31 * result + description.hashCode()
+        return result
+    }
+}

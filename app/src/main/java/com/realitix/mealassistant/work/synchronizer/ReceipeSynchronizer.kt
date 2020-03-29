@@ -1,13 +1,9 @@
 package com.realitix.mealassistant.work.synchronizer
 
 import android.content.Context
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
 import com.realitix.mealassistant.database.entity.*
 import com.realitix.mealassistant.repository.ReceipeRepository
 import com.realitix.mealassistant.util.EntityType
-import java.io.File
-import java.io.FileReader
 
 class ReceipeSynchronizer(context: Context, repository: ReceipeRepository):
     BaseSynchronizer<ReceipeSynchronizer.ParseResult, ReceipeRepository>(context, repository) {
@@ -22,8 +18,8 @@ class ReceipeSynchronizer(context: Context, repository: ReceipeRepository):
     )
 
     class Step(
-        val uuid: String,
-        val previousStepUuid: String,
+        val stepUuid: String,
+        val previousStepUuid: String? = null,
         val description: String,
         val duration: Int,
         val aliments: Map<String, Int>,
@@ -58,7 +54,7 @@ class ReceipeSynchronizer(context: Context, repository: ReceipeRepository):
         for(step in parseResult.steps) {
             repo.insertReceipeStep(
                 ReceipeStepRaw(
-                    step.uuid,
+                    step.stepUuid,
                     parseResult.uuid,
                     0,
                     step.description,
@@ -70,7 +66,7 @@ class ReceipeSynchronizer(context: Context, repository: ReceipeRepository):
                 repo.insertReceipeStepAliment(
                     ReceipeStepAlimentRaw(
                         alimentUuid,
-                        step.uuid,
+                        step.stepUuid,
                         quantity
                     )
                 )
@@ -78,7 +74,7 @@ class ReceipeSynchronizer(context: Context, repository: ReceipeRepository):
 
             // receipes
             for (receipeUuid in step.receipes) {
-                repo.insertReceipeStepReceipe(ReceipeStepReceipeRaw(receipeUuid, step.uuid))
+                repo.insertReceipeStepReceipe(ReceipeStepReceipeRaw(receipeUuid, step.stepUuid))
             }
         }
     }

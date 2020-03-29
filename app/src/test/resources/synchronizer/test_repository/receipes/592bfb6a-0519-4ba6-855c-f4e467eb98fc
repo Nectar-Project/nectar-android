@@ -1,0 +1,27 @@
+{
+    "uuid": "592bfb6a-0519-4ba6-855c-f4e467eb98fc",
+    "names": {
+        "fr": "Recette test",
+        "en": "Test receipe"
+    },
+    "nbPeople": 2,
+    "stars": 2,
+    "tags": [
+        "1f0ce536-a01d-4c7c-9412-d696920ea051"
+    ],
+    "utensils": [
+        "a70ac073-cee8-4e45-b88e-eaeecf186150"
+    ],
+    "steps": [
+        {
+            "stepUuid": "60d1b1a1-f4ab-4d8a-8b8b-dbb248b90318",
+            "previousStepUuid": null,
+            "description": "First step",
+            "duration": 10,
+            "aliments": {
+                "a7a12c60-1604-48ee-9991-0e4baa08006d": 100
+            },
+            "receipes": []
+        }
+    ]
+}

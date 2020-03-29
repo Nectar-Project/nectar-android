@@ -12,7 +12,7 @@ import java.io.File
 class GitRepositoryWorker(val context: Context, workerParams: WorkerParameters)
     : Worker(context, workerParams) {
 
-    private val parserMap = mapOf(
+    val synchronizerMap = mapOf(
         EntityType.STATE to StateSynchronizer(context, StateRepository(context)),
         EntityType.TAG to TagSynchronizer(context, TagRepository(context)),
         EntityType.MEASURE to MeasureSynchronizer(context, MeasureRepository(context)),
@@ -38,7 +38,7 @@ class GitRepositoryWorker(val context: Context, workerParams: WorkerParameters)
                         // Sort the map by priority order
                         val sortedUpdates = diff.updates.sortedWith(compareBy{it.first.ordinal})
                         for((dt, uuid) in sortedUpdates) {
-                            parserMap[dt]?.fromGitToDb(repo.name, uuid)
+                            synchronizerMap[dt]?.fromGitToDb(repo.name, uuid)
                         }
                     }
                     manager.sync()

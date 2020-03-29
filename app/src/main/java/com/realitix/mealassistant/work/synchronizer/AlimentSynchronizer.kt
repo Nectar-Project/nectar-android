@@ -16,12 +16,11 @@ class AlimentSynchronizer(context: Context, repository: AlimentRepository):
     class ParseResult(
         val uuid: String,
         val names: Map<String, String>, // lang=name
-        val altNames: Map<String, String>, // lang=name
         val tags: List<String>, // list of uuid
-        val states: List<State> // list of states
+        val states: Map<String, State> // list of states
     )
 
-    class State(val uuid: String, val measures: Map<String, Int>, val nutrition: Nutrition)
+    class State(val measures: Map<String, Int>, val nutrition: Nutrition)
 
     override fun getEntityType(): EntityType = EntityType.ALIMENT
     override fun getParseResult(context: Context, repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(context, repositoryName, uuid)
@@ -45,10 +44,10 @@ class AlimentSynchronizer(context: Context, repository: AlimentRepository):
         }
 
         // states
-        for(state in parseResult.states) {
+        for((stateUuid, state) in parseResult.states) {
             // nutrition
             val alimentStateUuid = MealUtil.generateUuid()
-            repo.insertAlimentState(AlimentStateRaw(alimentStateUuid, parseResult.uuid, state.uuid, state.nutrition))
+            repo.insertAlimentState(AlimentStateRaw(alimentStateUuid, parseResult.uuid, stateUuid, state.nutrition))
             for((measureUuid, quantity) in state.measures) {
                 repo.insertAlimentStateMeasure(AlimentStateMeasureRaw(alimentStateUuid, measureUuid, quantity))
             }
