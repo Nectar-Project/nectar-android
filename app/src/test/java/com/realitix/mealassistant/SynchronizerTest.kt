@@ -119,7 +119,7 @@ class SynchronizerUnitTest {
         inOrder.verify(repository).insertReceipeName(ReceipeNameRaw(receipeUuid, "en", nameEn))
         inOrder.verify(repository).insertReceipeTag(ReceipeTagRaw(receipeUuid, tagUuid))
         inOrder.verify(repository).insertReceipeUtensil(ReceipeUtensilRaw(receipeUuid, utensilUuid))
-        inOrder.verify(repository).insertReceipeStep(ReceipeStepRaw(stepUuid, receipeUuid, 0, stepDescription, stepDuration))
+        inOrder.verify(repository).insertReceipeStep(ReceipeStepRaw(stepUuid, receipeUuid, 1, stepDescription, stepDuration))
         inOrder.verify(repository).insertReceipeStepAliment(ReceipeStepAlimentRaw(stepAlimentUuid, stepUuid, stepAlimentQuantity))
         inOrder.verify(repository).insertReceipeStepReceipe(ReceipeStepReceipeRaw(stepReceipeUuid, stepUuid))
     }
