@@ -25,4 +25,22 @@ class ReceipeUtensil(receipeUuid: String, utensilUuid: String): ReceipeUtensilRa
         Index(value=["utensilUuid"])
     ]
 )
-open class ReceipeUtensilRaw(var receipeUuid: String, var utensilUuid: String)
+open class ReceipeUtensilRaw(var receipeUuid: String, var utensilUuid: String) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ReceipeUtensilRaw
+
+        if (receipeUuid != other.receipeUuid) return false
+        if (utensilUuid != other.utensilUuid) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = receipeUuid.hashCode()
+        result = 31 * result + utensilUuid.hashCode()
+        return result
+    }
+}

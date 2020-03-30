@@ -26,4 +26,22 @@ class ReceipeStepReceipe(receipeUuid: String, stepUuid: String): ReceipeStepRece
         Index(value=["stepUuid"])
     ]
 )
-open class ReceipeStepReceipeRaw(var receipeUuid: String, var stepUuid: String)
+open class ReceipeStepReceipeRaw(var receipeUuid: String, var stepUuid: String) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ReceipeStepReceipeRaw
+
+        if (receipeUuid != other.receipeUuid) return false
+        if (stepUuid != other.stepUuid) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = receipeUuid.hashCode()
+        result = 31 * result + stepUuid.hashCode()
+        return result
+    }
+}

@@ -31,4 +31,28 @@ open class ReceipeStepRaw(
     var description: String,
     // Duration in minutes
     var duration: Int
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ReceipeStepRaw
+
+        if (uuid != other.uuid) return false
+        if (receipeUuid != other.receipeUuid) return false
+        if (order != other.order) return false
+        if (description != other.description) return false
+        if (duration != other.duration) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = uuid.hashCode()
+        result = 31 * result + receipeUuid.hashCode()
+        result = 31 * result + order
+        result = 31 * result + description.hashCode()
+        result = 31 * result + duration
+        return result
+    }
+}

@@ -29,4 +29,24 @@ open class ReceipeRaw(
     var uuid: String,
     var nb_people: Int,
     var stars: Int
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ReceipeRaw
+
+        if (uuid != other.uuid) return false
+        if (nb_people != other.nb_people) return false
+        if (stars != other.stars) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = uuid.hashCode()
+        result = 31 * result + nb_people
+        result = 31 * result + stars
+        return result
+    }
+}

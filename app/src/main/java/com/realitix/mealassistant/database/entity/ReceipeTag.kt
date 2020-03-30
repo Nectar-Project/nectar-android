@@ -28,4 +28,22 @@ class ReceipeTag(receipeUuid: String, tagUuid: String): ReceipeTagRaw(receipeUui
 open class ReceipeTagRaw (
     var receipeUuid: String,
     var tagUuid: String
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ReceipeTagRaw
+
+        if (receipeUuid != other.receipeUuid) return false
+        if (tagUuid != other.tagUuid) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = receipeUuid.hashCode()
+        result = 31 * result + tagUuid.hashCode()
+        return result
+    }
+}
