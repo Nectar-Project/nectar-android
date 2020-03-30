@@ -36,8 +36,6 @@ class AlimentSynchronizer(context: Context, repository: AlimentRepository):
             repo.insertAlimentName(AlimentNameRaw(parseResult.uuid, lang, name))
         }
 
-        // TODO add alternative names
-
         // tags
         for(tagUuid in parseResult.tags) {
             repo.insertAlimentTag(AlimentTagRaw(parseResult.uuid, tagUuid))

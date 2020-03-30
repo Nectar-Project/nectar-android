@@ -3,11 +3,13 @@ package com.realitix.mealassistant
 import android.content.Context
 import androidx.work.WorkerParameters
 import com.realitix.mealassistant.database.entity.*
+import com.realitix.mealassistant.repository.AlimentRepository
 import com.realitix.mealassistant.repository.MealRepository
 import com.realitix.mealassistant.repository.ReceipeRepository
 import com.realitix.mealassistant.util.EntityType
 import com.realitix.mealassistant.util.GitManager
 import com.realitix.mealassistant.work.GitRepositoryWorker
+import com.realitix.mealassistant.work.synchronizer.AlimentSynchronizer
 import com.realitix.mealassistant.work.synchronizer.MealSynchronizer
 import com.realitix.mealassistant.work.synchronizer.ReceipeSynchronizer
 import junit.framework.Assert
@@ -15,6 +17,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.Mockito.*
 import org.mockito.runners.MockitoJUnitRunner
 import java.io.File
@@ -119,8 +122,38 @@ class SynchronizerUnitTest {
         inOrder.verify(repository).insertReceipeName(ReceipeNameRaw(receipeUuid, "en", nameEn))
         inOrder.verify(repository).insertReceipeTag(ReceipeTagRaw(receipeUuid, tagUuid))
         inOrder.verify(repository).insertReceipeUtensil(ReceipeUtensilRaw(receipeUuid, utensilUuid))
-        inOrder.verify(repository).insertReceipeStep(ReceipeStepRaw(stepUuid, receipeUuid, 1, stepDescription, stepDuration))
+        inOrder.verify(repository).insertReceipeStep(ReceipeStepRaw(stepUuid, receipeUuid, 0, stepDescription, stepDuration))
         inOrder.verify(repository).insertReceipeStepAliment(ReceipeStepAlimentRaw(stepAlimentUuid, stepUuid, stepAlimentQuantity))
         inOrder.verify(repository).insertReceipeStepReceipe(ReceipeStepReceipeRaw(stepReceipeUuid, stepUuid))
     }
+
+    @Test
+    fun alimentGitToDb() {
+        val alimentUuid = "a7a12c60-1604-48ee-9991-0e4baa08006d"
+        val nameFr = "Pomme"
+        val nameEn = "Apple"
+        val tagUuid = "1f0ce536-a01d-4c7c-9412-d696920ea051"
+        val stateUuid = "f33a0e6a-0ad6-4398-a803-3edd8e19987a"
+        val measureUuid = "a4a3796e-e478-4864-86f7-bf5d17a603e1"
+        val n = 10.0F
+        val nutrition = Nutrition(n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n)
+
+        val repository: AlimentRepository = mock(AlimentRepository::class.java)
+
+        val s = AlimentSynchronizer(mockContext, repository)
+        s.fromGitToDb(TEST_REPOSITORY_NAME, alimentUuid)
+
+        val inOrder = inOrder(repository)
+        inOrder.verify(repository).getAliment(alimentUuid)
+        inOrder.verify(repository).insertAliment(AlimentRaw(alimentUuid))
+        inOrder.verify(repository).insertAlimentName(AlimentNameRaw(alimentUuid, "fr", nameFr))
+        inOrder.verify(repository).insertAlimentName(AlimentNameRaw(alimentUuid, "en", nameEn))
+        inOrder.verify(repository).insertAlimentTag(AlimentTagRaw(alimentUuid, tagUuid))
+        inOrder.verify(repository).insertAlimentState(AlimentStateRaw(anyObject(), alimentUuid, stateUuid, nutrition))
+    }
+
+    private fun <T> anyObject(): T {
+        return Mockito.anyObject<T>()
+    }
+
 }

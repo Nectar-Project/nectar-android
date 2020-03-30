@@ -33,4 +33,26 @@ open class AlimentStateRaw (
     var stateUuid: String,
     @Embedded(prefix="nutrition_")
     var nutrition: Nutrition
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as AlimentStateRaw
+
+        if (uuid != other.uuid) return false
+        if (alimentUuid != other.alimentUuid) return false
+        if (stateUuid != other.stateUuid) return false
+        if (nutrition != other.nutrition) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = uuid.hashCode()
+        result = 31 * result + alimentUuid.hashCode()
+        result = 31 * result + stateUuid.hashCode()
+        result = 31 * result + nutrition.hashCode()
+        return result
+    }
+}
