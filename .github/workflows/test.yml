@@ -1,0 +1,19 @@
+name: Android Unit Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Run Gradle Command
+      uses: Raul6469/android-gradle-action@2.0.0
+      with:
+        script: test
