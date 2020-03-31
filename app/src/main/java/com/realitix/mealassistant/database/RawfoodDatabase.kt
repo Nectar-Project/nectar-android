@@ -18,18 +18,21 @@ import java.io.File
 @Database(
     entities = [
         AlimentRaw::class,
+        AlimentImageRaw::class,
         AlimentNameRaw::class,
         AlimentNameFts::class,
         AlimentStateRaw::class,
         AlimentStateMeasureRaw::class,
         AlimentTagRaw::class,
         GitRepositoryRaw::class,
+        ImageRaw::class,
         MealRaw::class,
         MealAlimentRaw::class,
         MealReceipeRaw::class,
         MeasureRaw::class,
         MeasureNameRaw::class,
         ReceipeRaw::class,
+        ReceipeImageRaw::class,
         ReceipeNameRaw::class,
         ReceipeNameFts::class,
         ReceipeStepRaw::class,
@@ -45,15 +48,17 @@ import java.io.File
         UtensilNameRaw::class
     ],
     exportSchema = false,
-    version = 4
+    version = 5
 )
 abstract class MealDatabase : RoomDatabase() {
     abstract fun alimentDao(): AlimentDao
+    abstract fun alimentImageDao(): AlimentImageDao
     abstract fun alimentNameDao(): AlimentNameDao
     abstract fun alimentStateDao(): AlimentStateDao
     abstract fun alimentStateMeasureDao(): AlimentStateMeasureDao
     abstract fun alimentTagDao(): AlimentTagDao
     abstract fun gitRepositoryDao(): GitRepositoryDao
+    abstract fun imageDao(): ImageDao
     abstract fun mealAlimentDao(): MealAlimentDao
     abstract fun mealDao(): MealDao
     abstract fun mealReceipeDao(): MealReceipeDao
@@ -79,23 +84,23 @@ abstract class MealDatabase : RoomDatabase() {
         fun getInstance(context: Context): MealDatabase {
             if (instance == null) {
                 val callback = object: Callback() {
-                    override fun onCreate(db: SupportSQLiteDatabase) {
-                        super.onCreate(db)
-
+                    fun init(db: SupportSQLiteDatabase) {
                         // Create DB Entry for default repository
                         val repo = GitRepository(
                             generateUuid(),
                             MealUtil.getProperty(context, "defaultGitRepositoryName"),
                             MealUtil.getProperty(context, "defaultGitRepositoryUrl"),
-                            true,
-                            0,
-                            60*60*6,
-                            null
+                            rescan = true,
+                            readOnly = true,
+                            lastCheck = 0,
+                            frequency = 60*60*6,
+                            credentials = null
                         )
                         val contentValues = ContentValues()
                         contentValues.put("uuid", repo.uuid)
                         contentValues.put("name", repo.name)
                         contentValues.put("url", repo.url)
+                        contentValues.put("rescan", repo.rescan)
                         contentValues.put("readOnly", repo.readOnly)
                         contentValues.put("lastCheck", repo.lastCheck)
                         contentValues.put("frequency", repo.frequency)
@@ -104,9 +109,19 @@ abstract class MealDatabase : RoomDatabase() {
                         db.insert("GitRepositoryRaw", OnConflictStrategy.IGNORE, contentValues)
 
                         // Uncompress the default repository
-                        val zipName = MealUtil.getProperty(context, "defaultGitRepositoryName")
+                        val zipName = MealUtil.getProperty(context, "defaultGitRepositoryName") + ".zip"
                         val rName = MealUtil.getProperty(context, "repositoryNameFolder")
                         ZipUtil.unzipFromAssets(context, zipName, File(context.filesDir.toString(), rName).toString())
+                    }
+
+                    override fun onCreate(db: SupportSQLiteDatabase) {
+                        super.onCreate(db)
+                        init(db)
+                    }
+
+                    override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
+                        super.onDestructiveMigration(db)
+                        init(db)
                     }
                 }
 

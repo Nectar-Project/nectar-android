@@ -1,28 +1,34 @@
 package com.realitix.mealassistant.database.entity
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 
-class Measure(uuid: String): MeasureRaw(uuid)
+class Image(uuid: String, path: String): ImageRaw(uuid, path)
 
 @Entity
-open class MeasureRaw (
+open class ImageRaw (
     @PrimaryKey
-    var uuid: String
+    var uuid: String,
+    var path: String
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as MeasureRaw
+        other as ImageRaw
 
         if (uuid != other.uuid) return false
+        if (path != other.path) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        return uuid.hashCode()
+        var result = uuid.hashCode()
+        result = 31 * result + path.hashCode()
+        return result
     }
 }

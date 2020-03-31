@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import com.realitix.mealassistant.database.MealDatabase
 import com.realitix.mealassistant.database.entity.*
+import com.realitix.mealassistant.util.MealUtil
 
 class ReceipeRepository(val context: Context) {
     fun getReceipes(): LiveData<List<Receipe>> {
@@ -11,7 +12,7 @@ class ReceipeRepository(val context: Context) {
     }
 
     fun search(name: String): LiveData<List<Receipe>> {
-        return MealDatabase.getInstance(context).receipeDao().search(name)
+        return MealDatabase.getInstance(context).receipeDao().search(MealUtil.searchMaker(name))
     }
 
     fun getReceipeLive(receipeUuid: String): LiveData<Receipe> {

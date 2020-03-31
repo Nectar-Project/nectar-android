@@ -13,4 +13,19 @@ class Tag(uuid: String): TagRaw(uuid) {
 open class TagRaw (
     @PrimaryKey
     var uuid: String
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as TagRaw
+
+        if (uuid != other.uuid) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return uuid.hashCode()
+    }
+}

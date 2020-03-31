@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.bumptech.glide.Glide
 import com.realitix.mealassistant.R
 import com.realitix.mealassistant.database.entity.Aliment
 import com.realitix.mealassistant.repository.AlimentRepository
@@ -56,12 +57,17 @@ class AlimentAddSearchFragment : Fragment() {
             { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
             { holder, aliment ->
                 holder.text.text = aliment.getName()
-                holder.icon.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_receipt_black_36dp
+                if(aliment.images.size > 0) {
+                    Glide.with(this).load(aliment.images!![0]).into(holder.icon)
+                }
+                else {
+                    holder.icon.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.ic_receipt_black_36dp
+                        )
                     )
-                )
+                }
             }
         )
         recyclerView.hasFixedSize()

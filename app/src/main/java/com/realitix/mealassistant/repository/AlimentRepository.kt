@@ -1,14 +1,15 @@
 package com.realitix.mealassistant.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.realitix.mealassistant.database.MealDatabase
 import com.realitix.mealassistant.database.entity.*
+import com.realitix.mealassistant.util.MealUtil
 
 class AlimentRepository(val context: Context) {
-
     fun search(name: String): LiveData<List<Aliment>> {
-        return MealDatabase.getInstance(context).alimentDao().search(name)
+        return MealDatabase.getInstance(context).alimentDao().search(MealUtil.searchMaker(name))
     }
 
     fun getAlimentLive(uuid: String): LiveData<Aliment> {
@@ -25,6 +26,10 @@ class AlimentRepository(val context: Context) {
 
     fun insertAlimentName(alimentName: AlimentNameRaw) {
         return MealDatabase.getInstance(context).alimentNameDao().insert(alimentName)
+    }
+
+    fun insertAlimentImage(a: AlimentImageRaw) {
+        return MealDatabase.getInstance(context).alimentImageDao().insert(a)
     }
 
     fun insertAlimentTag(alimentTag: AlimentTagRaw) {

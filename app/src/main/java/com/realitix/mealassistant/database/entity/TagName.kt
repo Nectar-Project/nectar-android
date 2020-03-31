@@ -25,4 +25,24 @@ open class TagNameRaw (
     var tagUuid: String,
     var language: String,
     var name: String
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as TagNameRaw
+
+        if (tagUuid != other.tagUuid) return false
+        if (language != other.language) return false
+        if (name != other.name) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = tagUuid.hashCode()
+        result = 31 * result + language.hashCode()
+        result = 31 * result + name.hashCode()
+        return result
+    }
+}

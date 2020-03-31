@@ -8,6 +8,7 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
 import org.eclipse.jgit.treewalk.CanonicalTreeParser
 import java.io.File
+import java.nio.file.Files
 
 
 class GitManager(private val repoDir: File, private val url: String, private val credentials: GitCredentials?) {
@@ -23,7 +24,6 @@ class GitManager(private val repoDir: File, private val url: String, private val
 
     // Contains list of uuid
     class DiffResult(
-        val hasResult: Boolean,
         val updates: List<Pair<EntityType, String>>,
         val deletes: List<Pair<EntityType, String>>
     )
@@ -61,6 +61,23 @@ class GitManager(private val repoDir: File, private val url: String, private val
         git.reset().setMode(ResetCommand.ResetType.HARD).setRef("refs/remotes/origin/master").call()
     }
 
+    // Return a diff of all files
+    fun rescan(): DiffResult {
+        val updates: ArrayList<Pair<EntityType, String>> = ArrayList()
+        val deletes: ArrayList<Pair<EntityType, String>> = ArrayList()
+
+        for (entityType in EntityType.values()) {
+            if (entityType == EntityType.UNKNOW)
+                continue
+            Files.list(File(repoDir, entityType.folderName).toPath()).forEach {
+                val uuid = it.toFile().name
+                updates.add(entityType to uuid)
+            }
+        }
+
+        return DiffResult(updates, deletes)
+    }
+
     // Return diff between master and origin/master
     fun diff(): DiffResult {
         val master = getBranch("master")
@@ -71,7 +88,6 @@ class GitManager(private val repoDir: File, private val url: String, private val
             .setShowNameAndStatusOnly(true)
             .call()
 
-        val hasResult = entries.size > 0
         val updates: ArrayList<Pair<EntityType, String>> = ArrayList()
         val deletes: ArrayList<Pair<EntityType, String>> = ArrayList()
         for(entry in entries) {
@@ -88,7 +104,7 @@ class GitManager(private val repoDir: File, private val url: String, private val
             }
         }
 
-        return DiffResult(hasResult, updates, deletes)
+        return DiffResult(updates, deletes)
     }
 
     fun clone() {

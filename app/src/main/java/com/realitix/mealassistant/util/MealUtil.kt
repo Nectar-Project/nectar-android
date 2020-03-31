@@ -1,6 +1,7 @@
 package com.realitix.mealassistant.util
 
 import android.content.Context
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.floor
@@ -35,6 +36,31 @@ class MealUtil {
             val properties = Properties()
             properties.load(inputStream)
             return properties.getProperty(key)
+        }
+
+        fun getRepositoryFolder(context: Context, repositoryName: String): File {
+            val rName = getProperty(context, "repositoryNameFolder")
+            val srcFolder = File(context.filesDir, rName)
+            return File(srcFolder, repositoryName)
+        }
+
+        fun getImageFolder(context: Context): File {
+            val rName = getProperty(context, "imageFolder")
+            return File(context.filesDir, rName)
+        }
+
+        fun searchMaker(search: String): String {
+            var searchResult = ""
+            if(!search.isBlank()) {
+                val matcher: MutableList<String> = search.split(" ") as MutableList<String>
+                matcher.retainAll { !it.isBlank() }
+                searchResult = if (matcher.size < 2) {
+                    matcher[0]
+                } else {
+                    matcher.joinToString(separator = "* ")
+                }
+            }
+            return "$searchResult*"
         }
     }
 }

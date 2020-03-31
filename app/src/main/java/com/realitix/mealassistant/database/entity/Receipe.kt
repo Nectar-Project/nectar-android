@@ -18,6 +18,8 @@ open class ReceipeWS(uuid: String, nb_people: Int, stars: Int): ReceipeRaw(uuid,
     var tags: List<ReceipeTag>? = null
     @Relation(parentColumn = "uuid", entityColumn = "receipeUuid", entity = ReceipeUtensilRaw::class)
     var utensils: List<ReceipeUtensil>? = null
+    @Relation(parentColumn = "uuid", entityColumn = "receipeUuid", entity = ReceipeImageRaw::class)
+    var images: List<ReceipeImage>? = null
 
     fun getName(): String = getReceipeName().name
     fun getReceipeName(): ReceipeName = names!![0]

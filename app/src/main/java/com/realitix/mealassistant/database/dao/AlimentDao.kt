@@ -12,7 +12,7 @@ import com.realitix.mealassistant.database.entity.AlimentRaw
 interface AlimentDao: BaseDao<AlimentRaw> {
     @Transaction
     @Query("""
-        SELECT AlimentRaw.*
+        SELECT DISTINCT AlimentRaw.*
         FROM AlimentRaw
         INNER JOIN AlimentNameRaw ON AlimentNameRaw.alimentUuid = AlimentRaw.uuid
         INNER JOIN AlimentNameFts ON AlimentNameRaw.rowid = AlimentNameFts.rowid
