@@ -1,13 +1,9 @@
 package com.realitix.mealassistant
 
 import android.content.Context
-import androidx.work.WorkerParameters
 import com.realitix.mealassistant.database.entity.*
 import com.realitix.mealassistant.repository.*
-import com.realitix.mealassistant.util.EntityType
-import com.realitix.mealassistant.util.GitManager
-import com.realitix.mealassistant.util.UuidGeneratorInterface
-import com.realitix.mealassistant.work.GitRepositoryWorker
+import com.realitix.mealassistant.util.*
 import com.realitix.mealassistant.work.synchronizer.*
 import org.junit.Assert
 import org.junit.Before
@@ -24,17 +20,18 @@ private const val TEST_RESSOURCES_DIR = "src/test/resources/synchronizer"
 private const val TEST_DATA_REPOSITORY_URL = "https://github.com/Nectar-Project/nectar-data.git"
 private const val TEST_REPOSITORY_NAME = "test_repository"
 
-
 @RunWith(MockitoJUnitRunner::class)
 class SynchronizerUnitTest {
     @Mock
-    private lateinit var mockContext: Context
+    private lateinit var context: Context
 
 
     @Before
     fun initContext() {
-        `when`(mockContext.filesDir).thenReturn(File(TEST_RESSOURCES_DIR))
+        `when`(context.filesDir).thenReturn(getRepositoryFolder())
     }
+
+    private fun getRepositoryFolder(): File = File(TEST_RESSOURCES_DIR)
 
     @Test
     fun parseDataRepository() {
@@ -45,17 +42,25 @@ class SynchronizerUnitTest {
         GitManager(repositoryFile, TEST_DATA_REPOSITORY_URL, null).clone()
 
         // Loop through each file and parse it
-        val workerParameters = mock(WorkerParameters::class.java)
+        val synchronizerMap = mapOf(
+            EntityType.STATE to StateSynchronizer(StateRepository(context), getRepositoryFolder()),
+            EntityType.TAG to TagSynchronizer(TagRepository(context), getRepositoryFolder()),
+            EntityType.MEASURE to MeasureSynchronizer(MeasureRepository(context), getRepositoryFolder()),
+            EntityType.ALIMENT to AlimentSynchronizer(AlimentRepository(context), getRepositoryFolder(), UuidGenerator()),
+            EntityType.UTENSIL to UtensilSynchronizer(UtensilRepository(context), getRepositoryFolder()),
+            EntityType.RECEIPE to ReceipeSynchronizer(ReceipeRepository(context), getRepositoryFolder()),
+            EntityType.MEAL to MealSynchronizer(MealRepository(context), getRepositoryFolder())
+        )
         try {
             for (entityType in EntityType.values()) {
-                if (entityType == EntityType.UNKNOW)
-                    continue
+                //if (entityType == EntityType.UNKNOW || entityType == EntityType.IMAGE)
+                //    continue
                 Files.list(File(repositoryFile, entityType.folderName).toPath()).forEach {
                     val uuid = it.toFile().name
                     println("Parse path: $it")
-                    GitRepositoryWorker(mockContext, workerParameters)
-                        .synchronizerMap[entityType]
-                        ?.getParseResult(mockContext, repositoryName, uuid)
+                    if(synchronizerMap[entityType] != null) {
+                        (synchronizerMap[entityType] ?: error("")).getParseResult(repositoryName, uuid)
+                    }
                 }
             }
         }
@@ -80,7 +85,7 @@ class SynchronizerUnitTest {
         val quantity = 10
         val repository: MealRepository = mock(MealRepository::class.java)
 
-        val ms = MealSynchronizer(mockContext, repository)
+        val ms = MealSynchronizer(repository, getRepositoryFolder())
         ms.fromGitToDb(TEST_REPOSITORY_NAME, mealUuid)
 
         val inOrder = inOrder(repository)
@@ -108,7 +113,7 @@ class SynchronizerUnitTest {
 
         val repository: ReceipeRepository = mock(ReceipeRepository::class.java)
 
-        val s = ReceipeSynchronizer(mockContext, repository)
+        val s = ReceipeSynchronizer(repository, getRepositoryFolder())
         s.fromGitToDb(TEST_REPOSITORY_NAME, receipeUuid)
 
         val inOrder = inOrder(repository)
@@ -129,6 +134,7 @@ class SynchronizerUnitTest {
         val nameFr = "Pomme"
         val nameEn = "Apple"
         val tagUuid = "1f0ce536-a01d-4c7c-9412-d696920ea051"
+        val imageUuid = "e56f15a5-29f5-4ba7-8c9a-f750a31198ce"
         val alimentStateUuid = "1f0c4536-b01d-4c7c-9412-d696920ea051"
         val stateUuid = "f33a0e6a-0ad6-4398-a803-3edd8e19987a"
         val measureUuid = "a4a3796e-e478-4864-86f7-bf5d17a603e1"
@@ -138,7 +144,7 @@ class SynchronizerUnitTest {
 
         val repository: AlimentRepository = mock(AlimentRepository::class.java)
 
-        val s = AlimentSynchronizer(mockContext, repository, object: UuidGeneratorInterface {
+        val s = AlimentSynchronizer(repository, getRepositoryFolder(), object: UuidGeneratorInterface {
             override fun generateUuid(): String = alimentStateUuid
         })
 
@@ -149,6 +155,7 @@ class SynchronizerUnitTest {
         inOrder.verify(repository).insertAliment(AlimentRaw(alimentUuid))
         inOrder.verify(repository).insertAlimentName(AlimentNameRaw(alimentUuid, "fr", nameFr))
         inOrder.verify(repository).insertAlimentName(AlimentNameRaw(alimentUuid, "en", nameEn))
+        inOrder.verify(repository).insertAlimentImage(AlimentImageRaw(alimentUuid, imageUuid))
         inOrder.verify(repository).insertAlimentTag(AlimentTagRaw(alimentUuid, tagUuid))
         inOrder.verify(repository).insertAlimentState(AlimentStateRaw(alimentStateUuid, alimentUuid, stateUuid, nutrition))
         inOrder.verify(repository).insertAlimentStateMeasure(AlimentStateMeasureRaw(alimentStateUuid, measureUuid, measureQuantity))
@@ -161,7 +168,7 @@ class SynchronizerUnitTest {
         val nameEn = "testen"
 
         val repository: StateRepository = mock(StateRepository::class.java)
-        val s = StateSynchronizer(mockContext, repository)
+        val s = StateSynchronizer(repository, getRepositoryFolder())
         s.fromGitToDb(TEST_REPOSITORY_NAME, uuid)
 
         val inOrder = inOrder(repository)
@@ -178,7 +185,7 @@ class SynchronizerUnitTest {
         val nameEn = "testen"
 
         val repository: MeasureRepository = mock(MeasureRepository::class.java)
-        val s = MeasureSynchronizer(mockContext, repository)
+        val s = MeasureSynchronizer(repository, getRepositoryFolder())
         s.fromGitToDb(TEST_REPOSITORY_NAME, uuid)
 
         val inOrder = inOrder(repository)
@@ -195,7 +202,7 @@ class SynchronizerUnitTest {
         val nameEn = "testen"
 
         val repository: TagRepository = mock(TagRepository::class.java)
-        val s = TagSynchronizer(mockContext, repository)
+        val s = TagSynchronizer(repository, getRepositoryFolder())
         s.fromGitToDb(TEST_REPOSITORY_NAME, uuid)
 
         val inOrder = inOrder(repository)
@@ -212,7 +219,7 @@ class SynchronizerUnitTest {
         val nameEn = "testen"
 
         val repository: UtensilRepository = mock(UtensilRepository::class.java)
-        val s = UtensilSynchronizer(mockContext, repository)
+        val s = UtensilSynchronizer(repository, getRepositoryFolder())
         s.fromGitToDb(TEST_REPOSITORY_NAME, uuid)
 
         val inOrder = inOrder(repository)

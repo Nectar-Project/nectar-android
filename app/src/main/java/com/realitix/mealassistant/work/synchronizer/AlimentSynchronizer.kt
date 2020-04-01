@@ -12,8 +12,11 @@ import com.realitix.mealassistant.util.UuidGeneratorInterface
 import java.io.File
 import java.io.FileReader
 
-class AlimentSynchronizer(context: Context, repository: AlimentRepository, val uuidGenerator: UuidGeneratorInterface):
-    BaseSynchronizer<AlimentSynchronizer.ParseResult, AlimentRepository>(context, repository) {
+class AlimentSynchronizer(
+    repository: AlimentRepository,
+    baseRepositoryFolder: File,
+    private val uuidGenerator: UuidGeneratorInterface
+): BaseSynchronizer<AlimentSynchronizer.ParseResult, AlimentRepository>(repository, baseRepositoryFolder) {
     class ParseResult(
         val uuid: String,
         val names: Map<String, String>,
@@ -25,7 +28,7 @@ class AlimentSynchronizer(context: Context, repository: AlimentRepository, val u
     class State(val measures: Map<String, Int>, val nutrition: Nutrition)
 
     override fun getEntityType(): EntityType = EntityType.ALIMENT
-    override fun getParseResult(context: Context, repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(context, repositoryName, uuid)
+    override fun getParseResult(repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(repositoryName, uuid)
 
     override fun updateDb(repo: AlimentRepository, parseResult: ParseResult) {
         // Create aliment only if not exists

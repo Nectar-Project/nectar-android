@@ -2,9 +2,10 @@ package com.realitix.mealassistant.work.synchronizer
 
 import android.content.Context
 import com.realitix.mealassistant.repository.NameRepositoryInterface
+import java.io.File
 
-abstract class NameBaseSynchronizer<U, V>(context: Context, repository: NameRepositoryInterface<U, V>):
-    BaseSynchronizer<NameBaseSynchronizer.ParseResult, NameRepositoryInterface<U, V>>(context, repository) {
+abstract class NameBaseSynchronizer<U, V>(repository: NameRepositoryInterface<U, V>, baseRepositoryFolder: File):
+    BaseSynchronizer<NameBaseSynchronizer.ParseResult, NameRepositoryInterface<U, V>>(repository, baseRepositoryFolder) {
     class ParseResult(
         val uuid: String,
         val names: Map<String, String>
@@ -12,7 +13,7 @@ abstract class NameBaseSynchronizer<U, V>(context: Context, repository: NameRepo
 
     abstract fun getNew(uuid: String): U
     abstract fun getNewName(uuid: String, lang: String, name: String): V
-    override fun getParseResult(context: Context, repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(context, repositoryName, uuid)
+    override fun getParseResult(repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(repositoryName, uuid)
 
     override fun updateDb(repo: NameRepositoryInterface<U, V>, parseResult: ParseResult) {
         // Create tag only if not exists

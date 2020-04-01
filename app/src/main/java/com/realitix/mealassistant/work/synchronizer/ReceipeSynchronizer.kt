@@ -4,9 +4,10 @@ import android.content.Context
 import com.realitix.mealassistant.database.entity.*
 import com.realitix.mealassistant.repository.ReceipeRepository
 import com.realitix.mealassistant.util.EntityType
+import java.io.File
 
-class ReceipeSynchronizer(context: Context, repository: ReceipeRepository):
-    BaseSynchronizer<ReceipeSynchronizer.ParseResult, ReceipeRepository>(context, repository) {
+class ReceipeSynchronizer(repository: ReceipeRepository, baseRepositoryFolder: File):
+    BaseSynchronizer<ReceipeSynchronizer.ParseResult, ReceipeRepository>(repository, baseRepositoryFolder) {
     class ParseResult(
         val uuid: String,
         val names: Map<String, String>,
@@ -27,7 +28,7 @@ class ReceipeSynchronizer(context: Context, repository: ReceipeRepository):
     )
 
     override fun getEntityType(): EntityType = EntityType.RECEIPE
-    override fun getParseResult(context: Context, repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(context, repositoryName, uuid)
+    override fun getParseResult(repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(repositoryName, uuid)
 
     override fun updateDb(repo: ReceipeRepository, parseResult: ParseResult) {
         // Create receipe only if not exists

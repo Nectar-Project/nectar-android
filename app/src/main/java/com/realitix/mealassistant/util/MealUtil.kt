@@ -38,16 +38,8 @@ class MealUtil {
             return properties.getProperty(key)
         }
 
-        fun getRepositoryFolder(context: Context, repositoryName: String): File {
-            val rName = getProperty(context, "repositoryNameFolder")
-            val srcFolder = File(context.filesDir, rName)
-            return File(srcFolder, repositoryName)
-        }
-
-        fun getImageFolder(context: Context): File {
-            val rName = getProperty(context, "imageFolder")
-            return File(context.filesDir, rName)
-        }
+        fun getRepositoryFolder(context: Context): File = File(context.filesDir, getProperty(context, "repositoryNameFolder"))
+        fun getImageFolder(context: Context): File = File(context.filesDir, getProperty(context, "imageFolder"))
 
         fun searchMaker(search: String): String {
             var searchResult = ""

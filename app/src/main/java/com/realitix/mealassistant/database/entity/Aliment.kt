@@ -12,7 +12,7 @@ class Aliment(uuid: String): AlimentRaw(uuid) {
     @Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentStateRaw::class)
     var states: List<AlimentState>? = null
     @Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentImageRaw::class)
-    var images: List<AlimentImage>? = null
+    var images: List<AlimentImage> = listOf()
 
     fun getName(): String {
         return names!![0].name

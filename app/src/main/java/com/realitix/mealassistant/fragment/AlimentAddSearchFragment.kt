@@ -57,8 +57,8 @@ class AlimentAddSearchFragment : Fragment() {
             { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
             { holder, aliment ->
                 holder.text.text = aliment.getName()
-                if(aliment.images.size > 0) {
-                    Glide.with(this).load(aliment.images!![0]).into(holder.icon)
+                if(aliment.images.isNotEmpty()) {
+                    Glide.with(this).load(aliment.images[0]).into(holder.icon)
                 }
                 else {
                     holder.icon.setImageDrawable(

@@ -15,15 +15,15 @@ import java.util.concurrent.TimeUnit
 class GitRepositoryWorker(val context: Context, workerParams: WorkerParameters)
     : Worker(context, workerParams) {
 
-    val synchronizerMap = mapOf(
-        EntityType.STATE to StateSynchronizer(context, StateRepository(context)),
-        EntityType.TAG to TagSynchronizer(context, TagRepository(context)),
-        EntityType.MEASURE to MeasureSynchronizer(context, MeasureRepository(context)),
-        EntityType.ALIMENT to AlimentSynchronizer(context, AlimentRepository(context), UuidGenerator()),
-        EntityType.UTENSIL to UtensilSynchronizer(context, UtensilRepository(context)),
-        EntityType.RECEIPE to ReceipeSynchronizer(context, ReceipeRepository(context)),
-        EntityType.MEAL to MealSynchronizer(context, MealRepository(context)),
-        EntityType.IMAGE to ImageSynchronizer(context, ImageRepository(context))
+    private val synchronizerMap = mapOf(
+        EntityType.STATE to StateSynchronizer(StateRepository(context), MealUtil.getRepositoryFolder(context)),
+        EntityType.TAG to TagSynchronizer(TagRepository(context), MealUtil.getRepositoryFolder(context)),
+        EntityType.MEASURE to MeasureSynchronizer(MeasureRepository(context), MealUtil.getRepositoryFolder(context)),
+        EntityType.ALIMENT to AlimentSynchronizer(AlimentRepository(context), MealUtil.getRepositoryFolder(context), UuidGenerator()),
+        EntityType.UTENSIL to UtensilSynchronizer(UtensilRepository(context), MealUtil.getRepositoryFolder(context)),
+        EntityType.RECEIPE to ReceipeSynchronizer(ReceipeRepository(context), MealUtil.getRepositoryFolder(context)),
+        EntityType.MEAL to MealSynchronizer(MealRepository(context), MealUtil.getRepositoryFolder(context)),
+        EntityType.IMAGE to ImageSynchronizer(ImageRepository(context), MealUtil.getRepositoryFolder(context), MealUtil.getImageFolder(context))
     )
 
     private fun synchronize(repositoryName: String, diff: GitManager.DiffResult) {
