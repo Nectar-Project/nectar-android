@@ -32,7 +32,7 @@ class SynchronizerUnitTest {
         val repositoryName = java.util.UUID.randomUUID().toString()
         val ressourceDir = File(TEST_RESSOURCES_DIR)
         val repositoryFile = File(ressourceDir, repositoryName)
-        GitManager(repositoryFile, TEST_DATA_REPOSITORY_URL, null).clone()
+        GitManager(repositoryFile, TEST_DATA_REPOSITORY_URL, null)
 
         // Loop through each file and parse it
         val synchronizerMap = mapOf(
