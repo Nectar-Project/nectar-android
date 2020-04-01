@@ -25,12 +25,6 @@ class SynchronizerUnitTest {
     @Mock
     private lateinit var context: Context
 
-
-    @Before
-    fun initContext() {
-        `when`(context.filesDir).thenReturn(getRepositoryFolder())
-    }
-
     private fun getRepositoryFolder(): File = File(TEST_RESSOURCES_DIR)
 
     @Test
