@@ -6,16 +6,16 @@ import androidx.room.*
 
 class Aliment(uuid: String): AlimentRaw(uuid) {
     @Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentNameRaw::class)
-    var names: List<AlimentName>? = null
+    lateinit var names: List<AlimentName>
     @Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentTagRaw::class)
-    var tags: List<AlimentTag>? = null
+    lateinit var tags: List<AlimentTag>
     @Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentStateRaw::class)
-    var states: List<AlimentState>? = null
+    lateinit var states: List<AlimentState>
     @Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentImageRaw::class)
-    var images: List<AlimentImage> = listOf()
+    lateinit var images: List<AlimentImage>
 
     fun getName(): String {
-        return names!![0].name
+        return names[0].name
     }
 }
 

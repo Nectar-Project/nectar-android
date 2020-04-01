@@ -107,11 +107,6 @@ abstract class MealDatabase : RoomDatabase() {
                         contentValues.putNull("credentials_username")
                         contentValues.putNull("credentials_password")
                         db.insert("GitRepositoryRaw", OnConflictStrategy.IGNORE, contentValues)
-
-                        // Uncompress the default repository
-                        val zipName = MealUtil.getProperty(context, "defaultGitRepositoryName") + ".zip"
-                        val rName = MealUtil.getProperty(context, "repositoryNameFolder")
-                        ZipUtil.unzipFromAssets(context, zipName, File(context.filesDir.toString(), rName).toString())
                     }
 
                     override fun onCreate(db: SupportSQLiteDatabase) {

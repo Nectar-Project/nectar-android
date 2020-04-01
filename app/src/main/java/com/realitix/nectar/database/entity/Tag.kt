@@ -6,7 +6,7 @@ import androidx.room.Relation
 
 class Tag(uuid: String): TagRaw(uuid) {
     @Relation(parentColumn = "uuid", entityColumn = "tagUuid", entity = TagNameRaw::class)
-    var names: List<TagName>? = null
+    lateinit var names: List<TagName>
 }
 
 @Entity

@@ -5,7 +5,7 @@ import androidx.room.*
 
 class AlimentState(uuid: String, alimentUuid: String, stateUuid: String, nutrition: Nutrition): AlimentStateRaw(uuid, alimentUuid, stateUuid, nutrition) {
     @Relation(parentColumn = "uuid", entityColumn = "alimentStateUuid", entity = AlimentStateMeasureRaw::class)
-    var measures: List<AlimentStateMeasure>? = null
+    lateinit var measures: List<AlimentStateMeasure>
 }
 
 @Entity(

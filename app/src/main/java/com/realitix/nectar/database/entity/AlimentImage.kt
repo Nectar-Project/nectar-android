@@ -3,7 +3,10 @@ package com.realitix.nectar.database.entity
 import androidx.room.*
 
 
-class AlimentImage(alimentUuid: String, imageUuid: String): AlimentImageRaw(alimentUuid, imageUuid)
+class AlimentImage(alimentUuid: String, imageUuid: String): AlimentImageRaw(alimentUuid, imageUuid) {
+    @Relation(parentColumn = "imageUuid", entityColumn = "uuid", entity = ImageRaw::class)
+    lateinit var image: Image
+}
 
 @Entity(
     primaryKeys = ["alimentUuid", "imageUuid"],

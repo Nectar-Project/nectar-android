@@ -7,7 +7,7 @@ import androidx.room.Relation
 
 class Utensil(uuid: String): UtensilRaw(uuid) {
     @Relation(parentColumn = "uuid", entityColumn = "utensilUuid", entity = UtensilNameRaw::class)
-    var names: List<UtensilName>? = null
+    lateinit var names: List<UtensilName>
 }
 
 @Entity

@@ -22,13 +22,7 @@ class GitManager(private val repoDir: File, private val url: String, private val
         return l
     }
 
-    // Contains list of uuid
-    class DiffResult(
-        val updates: List<Pair<EntityType, String>>,
-        val deletes: List<Pair<EntityType, String>>
-    )
-
-    private val git: Git by lazy {
+    private fun initGitRepository(): Git {
         if(!repoDir.exists()) {
             val git = Git.cloneRepository()
                 .setURI(url)
@@ -38,20 +32,26 @@ class GitManager(private val repoDir: File, private val url: String, private val
                 git.setCredentialsProvider(UsernamePasswordCredentialsProvider(credentials.username, credentials.password))
             }
 
-            git.call()
+            return git.call()
         }
-        else {
-            val builder = FileRepositoryBuilder()
 
-            val repo = builder.setGitDir(File(repoDir, ".git"))
-                .readEnvironment()
-                .findGitDir()
-                .setMustExist(true)
-                .build()
+        val builder = FileRepositoryBuilder()
+        val repo = builder.setGitDir(File(repoDir, ".git"))
+            .readEnvironment()
+            .findGitDir()
+            .setMustExist(true)
+            .build()
 
-            Git(repo)
-        }
+        return Git(repo)
     }
+
+    // Contains list of uuid
+    class DiffResult(
+        val updates: List<Pair<EntityType, String>>,
+        val deletes: List<Pair<EntityType, String>>
+    )
+
+    private val git: Git = initGitRepository()
 
     // Return true if remote has new commits
     fun fetch(): Boolean = !git.fetch().call().trackingRefUpdates.isEmpty()

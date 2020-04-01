@@ -7,9 +7,9 @@ import androidx.room.Relation
 
 class Meal(uuid: String, timestamp: Long, nb_people: Int, description: String): MealRaw(uuid, timestamp, nb_people, description) {
     @Relation(parentColumn = "uuid", entityColumn = "mealUuid", entity = MealAlimentRaw::class)
-    var aliments: List<MealAliment>? = null
+    lateinit var aliments: List<MealAliment>
     @Relation(parentColumn = "uuid", entityColumn = "mealUuid", entity = MealReceipeRaw::class)
-    var receipes: List<MealReceipe>? = null
+    lateinit var receipes: List<MealReceipe>
 }
 
 @Entity

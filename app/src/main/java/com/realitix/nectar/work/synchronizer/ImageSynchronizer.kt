@@ -17,7 +17,7 @@ class ImageSynchronizer(
             val repo = File(baseRepositoryFolder, gitRepositoryName)
             val srcPath = File(File(repo, getEntityType().folderName), uuid)
             val dstPath = File(baseImageFolder, uuid)
-            srcPath.copyTo(dstPath)
+            srcPath.copyTo(dstPath, true)
 
             repository.insert(ImageRaw(uuid, dstPath.absolutePath))
         }

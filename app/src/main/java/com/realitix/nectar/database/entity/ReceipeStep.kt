@@ -6,10 +6,10 @@ import androidx.room.*
 class ReceipeStep(uuid: String, receipeUuid: String, order: Int, description: String, duration: Int):
     ReceipeStepRaw(uuid, receipeUuid, order, description, duration) {
     @Relation(parentColumn = "uuid", entityColumn = "stepUuid", entity = ReceipeStepAlimentRaw::class)
-    var aliments: List<ReceipeStepAliment>? = null
+    lateinit var aliments: List<ReceipeStepAliment>
     // Can't return list of ReceipeStepReceipe because it creates an inner loop and a stackoverflow
     @Relation(parentColumn = "uuid", entityColumn = "stepUuid", entity = ReceipeStepReceipeRaw::class)
-    var receipes: List<ReceipeStepReceipe>? = null
+    lateinit var receipes: List<ReceipeStepReceipe>
 }
 
 @Entity(

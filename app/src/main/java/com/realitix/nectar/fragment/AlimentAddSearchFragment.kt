@@ -2,6 +2,7 @@ package com.realitix.nectar.fragment
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -20,6 +21,7 @@ import com.realitix.nectar.util.SingleLineItemViewHolder
 import com.realitix.nectar.viewmodel.AlimentAddSearchViewModel
 import com.realitix.nectar.viewmodel.RepositoryViewModelFactory
 import kotlinx.android.synthetic.main.fragment_aliment_add_search.*
+import java.io.File
 
 
 class AlimentAddSearchFragment : Fragment() {
@@ -57,8 +59,12 @@ class AlimentAddSearchFragment : Fragment() {
             { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
             { holder, aliment ->
                 holder.text.text = aliment.getName()
+                Log.e("TOTO", aliment.getName()+": "+ aliment.images.size)
                 if(aliment.images.isNotEmpty()) {
-                    Glide.with(this).load(aliment.images[0]).into(holder.icon)
+                    Glide
+                        .with(this)
+                        .load(File(aliment.images[0].image.path))
+                        .into(holder.icon)
                 }
                 else {
                     holder.icon.setImageDrawable(

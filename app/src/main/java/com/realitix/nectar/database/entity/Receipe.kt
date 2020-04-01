@@ -7,22 +7,22 @@ import androidx.room.Relation
 
 class Receipe(uuid: String, nb_people: Int, stars: Int): ReceipeWS(uuid, nb_people, stars) {
     @Relation(parentColumn = "uuid", entityColumn = "receipeUuid", entity = ReceipeStepRaw::class)
-    var steps: List<ReceipeStep>? = null
+    lateinit var steps: List<ReceipeStep>
 }
 
 // Receipe without steps to prevent cycle in ReceipeStepReceipe
 open class ReceipeWS(uuid: String, nb_people: Int, stars: Int): ReceipeRaw(uuid, nb_people, stars) {
     @Relation(parentColumn = "uuid", entityColumn = "receipeUuid", entity = ReceipeNameRaw::class)
-    var names: List<ReceipeName>? = null
+    lateinit var names: List<ReceipeName>
     @Relation(parentColumn = "uuid", entityColumn = "receipeUuid", entity = ReceipeTagRaw::class)
-    var tags: List<ReceipeTag>? = null
+    lateinit var tags: List<ReceipeTag>
     @Relation(parentColumn = "uuid", entityColumn = "receipeUuid", entity = ReceipeUtensilRaw::class)
-    var utensils: List<ReceipeUtensil>? = null
+    lateinit var utensils: List<ReceipeUtensil>
     @Relation(parentColumn = "uuid", entityColumn = "receipeUuid", entity = ReceipeImageRaw::class)
-    var images: List<ReceipeImage>? = null
+    lateinit var images: List<ReceipeImage>
 
     fun getName(): String = getReceipeName().name
-    fun getReceipeName(): ReceipeName = names!![0]
+    fun getReceipeName(): ReceipeName = names[0]
 }
 
 @Entity
