@@ -2,17 +2,12 @@ package com.realitix.nectar.database
 
 import android.content.ContentValues
 import android.content.Context
-import androidx.room.Database
-import androidx.room.OnConflictStrategy
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.realitix.nectar.database.dao.*
 import com.realitix.nectar.database.entity.*
-import com.realitix.nectar.util.MealUtil
-import com.realitix.nectar.util.MealUtil.Companion.generateUuid
-import com.realitix.nectar.util.ZipUtil
-import java.io.File
+import com.realitix.nectar.util.NectarUtil
+import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
 
 
 @Database(
@@ -24,6 +19,7 @@ import java.io.File
         AlimentStateRaw::class,
         AlimentStateMeasureRaw::class,
         AlimentTagRaw::class,
+        DatabaseUpdateRaw::class,
         GitRepositoryRaw::class,
         ImageRaw::class,
         MealRaw::class,
@@ -50,13 +46,15 @@ import java.io.File
     exportSchema = false,
     version = 5
 )
-abstract class MealDatabase : RoomDatabase() {
+@TypeConverters(Converter::class)
+abstract class NectarDatabase : RoomDatabase() {
     abstract fun alimentDao(): AlimentDao
     abstract fun alimentImageDao(): AlimentImageDao
     abstract fun alimentNameDao(): AlimentNameDao
     abstract fun alimentStateDao(): AlimentStateDao
     abstract fun alimentStateMeasureDao(): AlimentStateMeasureDao
     abstract fun alimentTagDao(): AlimentTagDao
+    abstract fun databaseUpdateDao(): DatabaseUpdateDao
     abstract fun gitRepositoryDao(): GitRepositoryDao
     abstract fun imageDao(): ImageDao
     abstract fun mealAlimentDao(): MealAlimentDao
@@ -79,17 +77,17 @@ abstract class MealDatabase : RoomDatabase() {
     abstract fun utensilNameDao(): UtensilNameDao
 
     companion object {
-        private var instance: MealDatabase? = null
+        private var instance: NectarDatabase? = null
         @Synchronized
-        fun getInstance(context: Context): MealDatabase {
+        fun getInstance(context: Context): NectarDatabase {
             if (instance == null) {
                 val callback = object: Callback() {
                     fun init(db: SupportSQLiteDatabase) {
                         // Create DB Entry for default repository
                         val repo = GitRepository(
                             generateUuid(),
-                            MealUtil.getProperty(context, "defaultGitRepositoryName"),
-                            MealUtil.getProperty(context, "defaultGitRepositoryUrl"),
+                            NectarUtil.getProperty(context, "defaultGitRepositoryName"),
+                            NectarUtil.getProperty(context, "defaultGitRepositoryUrl"),
                             rescan = true,
                             readOnly = true,
                             lastCheck = 0,
@@ -122,13 +120,13 @@ abstract class MealDatabase : RoomDatabase() {
 
                 instance = Room.databaseBuilder(
                         context.applicationContext,
-                        MealDatabase::class.java,
-                        MealUtil.getProperty(context, "databaseName"))
+                        NectarDatabase::class.java,
+                        NectarUtil.getProperty(context, "databaseName"))
                     .fallbackToDestructiveMigration()
                     .addCallback(callback)
                     .build()
             }
-            return instance as MealDatabase
+            return instance as NectarDatabase
         }
     }
 }

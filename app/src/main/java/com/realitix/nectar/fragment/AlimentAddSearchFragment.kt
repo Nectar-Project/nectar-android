@@ -59,7 +59,6 @@ class AlimentAddSearchFragment : Fragment() {
             { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
             { holder, aliment ->
                 holder.text.text = aliment.getName()
-                Log.e("TOTO", aliment.getName()+": "+ aliment.images.size)
                 if(aliment.images.isNotEmpty()) {
                     Glide
                         .with(this)

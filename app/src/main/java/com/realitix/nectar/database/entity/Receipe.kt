@@ -5,13 +5,13 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 
 
-class Receipe(uuid: String, nb_people: Int, stars: Int): ReceipeWS(uuid, nb_people, stars) {
+class Receipe(uuid: String, nbPeople: Int, stars: Int): ReceipeWS(uuid, nbPeople, stars) {
     @Relation(parentColumn = "uuid", entityColumn = "receipeUuid", entity = ReceipeStepRaw::class)
     lateinit var steps: List<ReceipeStep>
 }
 
 // Receipe without steps to prevent cycle in ReceipeStepReceipe
-open class ReceipeWS(uuid: String, nb_people: Int, stars: Int): ReceipeRaw(uuid, nb_people, stars) {
+open class ReceipeWS(uuid: String, nbPeople: Int, stars: Int): ReceipeRaw(uuid, nbPeople, stars) {
     @Relation(parentColumn = "uuid", entityColumn = "receipeUuid", entity = ReceipeNameRaw::class)
     lateinit var names: List<ReceipeName>
     @Relation(parentColumn = "uuid", entityColumn = "receipeUuid", entity = ReceipeTagRaw::class)
@@ -29,7 +29,7 @@ open class ReceipeWS(uuid: String, nb_people: Int, stars: Int): ReceipeRaw(uuid,
 open class ReceipeRaw(
     @PrimaryKey
     var uuid: String,
-    var nb_people: Int,
+    var nbPeople: Int,
     var stars: Int
 ) {
     override fun equals(other: Any?): Boolean {
@@ -39,7 +39,7 @@ open class ReceipeRaw(
         other as ReceipeRaw
 
         if (uuid != other.uuid) return false
-        if (nb_people != other.nb_people) return false
+        if (nbPeople != other.nbPeople) return false
         if (stars != other.stars) return false
 
         return true
@@ -47,7 +47,7 @@ open class ReceipeRaw(
 
     override fun hashCode(): Int {
         var result = uuid.hashCode()
-        result = 31 * result + nb_people
+        result = 31 * result + nbPeople
         result = 31 * result + stars
         return result
     }

@@ -15,7 +15,7 @@ import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.Meal
 import com.realitix.nectar.repository.MealRepository
 import com.realitix.nectar.util.GenericAdapter
-import com.realitix.nectar.util.MealUtil
+import com.realitix.nectar.util.NectarUtil
 import com.realitix.nectar.util.RecyclerItemClickListener
 import com.realitix.nectar.util.SingleLineItemViewHolder
 import com.realitix.nectar.viewmodel.MealPagerViewModel
@@ -37,7 +37,7 @@ class MealPagerFragment : Fragment() {
     private val timePicker by lazy {
         TimePickerDialog.newInstance(
             { _: TimePickerDialog, i: Int, i1: Int, _: Int ->
-                val pickerTimestamp = MealUtil.beginDayTimestamp(timestamp) + MealUtil.hourTimestamp(i) + MealUtil.minuteTimestamp(i1)
+                val pickerTimestamp = NectarUtil.beginDayTimestamp(timestamp) + NectarUtil.hourTimestamp(i) + NectarUtil.minuteTimestamp(i1)
                 val mid = viewModel.createMeal(pickerTimestamp)
                 val action = MealsFragmentDirections.actionMealsFragmentToMealFragment(mid)
                 findNavController().navigate(action)
@@ -65,7 +65,7 @@ class MealPagerFragment : Fragment() {
         adapter = GenericAdapter(
             { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
             { holder, meal ->
-                holder.text.text = MealUtil.hourMinuteFromTimestamp(meal.timestamp)
+                holder.text.text = NectarUtil.hourMinuteFromTimestamp(meal.timestamp)
                 holder.icon.setImageDrawable(
                     ContextCompat.getDrawable(
                         requireContext(),

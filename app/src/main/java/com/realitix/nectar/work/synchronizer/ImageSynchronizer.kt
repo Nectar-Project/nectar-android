@@ -23,4 +23,10 @@ class ImageSynchronizer(
         }
     }
 
+    override fun fromDbToGit(gitRepositoryName: String, uuid: String) {
+        val image = repository.get(uuid)!!
+        val srcPath = File(image.path)
+        val dstPath = File(File(File(baseRepositoryFolder, gitRepositoryName), getEntityType().folderName), uuid)
+        srcPath.copyTo(dstPath, true)
+    }
 }

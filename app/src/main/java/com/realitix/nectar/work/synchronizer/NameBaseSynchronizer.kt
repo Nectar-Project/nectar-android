@@ -25,4 +25,9 @@ abstract class NameBaseSynchronizer<U, V>(repository: NameRepositoryInterface<U,
             repo.insertName(getNewName(parseResult.uuid, lang, name))
         }
     }
+
+    override fun populateParseResult(
+        repo: NameRepositoryInterface<U, V>,
+        uuid: String
+    ): ParseResult = ParseResult(uuid, repo.getNamesMap(uuid))
 }

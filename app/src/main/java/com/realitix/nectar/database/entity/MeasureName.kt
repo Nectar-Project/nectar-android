@@ -5,7 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 
 
-class MeasureName(measureUuid: String, language: String, name: String): TagNameRaw(measureUuid, language, name)
+class MeasureName(measureUuid: String, language: String, name: String): MeasureNameRaw(measureUuid, language, name)
 
 @Entity(
     primaryKeys = ["measureUuid", "language"],

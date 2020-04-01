@@ -75,7 +75,7 @@ class ReceipeStepFragment : Fragment() {
 
         viewModel.step.observe(viewLifecycleOwner) {
             stepDescription.text = it.description
-            adapter.setData(RecyclerViewMerger.from(it.aliments!!, it.receipes!!))
+            adapter.setData(RecyclerViewMerger.from(it.aliments, it.receipes))
         }
 
         fab.setOnClickListener {

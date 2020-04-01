@@ -3,7 +3,7 @@ package com.realitix.nectar.viewmodel
 import androidx.lifecycle.*
 import com.realitix.nectar.database.entity.Meal
 import com.realitix.nectar.repository.MealRepository
-import com.realitix.nectar.util.MealUtil.Companion.generateUuid
+import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
 import kotlinx.coroutines.runBlocking
 
 class MealPagerViewModel constructor(val repository: MealRepository, timestamp: Long) : ViewModel() {

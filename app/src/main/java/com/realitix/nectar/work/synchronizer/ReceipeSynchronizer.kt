@@ -78,4 +78,39 @@ class ReceipeSynchronizer(repository: ReceipeRepository, baseRepositoryFolder: F
             }
         }
     }
+
+    override fun populateParseResult(repo: ReceipeRepository, uuid: String): ParseResult {
+        val receipe = repo.getReceipe(uuid)!!
+
+        val names = mutableMapOf<String, String>()
+        for(n in receipe.names) {
+            names[n.language] = n.name
+        }
+
+        val tags = mutableListOf<String>()
+        for(a in receipe.tags) {
+            tags.add(a.tagUuid)
+        }
+
+        val utensils = mutableListOf<String>()
+        for(a in receipe.utensils) {
+            tags.add(a.utensilUuid)
+        }
+
+        val steps = mutableListOf<Step>()
+        for(s in receipe.steps) {
+            val aliments = mutableMapOf<String, Int>()
+            for(a in s.aliments) {
+                aliments[a.alimentUuid] = a.quantity
+            }
+
+            val receipes = mutableListOf<String>()
+            for(r in s.receipes) {
+                receipes.add(r.receipeUuid)
+            }
+            steps.add(Step(s.uuid, null, s.description, s.duration, aliments, receipes))
+        }
+
+        return ParseResult(receipe.uuid, names, receipe.nbPeople, receipe.stars, tags, utensils, steps)
+    }
 }

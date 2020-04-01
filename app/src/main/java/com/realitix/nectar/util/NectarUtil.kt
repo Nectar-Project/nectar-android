@@ -7,7 +7,7 @@ import java.util.*
 import kotlin.math.floor
 
 
-class MealUtil {
+class NectarUtil {
     companion object {
         private const val nbSecondsInMinute: Long = 60
         private const val nbSecondsInHour: Long = nbSecondsInMinute*60

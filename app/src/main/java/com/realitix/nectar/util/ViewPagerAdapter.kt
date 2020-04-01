@@ -11,7 +11,7 @@ class ViewPagerAdapter(var anchorTimestamp: Long, fm: FragmentManager):
 
     override fun getCount(): Int  = 100
     override fun getItem(position: Int): Fragment = MealPagerFragment.newInstance(getTimestampFromPosition(position))
-    override fun getPageTitle(position: Int): CharSequence = MealUtil.dayMonthFromTimestamp(getTimestampFromPosition(position))
+    override fun getPageTitle(position: Int): CharSequence = NectarUtil.dayMonthFromTimestamp(getTimestampFromPosition(position))
 
     fun getTimestampFromPosition(position: Int): Long {
         val decalPosition = position - count/2

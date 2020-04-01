@@ -55,4 +55,34 @@ class AlimentSynchronizer(
             }
         }
     }
+
+    override fun populateParseResult(repo: AlimentRepository, uuid: String): ParseResult {
+        val aliment = repo.getAliment(uuid)!!
+
+        val names = mutableMapOf<String, String>()
+        for(a in aliment.names) {
+            names[a.language] = a.name
+        }
+
+        val images = mutableListOf<String>()
+        for(a in aliment.images) {
+            images.add(a.imageUuid)
+        }
+
+        val tags = mutableListOf<String>()
+        for(a in aliment.tags) {
+            tags.add(a.tagUuid)
+        }
+
+        val states = mutableMapOf<String, State>()
+        for(state in aliment.states) {
+            val measures = mutableMapOf<String, Int>()
+            for(m in state.measures) {
+                measures[m.measureUuid] = m.quantity
+            }
+            states[state.stateUuid] = State(measures, state.nutrition)
+        }
+
+        return ParseResult(aliment.uuid, names, images, tags, states)
+    }
 }

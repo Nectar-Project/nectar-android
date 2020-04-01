@@ -4,7 +4,7 @@ import androidx.lifecycle.*
 import com.realitix.nectar.database.entity.Receipe
 import com.realitix.nectar.database.entity.ReceipeName
 import com.realitix.nectar.repository.ReceipeRepository
-import com.realitix.nectar.util.MealUtil.Companion.generateUuid
+import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
 import kotlinx.coroutines.runBlocking
 
 class ReceipeListViewModel constructor(val repository: ReceipeRepository) : ViewModel() {

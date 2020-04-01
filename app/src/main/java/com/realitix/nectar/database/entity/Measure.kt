@@ -2,9 +2,13 @@ package com.realitix.nectar.database.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 
 
-class Measure(uuid: String): MeasureRaw(uuid)
+class Measure(uuid: String): MeasureRaw(uuid) {
+    @Relation(parentColumn = "uuid", entityColumn = "measureUuid", entity = MeasureNameRaw::class)
+    lateinit var names: List<MeasureName>
+}
 
 @Entity
 open class MeasureRaw (

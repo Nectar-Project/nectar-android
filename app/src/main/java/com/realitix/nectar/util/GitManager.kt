@@ -107,14 +107,22 @@ class GitManager(private val repoDir: File, private val url: String, private val
         return DiffResult(updates, deletes)
     }
 
-    fun clone() {
-        git.toString()
-    }
-
     private fun getBranch(rev: String): CanonicalTreeParser {
         val treeParser = CanonicalTreeParser()
         val treeId = git.repository.resolve("$rev^{tree}")
         git.repository.newObjectReader().use { reader -> treeParser.reset(reader, treeId) }
         return treeParser
+    }
+
+    fun addAll() {
+        git.add().setUpdate(true).addFilepattern(".").call()
+    }
+
+    fun commit() {
+        git.commit().setMessage("Commit all changes").call()
+    }
+
+    fun push() {
+        git.push().call()
     }
 }

@@ -2,9 +2,13 @@ package com.realitix.nectar.database.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 
 
-class State(uuid: String): StateRaw(uuid)
+class State(uuid: String): StateRaw(uuid) {
+    @Relation(parentColumn = "uuid", entityColumn = "stateUuid", entity = StateNameRaw::class)
+    lateinit var names: List<StateName>
+}
 
 @Entity
 open class StateRaw (

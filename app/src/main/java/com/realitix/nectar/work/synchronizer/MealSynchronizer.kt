@@ -35,4 +35,20 @@ class MealSynchronizer(repository: MealRepository, baseRepositoryFolder: File):
             repo.insertMealReceipe(MealReceipeRaw(receipeUuid, parseResult.uuid))
         }
     }
+
+    override fun populateParseResult(repo: MealRepository, uuid: String): ParseResult {
+        val meal = repo.getMeal(uuid)!!
+
+        val aliments = mutableMapOf<String, Int>()
+        for(a in meal.aliments) {
+            aliments[a.alimentUuid] = a.quantity
+        }
+
+        val receipes = mutableListOf<String>()
+        for(r in meal.receipes) {
+            receipes.add(r.receipeUuid)
+        }
+
+        return ParseResult(meal.uuid, meal.nbPeople, meal.timestamp, meal.description, aliments, receipes)
+    }
 }

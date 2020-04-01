@@ -66,8 +66,8 @@ class MealFragment : Fragment() {
         recyclerView.hasFixedSize()
 
         viewModel.meal.observe(viewLifecycleOwner) {
-            adapter.setData(RecyclerViewMerger.from(it.aliments!!, it.receipes!!))
-            datetime.text = MealUtil.dayMonthYearFromTimestamp(it.timestamp)
+            adapter.setData(RecyclerViewMerger.from(it.aliments, it.receipes))
+            datetime.text = NectarUtil.dayMonthYearFromTimestamp(it.timestamp)
         }
 
         fab.setOnClickListener {

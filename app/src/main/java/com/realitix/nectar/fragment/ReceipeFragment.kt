@@ -68,10 +68,10 @@ class ReceipeFragment : Fragment() {
 
         viewModel.receipe.observe(viewLifecycleOwner) {
             name.text = it.getName()
-            nbPeople.text = it.nb_people.toString()
+            nbPeople.text = it.nbPeople.toString()
             stars.text = it.stars.toString()
             nameTextInput.setText(it.getName())
-            adapter.setData(it.steps!!)
+            adapter.setData(it.steps)
         }
 
         name.setOnClickListener {
