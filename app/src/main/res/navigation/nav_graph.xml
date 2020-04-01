@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/receipeFragment"
-        android:name="com.realitix.mealassistant.fragment.ReceipeFragment"
+        android:name="com.realitix.nectar.fragment.ReceipeFragment"
         android:label="Recette"
         tools:layout="@layout/fragment_receipe" >
         <argument android:name="receipeUuid"
@@ -18,7 +18,7 @@
     </fragment>
     <fragment
         android:id="@+id/receipesFragment"
-        android:name="com.realitix.mealassistant.fragment.ReceipesFragment"
+        android:name="com.realitix.nectar.fragment.ReceipesFragment"
         android:label="Liste des recettes"
         tools:layout="@layout/fragment_receipes" >
         <action
@@ -27,7 +27,7 @@
     </fragment>
     <fragment
         android:id="@+id/receipeStepFragment"
-        android:name="com.realitix.mealassistant.fragment.ReceipeStepFragment"
+        android:name="com.realitix.nectar.fragment.ReceipeStepFragment"
         android:label="Etape"
         tools:layout="@layout/fragment_receipe_step" >
         <argument
@@ -45,7 +45,7 @@
     </fragment>
     <fragment
         android:id="@+id/alimentAddSearchFragment"
-        android:name="com.realitix.mealassistant.fragment.AlimentAddSearchFragment"
+        android:name="com.realitix.nectar.fragment.AlimentAddSearchFragment"
         android:label="Recherche d'un aliment"
         tools:layout="@layout/fragment_aliment_add_search" >
         <action
@@ -62,7 +62,7 @@
     </fragment>
     <fragment
         android:id="@+id/alimentAddQuantityFragment"
-        android:name="com.realitix.mealassistant.fragment.AlimentAddQuantityFragment"
+        android:name="com.realitix.nectar.fragment.AlimentAddQuantityFragment"
         android:label="Quantité de l'aliment"
         tools:layout="@layout/fragment_aliment_add_quantity" >
         <argument
@@ -77,7 +77,7 @@
     </fragment>
     <fragment
         android:id="@+id/receipeAddFragment"
-        android:name="com.realitix.mealassistant.fragment.ReceipeAddSearchFragment"
+        android:name="com.realitix.nectar.fragment.ReceipeAddSearchFragment"
         android:label="fragment_receipe_add"
         tools:layout="@layout/fragment_receipe_add_search" >
         <argument
@@ -88,7 +88,7 @@
     </fragment>
     <fragment
         android:id="@+id/mealsFragment"
-        android:name="com.realitix.mealassistant.fragment.MealsFragment"
+        android:name="com.realitix.nectar.fragment.MealsFragment"
         android:label="Planning"
         tools:layout="@layout/fragment_meals" >
         <action
@@ -97,7 +97,7 @@
     </fragment>
     <fragment
         android:id="@+id/mealFragment"
-        android:name="com.realitix.mealassistant.fragment.MealFragment"
+        android:name="com.realitix.nectar.fragment.MealFragment"
         android:label="Repas"
         tools:layout="@layout/fragment_meal" >
         <argument
@@ -112,7 +112,7 @@
     </fragment>
     <fragment
         android:id="@+id/mealPagerFragment"
-        android:name="com.realitix.mealassistant.fragment.MealPagerFragment"
+        android:name="com.realitix.nectar.fragment.MealPagerFragment"
         android:label="fragment_meal_pager"
         tools:layout="@layout/fragment_meal_pager" />
 </navigation>
