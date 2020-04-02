@@ -64,7 +64,6 @@ class SynchronizerUnitTest {
         repositoryFile.deleteRecursively()
     }
 
-
     @Test
     fun mealGitToDb() {
         val mealUuid = "eaa61552-e57c-49fa-a028-4ddc5b8d48c0"

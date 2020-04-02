@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Nectar</string>
+    <string name="receipe_list">Liste des recettes</string>
+    <string name="receipe">Recette</string>
+    <string name="action_settings">Paramètres</string>
+</resources>

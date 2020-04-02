@@ -10,5 +10,6 @@ enum class EntityType(val folderName: String) {
     UTENSIL("utensils"),
     ALIMENT("aliments"),
     RECEIPE("receipes"),
+    BOOK("books"),
     MEAL("meals")
 }

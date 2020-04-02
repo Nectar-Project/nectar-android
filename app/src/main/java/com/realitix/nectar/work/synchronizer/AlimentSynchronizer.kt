@@ -22,7 +22,7 @@ class AlimentSynchronizer(
     class State(val measures: Map<String, Int>, val nutrition: Nutrition)
 
     override fun getEntityType(): EntityType = EntityType.ALIMENT
-    override fun getParseResult(repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(repositoryName, uuid)
+    override fun getParseResult(repositoryName: String, uuid: String): ParseResult = getInnerParseResult(repositoryName, uuid)
 
     override fun updateDb(repo: AlimentRepository, parseResult: ParseResult) {
         // Create aliment only if not exists

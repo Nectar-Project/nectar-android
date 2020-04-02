@@ -10,4 +10,9 @@
         android:icon="@android:drawable/ic_dialog_email"
         android:title="Comment" />
 
+    <item
+        android:id="@+id/settingsFragment"
+        android:icon="@android:drawable/ic_dialog_email"
+        android:title="Comment" />
+
 </menu>

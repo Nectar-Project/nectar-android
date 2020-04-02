@@ -19,6 +19,10 @@ import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
         AlimentStateRaw::class,
         AlimentStateMeasureRaw::class,
         AlimentTagRaw::class,
+        BookRaw::class,
+        BookImageRaw::class,
+        BookNameRaw::class,
+        BookReceipeRaw::class,
         DatabaseUpdateRaw::class,
         GitRepositoryRaw::class,
         ImageRaw::class,
@@ -44,7 +48,7 @@ import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
         UtensilNameRaw::class
     ],
     exportSchema = false,
-    version = 5
+    version = 1
 )
 @TypeConverters(Converter::class)
 abstract class NectarDatabase : RoomDatabase() {
@@ -54,6 +58,10 @@ abstract class NectarDatabase : RoomDatabase() {
     abstract fun alimentStateDao(): AlimentStateDao
     abstract fun alimentStateMeasureDao(): AlimentStateMeasureDao
     abstract fun alimentTagDao(): AlimentTagDao
+    abstract fun bookDao(): BookDao
+    abstract fun bookImageDao(): BookImageDao
+    abstract fun bookNameDao(): BookNameDao
+    abstract fun bookReceipeDao(): BookReceipeDao
     abstract fun databaseUpdateDao(): DatabaseUpdateDao
     abstract fun gitRepositoryDao(): GitRepositoryDao
     abstract fun imageDao(): ImageDao

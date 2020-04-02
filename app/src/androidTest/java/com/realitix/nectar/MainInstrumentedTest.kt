@@ -22,7 +22,7 @@ class MainInstrumentedTest {
     var activityRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java)
 
     @Test
-    fun changeText_sameActivity() {
+    fun main() {
         onView(withId(R.id.mealsFragment))
             .perform(click())
     }

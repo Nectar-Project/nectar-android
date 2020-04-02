@@ -115,4 +115,9 @@
         android:name="com.realitix.nectar.fragment.MealPagerFragment"
         android:label="fragment_meal_pager"
         tools:layout="@layout/fragment_meal_pager" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.realitix.nectar.fragment.SettingsFragment"
+        android:label="@string/action_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

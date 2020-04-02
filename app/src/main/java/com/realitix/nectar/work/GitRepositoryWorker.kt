@@ -21,7 +21,8 @@ class GitRepositoryWorker(val context: Context, workerParams: WorkerParameters)
         EntityType.UTENSIL to UtensilSynchronizer(UtensilRepository(context), NectarUtil.getRepositoryFolder(context)),
         EntityType.RECEIPE to ReceipeSynchronizer(ReceipeRepository(context), NectarUtil.getRepositoryFolder(context)),
         EntityType.MEAL to MealSynchronizer(MealRepository(context), NectarUtil.getRepositoryFolder(context)),
-        EntityType.IMAGE to ImageSynchronizer(ImageRepository(context), NectarUtil.getRepositoryFolder(context), NectarUtil.getImageFolder(context))
+        EntityType.IMAGE to ImageSynchronizer(ImageRepository(context), NectarUtil.getRepositoryFolder(context), NectarUtil.getImageFolder(context)),
+        EntityType.BOOK to BookSynchronizer(BookRepository(context), NectarUtil.getRepositoryFolder(context))
     )
 
     private fun fromGitToDbRepository(gitRepositoryName: String, diff: GitManager.DiffResult) {
