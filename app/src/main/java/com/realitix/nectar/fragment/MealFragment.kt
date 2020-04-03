@@ -57,7 +57,7 @@ class MealFragment : Fragment() {
                 holder.icon.setImageDrawable(
                     ContextCompat.getDrawable(
                         requireContext(),
-                        R.drawable.ic_receipt_black_36dp
+                        R.drawable.ic_receipt_black_24dp
                     )
                 )
             }

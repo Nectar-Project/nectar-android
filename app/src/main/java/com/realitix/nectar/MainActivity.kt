@@ -6,6 +6,8 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
 import androidx.work.*
 import com.realitix.nectar.work.GitRepositoryWorker
 import kotlinx.android.synthetic.main.activity_main.*
