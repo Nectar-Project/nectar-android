@@ -1,16 +1,28 @@
 package com.realitix.nectar.fragment.settings
 
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.preference.*
 import com.realitix.nectar.R
+import com.realitix.nectar.repository.GitRepoRepository
 
 
 class SettingsGitRepositoryFragment: PreferenceFragmentCompat() {
+    private lateinit var uuid: String
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            uuid = it.getString("uuid")!!
+        }
+    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        preferenceManager.preferenceDataStore = GitRepositoryDataStore(GitRepoRepository(requireContext()), uuid)
         val context = preferenceManager.context
         val screen = preferenceManager.createPreferenceScreen(context)
 
@@ -58,6 +70,19 @@ class SettingsGitRepositoryFragment: PreferenceFragmentCompat() {
         url.text = ""
         url.summary = "Url du dépôt"
 
+        val rescan = SwitchPreference(context)
+        rescan.key = "rescan"
+        rescan.title = "Forcer un scan total"
+        rescan.summaryOn = "La prochaine synchonization forcera un scan total"
+        rescan.summaryOff = "La prohcaine synchonization fonctionnera normalement"
+
+        val frequency = SeekBarPreference(context)
+        frequency.key = "frequency"
+        frequency.title = "Fréquence de synchronization"
+        frequency.min = 1
+        frequency.max = 1*60*24
+        frequency.showSeekBarValue = true
+
         val credential = SwitchPreference(context)
         credential.key = "credential"
         credential.title = "Identifiants de connexion"
@@ -81,6 +106,8 @@ class SettingsGitRepositoryFragment: PreferenceFragmentCompat() {
         category.addPreference(name)
         category.addPreference(readOnly)
         category.addPreference(url)
+        category.addPreference(rescan)
+        category.addPreference(frequency)
         category.addPreference(credential)
         category.addPreference(username)
         category.addPreference(password)
@@ -91,10 +118,6 @@ class SettingsGitRepositoryFragment: PreferenceFragmentCompat() {
         // Set dependancies
         username.dependency = credential.key
         password.dependency = credential.key
-        credential.dependency = enabled.key
-        url.dependency = enabled.key
-        readOnly.dependency = enabled.key
-        name.dependency = enabled.key
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -103,8 +126,11 @@ class SettingsGitRepositoryFragment: PreferenceFragmentCompat() {
 
     companion object {
         @JvmStatic
-        fun newInstance() =
-            SettingsGitRepositoryFragment()
-                .apply {}
+        fun newInstance(uuid: String) =
+            SettingsGitRepositoryFragment().apply {
+                arguments = Bundle().apply {
+                    putString("uuid", uuid)
+                }
+            }
     }
 }

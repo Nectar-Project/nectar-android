@@ -8,6 +8,9 @@ import com.realitix.nectar.database.entity.GitRepositoryRaw
 
 @Dao
 interface GitRepositoryDao: BaseDao<GitRepositoryRaw> {
+    @Query("SELECT * FROM GitRepositoryRaw WHERE uuid=:uuid")
+    fun get(uuid: String): GitRepository?
+
     @Query("SELECT * FROM GitRepositoryRaw")
     fun list(): List<GitRepository>
 

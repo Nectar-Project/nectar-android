@@ -96,6 +96,7 @@ abstract class NectarDatabase : RoomDatabase() {
                             generateUuid(),
                             NectarUtil.getProperty(context, "defaultGitRepositoryName"),
                             NectarUtil.getProperty(context, "defaultGitRepositoryUrl"),
+                            enabled = true,
                             rescan = true,
                             readOnly = true,
                             lastCheck = 0,
@@ -106,6 +107,7 @@ abstract class NectarDatabase : RoomDatabase() {
                         contentValues.put("uuid", repo.uuid)
                         contentValues.put("name", repo.name)
                         contentValues.put("url", repo.url)
+                        contentValues.put("enabled", repo.enabled)
                         contentValues.put("rescan", repo.rescan)
                         contentValues.put("readOnly", repo.readOnly)
                         contentValues.put("lastCheck", repo.lastCheck)
