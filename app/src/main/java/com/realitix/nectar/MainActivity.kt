@@ -16,8 +16,6 @@ import java.util.concurrent.TimeUnit
 
 
 class MainActivity: AppCompatActivity() {
-    lateinit var gitWorkerId: UUID
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -37,8 +35,7 @@ class MainActivity: AppCompatActivity() {
             .addTag("git")
             .build()
 
-        gitWorkerId = gitWorker.id
-        WorkManager.getInstance(this).enqueue(gitWorker)
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork("gitSync", ExistingPeriodicWorkPolicy.REPLACE, gitWorker)
     }
 
     override fun onSupportNavigateUp() = findNavController(this, R.id.nav_host_fragment).navigateUp()
