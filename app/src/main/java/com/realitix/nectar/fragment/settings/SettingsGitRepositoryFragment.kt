@@ -4,6 +4,7 @@ package com.realitix.nectar.fragment.settings
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.webkit.URLUtil
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.preference.*
@@ -13,115 +14,74 @@ import com.realitix.nectar.repository.GitRepoRepository
 
 class SettingsGitRepositoryFragment: PreferenceFragmentCompat() {
     private lateinit var uuid: String
+    private lateinit var frequencyEntries: Array<String>
+    private lateinit var frequencyEntryValues: Array<String>
+    private lateinit var dataStore: GitRepositoryDataStore
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         arguments?.let {
             uuid = it.getString("uuid")!!
         }
+        frequencyEntries = resources.getStringArray(R.array.frequencyEntries)
+        frequencyEntryValues = resources.getStringArray(R.array.frequencyEntryValues)
+        dataStore = GitRepositoryDataStore(GitRepoRepository(requireContext()), frequencyEntryValues, uuid)
+        super.onCreate(savedInstanceState)
+    }
+
+    private fun checkUrl(url: String?): String? {
+        if(url.isNullOrBlank())
+            return "URL non renseignée"
+        if(!URLUtil.isValidUrl(url))
+            return "URL invalide: $url"
+        return url
+    }
+
+    private fun frequencyLabel(f: String?): String? {
+        val index = frequencyEntryValues.indexOf(f)
+        return frequencyEntries[index]
+    }
+
+    private fun setValueAsSummary(pref: Preference, initVal: String?, modifier: (v: String?) -> String? = {it}) {
+        pref.summary = modifier(initVal)
+        pref.setOnPreferenceChangeListener { preference, newValue ->
+            preference.summary = modifier(newValue.toString())
+            true
+        }
+    }
+
+    private fun configureField(key: String, modifier: (v: String?) -> String? = {it}) {
+        val pref = preferenceManager.preferenceScreen.findPreference<Preference>(key)!!
+        setValueAsSummary(pref, dataStore.getString(pref.key, ""), modifier)
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        preferenceManager.preferenceDataStore = GitRepositoryDataStore(GitRepoRepository(requireContext()), uuid)
-        val context = preferenceManager.context
-        val screen = preferenceManager.createPreferenceScreen(context)
+        preferenceManager.preferenceDataStore = dataStore
+        setPreferencesFromResource(R.xml.settings_git_repository, rootKey)
 
-        val backButton = Preference(context)
-        backButton.key = "backButton"
-        backButton.title = "Back"
-        backButton.summary = "Come back to general settings"
-        backButton.icon = ContextCompat.getDrawable(
-            requireContext(),
-            R.drawable.ic_arrow_back_black_24dp
-        )
-
+        val backButton = preferenceManager.preferenceScreen.findPreference<Preference>("backButton")!!
         backButton.setOnPreferenceClickListener {
             parentFragmentManager.popBackStack()
             true
         }
-        screen.addPreference(backButton)
 
-        val category = PreferenceCategory(context)
-        category.key = "category"
-        category.title = "Informations sur le dépôt"
-        screen.addPreference(category)
+        configureField("name")
+        configureField("url", ::checkUrl)
+        configureField("frequency", ::frequencyLabel)
+        configureField("username")
+        configureField("password")
 
-        val enabled = SwitchPreference(context)
-        enabled.key = "enabled"
-        enabled.title = "Activé"
-        enabled.summaryOn = "Le dépôt est activé"
-        enabled.summaryOff = "Le dépôt est désactivé"
-
-        val name = EditTextPreference(context)
-        name.key = "name"
-        name.title = "Name"
-        name.text = "name"
-        name.summary = "Nom du dépôt"
-
-        val readOnly = SwitchPreference(context)
-        readOnly.key = "readOnly"
-        readOnly.title = "Lecture seule"
-        readOnly.summaryOn = "Le dépôt est en lecture seule"
-        readOnly.summaryOff = "Le dépôt est en lecture/écriture"
-
-        val url = EditTextPreference(context)
-        url.key = "url"
-        url.title = "Url"
-        url.text = ""
-        url.summary = "Url du dépôt"
-
-        val rescan = SwitchPreference(context)
-        rescan.key = "rescan"
-        rescan.title = "Forcer un scan total"
-        rescan.summaryOn = "La prochaine synchonization forcera un scan total"
-        rescan.summaryOff = "La prohcaine synchonization fonctionnera normalement"
-
-        val frequency = SeekBarPreference(context)
-        frequency.key = "frequency"
-        frequency.title = "Fréquence de synchronization"
-        frequency.min = 1
-        frequency.max = 1*60*24
-        frequency.showSeekBarValue = true
-
-        val credential = SwitchPreference(context)
-        credential.key = "credential"
-        credential.title = "Identifiants de connexion"
-        credential.summaryOn = "Ce dépôt est accessible via vos identifiants"
-        credential.summaryOff = "Ce dépôt est acessible publiquement"
-
-        val username = EditTextPreference(context)
-        username.key = "username"
-        username.title = "Nom d'utilisateur"
-        username.text = ""
-        username.summary = "Nom d'utilisateur permettant de se connecter à ce dépôt"
-
-        val password = EditTextPreference(context)
-        password.key = "password"
-        password.title = "Mot de passe"
-        password.text = ""
-        password.summary = "Mot de passe permettant de se connecter à ce dépôt"
-
-        // Add preferences to the category
-        category.addPreference(enabled)
-        category.addPreference(name)
-        category.addPreference(readOnly)
-        category.addPreference(url)
-        category.addPreference(rescan)
-        category.addPreference(frequency)
-        category.addPreference(credential)
-        category.addPreference(username)
-        category.addPreference(password)
-
-        screen.addPreference(category)
-        preferenceScreen = screen
-
-        // Set dependancies
-        username.dependency = credential.key
-        password.dependency = credential.key
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        val credential = preferenceManager.preferenceScreen.findPreference<Preference>("credential")!!
+        credential.setOnPreferenceChangeListener { _, newValue ->
+            if(!(newValue as Boolean)) {
+                val username = preferenceManager.preferenceScreen.findPreference<EditTextPreference>("username")!!
+                val password = preferenceManager.preferenceScreen.findPreference<EditTextPreference>("password")!!
+                username.text = ""
+                username.callChangeListener("")
+                password.text = ""
+                password.callChangeListener("")
+            }
+            true
+        }
     }
 
     companion object {

@@ -16,12 +16,16 @@ class GitRepoRepository(val context: Context) {
         return NectarDatabase.getInstance(context).gitRepositoryDao().listLive()
     }
 
-    fun get(uuid: String): GitRepository? {
-        return NectarDatabase.getInstance(context).gitRepositoryDao().get(uuid)
+    suspend fun getSuspend(uuid: String): GitRepository? {
+        return NectarDatabase.getInstance(context).gitRepositoryDao().getSuspend(uuid)
     }
 
     fun updateGitRepository(repo: GitRepository) {
         NectarDatabase.getInstance(context).gitRepositoryDao().update(repo)
+    }
+
+    suspend fun updateSuspend(repo: GitRepository) {
+        NectarDatabase.getInstance(context).gitRepositoryDao().updateSuspend(repo)
     }
 
     suspend fun insertGitRepositorySuspend(r: GitRepositoryRaw) {

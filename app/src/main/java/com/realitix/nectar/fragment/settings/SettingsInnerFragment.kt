@@ -65,7 +65,7 @@ class SettingsInnerFragment: PreferenceFragmentCompat() {
                 rescan = true,
                 readOnly = true,
                 lastCheck = 0,
-                frequency = 60*60,
+                frequency = 60*60, // One hour
                 credentials = null
             ))
             false
@@ -84,7 +84,7 @@ class SettingsInnerFragment: PreferenceFragmentCompat() {
             // add all existing repositories
             for(git in it) {
                 val pref = Preference(context)
-                pref.key= git.name
+                pref.key= git.uuid
                 pref.title = git.name
                 pref.fragment = SettingsGitRepositoryFragment::class.qualifiedName
                 pref.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_navigate_next_black_24dp)

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        android:icon="@drawable/ic_arrow_back_black_24dp"
+        app:key="backButton"
+        app:summary="Come back to general settings"
+        app:title="Back" />
+
+    <PreferenceCategory android:title="Informations sur le dépôt">
+        <SwitchPreferenceCompat
+            app:key="enabled"
+            app:title="Activé"
+            app:summaryOn="Le dépôt est activé"
+            app:summaryOff="Le dépôt est désactivé"/>
+        <EditTextPreference
+            app:key="name"
+            app:title="Nom du dépôt" />
+        <SwitchPreferenceCompat
+            app:key="readOnly"
+            app:title="Lecture seule"
+            app:summaryOn="Le dépôt est en lecture seule"
+            app:summaryOff="Le dépôt est en lecture/écriture"/>
+        <EditTextPreference
+            app:key="url"
+            app:summary="Url du dépôt"
+            app:title="Url" />
+        <SwitchPreferenceCompat
+            app:key="rescan"
+            app:title="Forcer un scan total"
+            app:summaryOn="La prochaine synchonization forcera un scan total"
+            app:summaryOff="La prohcaine synchonization fonctionnera normalement"/>
+        <DropDownPreference
+            app:title="Fréquence de synchronization"
+            app:key="frequency"
+            android:entries="@array/frequencyEntries"
+            android:entryValues="@array/frequencyEntryValues" />
+        <SwitchPreferenceCompat
+            app:key="credential"
+            app:title="Identifiants de connexion"
+            app:summaryOn="Ce dépôt est accessible via vos identifiants"
+            app:summaryOff="Ce dépôt est acessible publiquement"/>
+        <EditTextPreference
+            app:key="username"
+            app:summary="Nom d'utilisateur permettant de se connecter à ce dépôt"
+            app:title="Nom d'utilisateur"
+            app:dependency="credential" />
+        <EditTextPreference
+            app:key="password"
+            app:summary="Mot de passe permettant de se connecter à ce dépôt"
+            app:title="Mot de passe"
+            app:dependency="credential" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

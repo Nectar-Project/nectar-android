@@ -43,7 +43,8 @@ class SettingsFragment : Fragment(), PreferenceFragmentCompat.OnPreferenceStartF
         caller: PreferenceFragmentCompat?,
         pref: Preference?
     ): Boolean {
-        val newFragment = SettingsGitRepositoryFragment.newInstance()
+        val uuid = pref!!.key
+        val newFragment = SettingsGitRepositoryFragment.newInstance(uuid)
         updateFragment(newFragment)
         return true
     }
