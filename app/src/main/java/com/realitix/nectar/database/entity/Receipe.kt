@@ -1,19 +1,20 @@
 package com.realitix.nectar.database.entity
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 
 
-class Receipe(uuid: String, nbPeople: Int, stars: Int): ReceipeWS(uuid, nbPeople, stars) {
+class Receipe(uuid: String, nameUuid: String, nbPeople: Int, stars: Int): ReceipeWS(uuid, nameUuid, nbPeople, stars) {
     @Relation(parentColumn = "uuid", entityColumn = "receipeUuid", entity = ReceipeStepRaw::class)
     lateinit var steps: List<ReceipeStep>
 }
 
 // Receipe without steps to prevent cycle in ReceipeStepReceipe
-open class ReceipeWS(uuid: String, nbPeople: Int, stars: Int): ReceipeRaw(uuid, nbPeople, stars) {
-    @Relation(parentColumn = "uuid", entityColumn = "receipeUuid", entity = ReceipeNameRaw::class)
-    lateinit var names: List<ReceipeName>
+open class ReceipeWS(uuid: String, nameUuid: String, nbPeople: Int, stars: Int): ReceipeRaw(uuid, nameUuid, nbPeople, stars) {
+    @Relation(parentColumn = "nameUuid", entityColumn = "uuid", entity = StringKeyRaw::class)
+    lateinit var name: StringKey
     @Relation(parentColumn = "uuid", entityColumn = "receipeUuid", entity = ReceipeTagRaw::class)
     lateinit var tags: List<ReceipeTag>
     @Relation(parentColumn = "uuid", entityColumn = "receipeUuid", entity = ReceipeUtensilRaw::class)
@@ -21,14 +22,23 @@ open class ReceipeWS(uuid: String, nbPeople: Int, stars: Int): ReceipeRaw(uuid, 
     @Relation(parentColumn = "uuid", entityColumn = "receipeUuid", entity = ReceipeImageRaw::class)
     lateinit var images: List<ReceipeImage>
 
-    fun getName(): String = getReceipeName().name
-    fun getReceipeName(): ReceipeName = names[0]
+    fun getName(): String {
+        return name.strings[0].value
+    }
 }
 
-@Entity
+@Entity(
+    foreignKeys = [ForeignKey(
+        entity = StringKeyRaw::class,
+        parentColumns = ["uuid"],
+        childColumns = ["nameUuid"],
+        onDelete = ForeignKey.CASCADE
+    )]
+)
 open class ReceipeRaw(
     @PrimaryKey
     var uuid: String,
+    var nameUuid: String,
     var nbPeople: Int,
     var stars: Int
 ) {
@@ -39,6 +49,7 @@ open class ReceipeRaw(
         other as ReceipeRaw
 
         if (uuid != other.uuid) return false
+        if (nameUuid != other.nameUuid) return false
         if (nbPeople != other.nbPeople) return false
         if (stars != other.stars) return false
 
@@ -47,8 +58,10 @@ open class ReceipeRaw(
 
     override fun hashCode(): Int {
         var result = uuid.hashCode()
+        result = 31 * result + nameUuid.hashCode()
         result = 31 * result + nbPeople
         result = 31 * result + stars
         return result
     }
+
 }

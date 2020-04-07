@@ -10,10 +10,6 @@ class BookRepository(val context: Context) {
         return NectarDatabase.getInstance(context).bookDao().insert(i)
     }
 
-    fun insertBookName(i: BookNameRaw) {
-        return NectarDatabase.getInstance(context).bookNameDao().insert(i)
-    }
-
     fun insertBookImage(i: BookImageRaw) {
         return NectarDatabase.getInstance(context).bookImageDao().insert(i)
     }

@@ -5,8 +5,6 @@ import androidx.room.*
 
 
 class Aliment(uuid: String, nameUuid: String): AlimentRaw(uuid, nameUuid) {
-    //@Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentNameRaw::class)
-    //lateinit var names: List<AlimentName>
     @Relation(parentColumn = "nameUuid", entityColumn = "uuid", entity = StringKeyRaw::class)
     lateinit var name: StringKey
     @Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentTagRaw::class)
@@ -18,11 +16,17 @@ class Aliment(uuid: String, nameUuid: String): AlimentRaw(uuid, nameUuid) {
 
     fun getName(): String {
         return name.strings[0].value
-        //return names[0].name
     }
 }
 
-@Entity
+@Entity(
+    foreignKeys = [ForeignKey(
+        entity = StringKeyRaw::class,
+        parentColumns = ["uuid"],
+        childColumns = ["nameUuid"],
+        onDelete = ForeignKey.CASCADE
+    )]
+)
 open class AlimentRaw (
     @PrimaryKey
     var uuid: String,

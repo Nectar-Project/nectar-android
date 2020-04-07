@@ -1,6 +1,8 @@
 package com.realitix.nectar.repository
 
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.realitix.nectar.database.NectarDatabase
 import com.realitix.nectar.database.entity.*
@@ -35,10 +37,6 @@ class ReceipeRepository(val context: Context) {
         NectarDatabase.getInstance(context).receipeDao().update(receipe)
     }
 
-    suspend fun updateReceipeName(receipeName: ReceipeName) {
-        NectarDatabase.getInstance(context).receipeDao().updateName(receipeName)
-    }
-
     suspend fun hasReceipe(receipeUuid: String): Boolean {
         if(NectarDatabase.getInstance(context).receipeDao().has(receipeUuid) != null)
             return true
@@ -57,10 +55,6 @@ class ReceipeRepository(val context: Context) {
 
     fun insertReceipe(receipe: ReceipeRaw) {
         NectarDatabase.getInstance(context).receipeDao().insert(receipe)
-    }
-
-    fun insertReceipeName(name: ReceipeNameRaw) {
-        NectarDatabase.getInstance(context).receipeNameDao().insert(name)
     }
 
     fun insertReceipeTag(tag: ReceipeTagRaw) {
@@ -83,19 +77,22 @@ class ReceipeRepository(val context: Context) {
         return NectarDatabase.getInstance(context).receipeStepReceipeDao().insert(r)
     }
 
-    suspend fun createReceipeName(receipeName: ReceipeNameRaw) {
-        NectarDatabase.getInstance(context).receipeDao().insertName(receipeName)
-    }
-
-    suspend fun createReceipeStep(receipeStep: ReceipeStep) {
+    suspend fun createReceipeStep(receipeStep: ReceipeStepRaw) {
         return NectarDatabase.getInstance(context).receipeStepDao().insertSuspended(receipeStep)
     }
 
-    suspend fun createReceipeStepAliment(receipeStepAliment: ReceipeStepAliment) {
-        return NectarDatabase.getInstance(context).receipeStepAlimentDao().insertSuspended(receipeStepAliment)
+    suspend fun createReceipeStepAliment(receipeStepAliment: ReceipeStepAlimentRaw): Boolean {
+        return try {
+            NectarDatabase.getInstance(context).receipeStepAlimentDao().insertSuspended(receipeStepAliment)
+            true
+        } catch (e: SQLiteConstraintException) {
+            // If aliment is already in this step, UNIQUE constraint error, so we return false
+            Log.e("Nectar", "Aliment ${receipeStepAliment.alimentUuid} is already in step ${receipeStepAliment.stepUuid}")
+            false
+        }
     }
 
-    suspend fun createReceipeStepReceipe(receipeStepReceipe: ReceipeStepReceipe) {
+    suspend fun createReceipeStepReceipe(receipeStepReceipe: ReceipeStepReceipeRaw) {
         return NectarDatabase.getInstance(context).receipeStepReceipeDao().insert(receipeStepReceipe)
     }
 }

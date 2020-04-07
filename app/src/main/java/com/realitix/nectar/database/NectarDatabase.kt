@@ -14,14 +14,11 @@ import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
     entities = [
         AlimentRaw::class,
         AlimentImageRaw::class,
-        AlimentNameRaw::class,
-        AlimentNameFts::class,
         AlimentStateRaw::class,
         AlimentStateMeasureRaw::class,
         AlimentTagRaw::class,
         BookRaw::class,
         BookImageRaw::class,
-        BookNameRaw::class,
         BookReceipeRaw::class,
         DatabaseUpdateRaw::class,
         GitRepositoryRaw::class,
@@ -30,25 +27,19 @@ import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
         MealAlimentRaw::class,
         MealReceipeRaw::class,
         MeasureRaw::class,
-        MeasureNameRaw::class,
         StringKeyRaw::class,
         StringKeyValueRaw::class,
         StringKeyValueFts::class,
         ReceipeRaw::class,
         ReceipeImageRaw::class,
-        ReceipeNameRaw::class,
-        ReceipeNameFts::class,
         ReceipeStepRaw::class,
         ReceipeStepAlimentRaw::class,
         ReceipeStepReceipeRaw::class,
         ReceipeTagRaw::class,
         ReceipeUtensilRaw::class,
         StateRaw::class,
-        StateNameRaw::class,
         TagRaw::class,
-        TagNameRaw::class,
-        UtensilRaw::class,
-        UtensilNameRaw::class
+        UtensilRaw::class
     ],
     exportSchema = false,
     version = 1
@@ -57,13 +48,11 @@ import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
 abstract class NectarDatabase : RoomDatabase() {
     abstract fun alimentDao(): AlimentDao
     abstract fun alimentImageDao(): AlimentImageDao
-    abstract fun alimentNameDao(): AlimentNameDao
     abstract fun alimentStateDao(): AlimentStateDao
     abstract fun alimentStateMeasureDao(): AlimentStateMeasureDao
     abstract fun alimentTagDao(): AlimentTagDao
     abstract fun bookDao(): BookDao
     abstract fun bookImageDao(): BookImageDao
-    abstract fun bookNameDao(): BookNameDao
     abstract fun bookReceipeDao(): BookReceipeDao
     abstract fun databaseUpdateDao(): DatabaseUpdateDao
     abstract fun gitRepositoryDao(): GitRepositoryDao
@@ -72,22 +61,17 @@ abstract class NectarDatabase : RoomDatabase() {
     abstract fun mealDao(): MealDao
     abstract fun mealReceipeDao(): MealReceipeDao
     abstract fun measureDao(): MeasureDao
-    abstract fun measureNameDao(): MeasureNameDao
     abstract fun nameDao(): StringKeyDao
     abstract fun nameValueDao(): StringKeyValueDao
     abstract fun receipeDao(): ReceipeDao
-    abstract fun receipeNameDao(): ReceipeNameDao
     abstract fun receipeTagDao(): ReceipeTagDao
     abstract fun receipeUtensilDao(): ReceipeUtensilDao
     abstract fun receipeStepAlimentDao(): ReceipeStepAlimentDao
     abstract fun receipeStepDao(): ReceipeStepDao
     abstract fun receipeStepReceipeDao(): ReceipeStepReceipeDao
     abstract fun stateDao(): StateDao
-    abstract fun stateNameDao(): StateNameDao
     abstract fun tagDao(): TagDao
-    abstract fun tagNameDao(): TagNameDao
     abstract fun utensilDao(): UtensilDao
-    abstract fun utensilNameDao(): UtensilNameDao
 
     companion object {
         private var instance: NectarDatabase? = null

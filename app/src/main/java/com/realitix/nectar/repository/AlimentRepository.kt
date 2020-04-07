@@ -23,10 +23,6 @@ class AlimentRepository(val context: Context) {
         return NectarDatabase.getInstance(context).alimentDao().insert(aliment)
     }
 
-    fun insertAlimentName(alimentName: AlimentNameRaw) {
-        return NectarDatabase.getInstance(context).alimentNameDao().insert(alimentName)
-    }
-
     fun insertAlimentImage(a: AlimentImageRaw) {
         return NectarDatabase.getInstance(context).alimentImageDao().insert(a)
     }

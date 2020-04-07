@@ -1,14 +1,14 @@
 package com.realitix.nectar.background.synchronizer
 
 import com.realitix.nectar.database.entity.*
-import com.realitix.nectar.repository.NameRepository
+import com.realitix.nectar.repository.StringKeyRepository
 import com.realitix.nectar.util.EntityType
 import java.io.File
 
 class StringKeySynchronizer(
-    repository: NameRepository,
+    repository: StringKeyRepository,
     baseRepositoryFolder: File
-): BaseSynchronizer<StringKeySynchronizer.ParseResult, NameRepository>(repository, baseRepositoryFolder) {
+): BaseSynchronizer<StringKeySynchronizer.ParseResult, StringKeyRepository>(repository, baseRepositoryFolder) {
     class ParseResult(
         val uuid: String,
         val values: Map<String, String>
@@ -17,7 +17,7 @@ class StringKeySynchronizer(
     override fun getEntityType(): EntityType = EntityType.STRING_KEY
     override fun getParseResult(repositoryName: String, uuid: String): ParseResult = getInnerParseResult(repositoryName, uuid)
 
-    override fun updateDb(repo: NameRepository, parseResult: ParseResult) {
+    override fun updateDb(repo: StringKeyRepository, parseResult: ParseResult) {
         // Create name only if not exists
         if(repo.get(parseResult.uuid) == null) {
             repo.insert(StringKeyRaw(parseResult.uuid))
@@ -35,7 +35,7 @@ class StringKeySynchronizer(
         }
     }
 
-    override fun populateParseResult(repo: NameRepository, uuid: String): ParseResult {
+    override fun populateParseResult(repo: StringKeyRepository, uuid: String): ParseResult {
         val name = repo.get(uuid)!!
 
         val names = mutableMapOf<String, String>()

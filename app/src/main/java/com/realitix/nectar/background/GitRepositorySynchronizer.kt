@@ -23,7 +23,7 @@ class GitRepositorySynchronizer(val context: Context): Thread() {
         EntityType.MEAL to MealSynchronizer(MealRepository(context), NectarUtil.getRepositoryFolder(context)),
         EntityType.IMAGE to ImageSynchronizer(ImageRepository(context), NectarUtil.getRepositoryFolder(context), NectarUtil.getImageFolder(context)),
         EntityType.BOOK to BookSynchronizer(BookRepository(context), NectarUtil.getRepositoryFolder(context)),
-        EntityType.STRING_KEY to StringKeySynchronizer(NameRepository(context), NectarUtil.getRepositoryFolder(context))
+        EntityType.STRING_KEY to StringKeySynchronizer(StringKeyRepository(context), NectarUtil.getRepositoryFolder(context))
     )
 
     private fun fromGitToDbRepository(gitRepositoryName: String, diff: GitManager.DiffResult) {

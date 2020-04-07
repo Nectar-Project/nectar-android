@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.realitix.nectar.database.entity.Aliment
 import com.realitix.nectar.database.entity.MealAliment
 import com.realitix.nectar.database.entity.ReceipeStepAliment
+import com.realitix.nectar.database.entity.ReceipeStepAlimentRaw
 import com.realitix.nectar.repository.AlimentRepository
 import com.realitix.nectar.repository.MealRepository
 import com.realitix.nectar.repository.ReceipeRepository
@@ -30,7 +31,7 @@ class AlimentAddQuantityViewModel (
     }
 
     private fun createReceipeStepAliment(quantity: Int) {
-        val c = ReceipeStepAliment(alimentUuid, objUuid, quantity)
+        val c = ReceipeStepAlimentRaw(alimentUuid, objUuid, quantity)
         GlobalScope.launch {
             receipeRepository.createReceipeStepAliment(c)
         }

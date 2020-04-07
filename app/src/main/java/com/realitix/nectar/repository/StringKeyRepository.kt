@@ -5,7 +5,7 @@ import com.realitix.nectar.database.NectarDatabase
 import com.realitix.nectar.database.entity.*
 
 
-class NameRepository(val context: Context) {
+class StringKeyRepository(val context: Context) {
     fun insert(i: StringKeyRaw) {
         return NectarDatabase.getInstance(context).nameDao().insert(i)
     }
