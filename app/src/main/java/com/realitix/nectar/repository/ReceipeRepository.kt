@@ -49,7 +49,7 @@ class ReceipeRepository(val context: Context) {
         return false
     }
 
-    suspend fun createReceipe(receipe: ReceipeRaw) {
+    suspend fun createReceipeSuspend(receipe: ReceipeRaw) {
         NectarDatabase.getInstance(context).receipeDao().insertSuspended(receipe)
     }
 
@@ -77,7 +77,7 @@ class ReceipeRepository(val context: Context) {
         return NectarDatabase.getInstance(context).receipeStepReceipeDao().insert(r)
     }
 
-    suspend fun createReceipeStep(receipeStep: ReceipeStepRaw) {
+    suspend fun insertReceipeStepSuspend(receipeStep: ReceipeStepRaw) {
         return NectarDatabase.getInstance(context).receipeStepDao().insertSuspended(receipeStep)
     }
 

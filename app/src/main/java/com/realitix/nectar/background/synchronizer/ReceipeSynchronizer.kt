@@ -20,7 +20,7 @@ class ReceipeSynchronizer(repository: ReceipeRepository, baseRepositoryFolder: F
     class Step(
         val stepUuid: String,
         val previousStepUuid: String? = null,
-        val description: String,
+        val descriptionUuid: String,
         val duration: Int,
         val aliments: Map<String, Int>,
         val receipes: List<String>
@@ -51,8 +51,8 @@ class ReceipeSynchronizer(repository: ReceipeRepository, baseRepositoryFolder: F
                 ReceipeStepRaw(
                     step.stepUuid,
                     parseResult.uuid,
-                    0,
-                    step.description,
+                    step.previousStepUuid,
+                    step.descriptionUuid,
                     step.duration
                 )
             )
@@ -98,7 +98,7 @@ class ReceipeSynchronizer(repository: ReceipeRepository, baseRepositoryFolder: F
             for(r in s.receipes) {
                 receipes.add(r.receipeUuid)
             }
-            steps.add(Step(s.uuid, null, s.description, s.duration, aliments, receipes))
+            steps.add(Step(s.uuid, null, s.descriptionUuid, s.duration, aliments, receipes))
         }
 
         return ParseResult(receipe.uuid, receipe.nameUuid, receipe.nbPeople, receipe.stars, tags, utensils, steps)

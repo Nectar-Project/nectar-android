@@ -11,7 +11,7 @@ import com.realitix.nectar.background.synchronizer.*
 import java.io.File
 
 class GitRepositorySynchronizer(val context: Context): Thread() {
-    var run = true
+    private var run = true
 
     private val synchronizerMap = mapOf(
         EntityType.STATE to StateSynchronizer(StateRepository(context), NectarUtil.getRepositoryFolder(context)),
@@ -47,10 +47,12 @@ class GitRepositorySynchronizer(val context: Context): Thread() {
                 )
 
                 if(repo.rescan) {
+                    Log.i("Nectar", "Rescan repo ${repo.name}")
                     fromGitToDbRepository(repo.name, manager.rescan())
                     repo.rescan = false
                 }
                 else if (manager.fetch()) {
+                    Log.i("Nectar", "Sync repo ${repo.name}")
                     fromGitToDbRepository(repo.name, manager.diff())
                     manager.sync()
                 }
@@ -77,6 +79,7 @@ class GitRepositorySynchronizer(val context: Context): Thread() {
             }
 
             if(updated) {
+                Log.i("Nectar", "Push updates to ${g.name}")
                 val manager = GitManager(
                     File(baseRepositoryFolder, g.name),
                     g.url,
@@ -96,7 +99,6 @@ class GitRepositorySynchronizer(val context: Context): Thread() {
     override fun run() {
         val millis: Long = 1000*60
         while(run) {
-            Log.e("Nectar", "Run Synchronization")
             synchronizeFromGitToDb()
             synchronizeFromDbToGit()
             sleep(millis)

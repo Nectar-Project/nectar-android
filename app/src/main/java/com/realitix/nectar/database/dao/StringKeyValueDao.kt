@@ -10,4 +10,8 @@ interface StringKeyValueDao: BaseDao<StringKeyValueRaw> {
     @Transaction
     @Query("SELECT * FROM StringKeyValueRaw WHERE stringKeyUuid=:uuid AND language=:lang")
     fun get(uuid: String, lang: String): StringKeyValue?
+
+    @Transaction
+    @Query("SELECT * FROM StringKeyValueRaw WHERE stringKeyUuid=:uuid AND language=:lang")
+    suspend fun getSuspend(uuid: String, lang: String): StringKeyValue?
 }

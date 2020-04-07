@@ -20,11 +20,11 @@ class ReceipeListViewModel constructor(
         val sid = generateUuid()
         runBlocking {
             // create name
-            stringKeyRepository.insert(StringKeyRaw(sid))
-            stringKeyRepository.insertValue(StringKeyValue(sid, "fr", "Nouvelle recette"))
+            stringKeyRepository.insertSuspend(StringKeyRaw(sid))
+            stringKeyRepository.insertValueSuspend(StringKeyValue(sid, "fr", "Nouvelle recette"))
 
             // create receipe
-            receipeRepository.createReceipe(Receipe(rid, sid, 2, 2))
+            receipeRepository.createReceipeSuspend(Receipe(rid, sid, 2, 2))
         }
         return rid
     }

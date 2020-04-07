@@ -59,7 +59,7 @@ class ReceipeFragment : Fragment() {
         adapter = GenericAdapter(
             { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
             { holder, step ->
-                holder.text.text = step.description
+                holder.text.text = step.getDescription()
                 holder.icon.setImageDrawable(
                     ContextCompat.getDrawable(
                         requireContext(),
