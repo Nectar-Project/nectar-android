@@ -1,8 +1,5 @@
 {
-    "names": {
-        "fr": "Pomme",
-        "en": "Apple"
-    },
+    "nameUuid": "a7a12c60-1604-48ee-9991-0e4baa08006d",
     "uuid": "a7a12c60-1604-48ee-9991-0e4baa08006d",
     "images": [
         "e56f15a5-29f5-4ba7-8c9a-f750a31198ce"

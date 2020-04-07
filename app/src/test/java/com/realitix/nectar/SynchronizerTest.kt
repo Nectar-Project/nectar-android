@@ -42,7 +42,9 @@ class SynchronizerUnitTest {
             EntityType.ALIMENT to AlimentSynchronizer(AlimentRepository(context), getRepositoryFolder(), UuidGenerator()),
             EntityType.UTENSIL to UtensilSynchronizer(UtensilRepository(context), getRepositoryFolder()),
             EntityType.RECEIPE to ReceipeSynchronizer(ReceipeRepository(context), getRepositoryFolder()),
-            EntityType.MEAL to MealSynchronizer(MealRepository(context), getRepositoryFolder())
+            EntityType.MEAL to MealSynchronizer(MealRepository(context), getRepositoryFolder()),
+            EntityType.BOOK to BookSynchronizer(BookRepository(context), getRepositoryFolder()),
+            EntityType.STRING_KEY to StringKeySynchronizer(StringKeyRepository(context), getRepositoryFolder())
         )
         try {
             for (entityType in EntityType.values()) {
@@ -88,14 +90,13 @@ class SynchronizerUnitTest {
     @Test
     fun receipeGitToDb() {
         val receipeUuid = "592bfb6a-0519-4ba6-855c-f4e467eb98fc"
-        val nameFr = "testfr"
-        val nameEn = "testen"
+        val nameUuid = "592bfb6a-0519-4ba6-855c-f4e467eb98fc"
         val nbPeople = 2
         val stars = 2
         val tagUuid = "1f0ce536-a01d-4c7c-9412-d696920ea051"
         val utensilUuid = "a70ac073-cee8-4e45-b88e-eaeecf186150"
         val stepUuid = "60d1b1a1-f4ab-4d8a-8b8b-dbb248b90318"
-        val stepDescription = "step_description"
+        val stepDescriptionUuid = "60d1b1a1-f4ab-4d8a-8b8b-dbb248b90318"
         val stepDuration = 10
         val stepAlimentUuid = "a7a12c60-1604-48ee-9991-0e4baa08006d"
         val stepAlimentQuantity = 100
@@ -108,12 +109,10 @@ class SynchronizerUnitTest {
 
         val inOrder = inOrder(repository)
         inOrder.verify(repository).getReceipe(receipeUuid)
-        inOrder.verify(repository).insertReceipe(ReceipeRaw(receipeUuid, nbPeople, stars))
-        inOrder.verify(repository).insertReceipeName(ReceipeNameRaw(receipeUuid, "fr", nameFr))
-        inOrder.verify(repository).insertReceipeName(ReceipeNameRaw(receipeUuid, "en", nameEn))
+        inOrder.verify(repository).insertReceipe(ReceipeRaw(receipeUuid, nameUuid, nbPeople, stars))
         inOrder.verify(repository).insertReceipeTag(ReceipeTagRaw(receipeUuid, tagUuid))
         inOrder.verify(repository).insertReceipeUtensil(ReceipeUtensilRaw(receipeUuid, utensilUuid))
-        inOrder.verify(repository).insertReceipeStep(ReceipeStepRaw(stepUuid, receipeUuid, 0, stepDescription, stepDuration))
+        inOrder.verify(repository).insertReceipeStep(ReceipeStepRaw(stepUuid, receipeUuid, null, stepDescriptionUuid, stepDuration))
         inOrder.verify(repository).insertReceipeStepAliment(ReceipeStepAlimentRaw(stepAlimentUuid, stepUuid, stepAlimentQuantity))
         inOrder.verify(repository).insertReceipeStepReceipe(ReceipeStepReceipeRaw(stepReceipeUuid, stepUuid))
     }
@@ -121,8 +120,7 @@ class SynchronizerUnitTest {
     @Test
     fun alimentGitToDb() {
         val alimentUuid = "a7a12c60-1604-48ee-9991-0e4baa08006d"
-        val nameFr = "Pomme"
-        val nameEn = "Apple"
+        val nameUuid = "a7a12c60-1604-48ee-9991-0e4baa08006d"
         val tagUuid = "1f0ce536-a01d-4c7c-9412-d696920ea051"
         val imageUuid = "e56f15a5-29f5-4ba7-8c9a-f750a31198ce"
         val alimentStateUuid = "1f0c4536-b01d-4c7c-9412-d696920ea051"
@@ -142,9 +140,7 @@ class SynchronizerUnitTest {
 
         val inOrder = inOrder(repository)
         inOrder.verify(repository).getAliment(alimentUuid)
-        inOrder.verify(repository).insertAliment(AlimentRaw(alimentUuid))
-        inOrder.verify(repository).insertAlimentName(AlimentNameRaw(alimentUuid, "fr", nameFr))
-        inOrder.verify(repository).insertAlimentName(AlimentNameRaw(alimentUuid, "en", nameEn))
+        inOrder.verify(repository).insertAliment(AlimentRaw(alimentUuid, nameUuid))
         inOrder.verify(repository).insertAlimentImage(AlimentImageRaw(alimentUuid, imageUuid))
         inOrder.verify(repository).insertAlimentTag(AlimentTagRaw(alimentUuid, tagUuid))
         inOrder.verify(repository).insertAlimentState(AlimentStateRaw(alimentStateUuid, alimentUuid, stateUuid, nutrition))
@@ -154,8 +150,7 @@ class SynchronizerUnitTest {
     @Test
     fun stateGitToDb() {
         val uuid = "419d4083-4d6d-4436-a383-fc6efd601357"
-        val nameFr = "testfr"
-        val nameEn = "testen"
+        val nameUuid = "419d4083-4d6d-4436-a383-fc6efd601357"
 
         val repository: StateRepository = mock(StateRepository::class.java)
         val s = StateSynchronizer(repository, getRepositoryFolder())
@@ -163,16 +158,13 @@ class SynchronizerUnitTest {
 
         val inOrder = inOrder(repository)
         inOrder.verify(repository).getRaw(uuid)
-        inOrder.verify(repository).insert(StateRaw(uuid))
-        inOrder.verify(repository).insertName(StateNameRaw(uuid, "fr", nameFr))
-        inOrder.verify(repository).insertName(StateNameRaw(uuid, "en", nameEn))
+        inOrder.verify(repository).insert(StateRaw(uuid, nameUuid))
     }
 
     @Test
     fun measureGitToDb() {
         val uuid = "1f0ce536-a01d-4c7c-9412-d696920ea051"
-        val nameFr = "testfr"
-        val nameEn = "testen"
+        val nameUuid = "1f0ce536-a01d-4c7c-9412-d696920ea051"
 
         val repository: MeasureRepository = mock(MeasureRepository::class.java)
         val s = MeasureSynchronizer(repository, getRepositoryFolder())
@@ -180,16 +172,13 @@ class SynchronizerUnitTest {
 
         val inOrder = inOrder(repository)
         inOrder.verify(repository).getRaw(uuid)
-        inOrder.verify(repository).insert(MeasureRaw(uuid))
-        inOrder.verify(repository).insertName(MeasureNameRaw(uuid, "fr", nameFr))
-        inOrder.verify(repository).insertName(MeasureNameRaw(uuid, "en", nameEn))
+        inOrder.verify(repository).insert(MeasureRaw(uuid, nameUuid))
     }
 
     @Test
     fun tagGitToDb() {
         val uuid = "1f0ce536-a01d-4c7c-9412-d696920ea051"
-        val nameFr = "testfr"
-        val nameEn = "testen"
+        val nameUuid = "1f0ce536-a01d-4c7c-9412-d696920ea051"
 
         val repository: TagRepository = mock(TagRepository::class.java)
         val s = TagSynchronizer(repository, getRepositoryFolder())
@@ -197,16 +186,13 @@ class SynchronizerUnitTest {
 
         val inOrder = inOrder(repository)
         inOrder.verify(repository).getRaw(uuid)
-        inOrder.verify(repository).insert(TagRaw(uuid))
-        inOrder.verify(repository).insertName(TagNameRaw(uuid, "fr", nameFr))
-        inOrder.verify(repository).insertName(TagNameRaw(uuid, "en", nameEn))
+        inOrder.verify(repository).insert(TagRaw(uuid, nameUuid))
     }
 
     @Test
     fun utensilGitToDb() {
         val uuid = "a70ac073-cee8-4e45-b88e-eaeecf186150"
-        val nameFr = "testfr"
-        val nameEn = "testen"
+        val nameUuid = "a70ac073-cee8-4e45-b88e-eaeecf186150"
 
         val repository: UtensilRepository = mock(UtensilRepository::class.java)
         val s = UtensilSynchronizer(repository, getRepositoryFolder())
@@ -214,8 +200,6 @@ class SynchronizerUnitTest {
 
         val inOrder = inOrder(repository)
         inOrder.verify(repository).getRaw(uuid)
-        inOrder.verify(repository).insert(UtensilRaw(uuid))
-        inOrder.verify(repository).insertName(UtensilNameRaw(uuid, "fr", nameFr))
-        inOrder.verify(repository).insertName(UtensilNameRaw(uuid, "en", nameEn))
+        inOrder.verify(repository).insert(UtensilRaw(uuid, nameUuid))
     }
 }

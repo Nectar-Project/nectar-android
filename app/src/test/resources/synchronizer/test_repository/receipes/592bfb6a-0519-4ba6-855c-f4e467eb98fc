@@ -1,9 +1,6 @@
 {
     "uuid": "592bfb6a-0519-4ba6-855c-f4e467eb98fc",
-    "names": {
-        "fr": "testfr",
-        "en": "testen"
-    },
+    "nameUuid": "592bfb6a-0519-4ba6-855c-f4e467eb98fc",
     "nbPeople": 2,
     "stars": 2,
     "tags": [
@@ -16,7 +13,7 @@
         {
             "stepUuid": "60d1b1a1-f4ab-4d8a-8b8b-dbb248b90318",
             "previousStepUuid": null,
-            "description": "step_description",
+            "descriptionUuid": "60d1b1a1-f4ab-4d8a-8b8b-dbb248b90318",
             "duration": 10,
             "aliments": {
                 "a7a12c60-1604-48ee-9991-0e4baa08006d": 100
