@@ -9,7 +9,7 @@ class BookSynchronizer(repository: BookRepository, baseRepositoryFolder: File):
     BaseSynchronizer<BookSynchronizer.ParseResult, BookRepository>(repository, baseRepositoryFolder) {
     class ParseResult(
         val uuid: String,
-        val names: Map<String, String>,
+        val nameUuid: String,
         val images: List<String>,
         val receipes: List<String>,
         val author: String,
@@ -22,12 +22,7 @@ class BookSynchronizer(repository: BookRepository, baseRepositoryFolder: File):
     override fun updateDb(repo: BookRepository, parseResult: ParseResult) {
         // Create book only if not exists
         if(repo.getBook(parseResult.uuid) == null) {
-            repo.insertBook(BookRaw(parseResult.uuid, parseResult.author, parseResult.publishDate))
-        }
-
-        // names
-        for((lang, name) in parseResult.names) {
-            repo.insertBookName(BookNameRaw(parseResult.uuid, lang, name))
+            repo.insertBook(BookRaw(parseResult.uuid, parseResult.nameUuid, parseResult.author, parseResult.publishDate))
         }
 
         // images
@@ -44,11 +39,6 @@ class BookSynchronizer(repository: BookRepository, baseRepositoryFolder: File):
     override fun populateParseResult(repo: BookRepository, uuid: String): ParseResult {
         val book = repo.getBook(uuid)!!
 
-        val names = mutableMapOf<String, String>()
-        for(a in book.names) {
-            names[a.language] = a.name
-        }
-
         val images = mutableListOf<String>()
         for(a in book.images) {
             images.add(a.imageUuid)
@@ -59,6 +49,6 @@ class BookSynchronizer(repository: BookRepository, baseRepositoryFolder: File):
             receipes.add(a.receipeUuid)
         }
 
-        return ParseResult(book.uuid, names, images, receipes, book.author, book.publishDate)
+        return ParseResult(book.uuid, book.nameUuid, images, receipes, book.author, book.publishDate)
     }
 }

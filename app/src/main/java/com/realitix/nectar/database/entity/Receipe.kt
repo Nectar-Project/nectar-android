@@ -1,9 +1,6 @@
 package com.realitix.nectar.database.entity
 
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
-import androidx.room.Relation
+import androidx.room.*
 
 
 class Receipe(uuid: String, nameUuid: String, nbPeople: Int, stars: Int): ReceipeWS(uuid, nameUuid, nbPeople, stars) {
@@ -23,7 +20,7 @@ open class ReceipeWS(uuid: String, nameUuid: String, nbPeople: Int, stars: Int):
     lateinit var images: List<ReceipeImage>
 
     fun getName(): String {
-        return name.strings[0].value
+        return name.getValue()
     }
 }
 
@@ -33,7 +30,10 @@ open class ReceipeWS(uuid: String, nameUuid: String, nbPeople: Int, stars: Int):
         parentColumns = ["uuid"],
         childColumns = ["nameUuid"],
         onDelete = ForeignKey.CASCADE
-    )]
+    )],
+    indices = [
+        Index(value=["nameUuid"])
+    ]
 )
 open class ReceipeRaw(
     @PrimaryKey

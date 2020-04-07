@@ -6,8 +6,7 @@ import com.realitix.nectar.util.EntityType
 import java.io.File
 
 class UtensilSynchronizer(repository: UtensilRepository, baseRepositoryFolder: File):
-    NameBaseSynchronizer<UtensilRaw, UtensilNameRaw>(repository, baseRepositoryFolder) {
-    override fun getNew(uuid: String): UtensilRaw = UtensilRaw(uuid)
-    override fun getNewName(uuid: String, lang: String, name: String): UtensilNameRaw = UtensilNameRaw(uuid, lang, name)
+    NameBaseSynchronizer<UtensilRaw>(repository, baseRepositoryFolder) {
+    override fun getNew(uuid: String, nameUuid: String): UtensilRaw = UtensilRaw(uuid, nameUuid)
     override fun getEntityType(): EntityType = EntityType.UTENSIL
 }

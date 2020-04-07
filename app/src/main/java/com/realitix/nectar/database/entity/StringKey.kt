@@ -7,6 +7,10 @@ import androidx.room.*
 class StringKey(uuid: String): StringKeyRaw(uuid) {
     @Relation(parentColumn = "uuid", entityColumn = "stringKeyUuid", entity = StringKeyValueRaw::class)
     lateinit var strings: List<StringKeyValue>
+
+    fun getValue(): String {
+        return strings[0].value
+    }
 }
 
 @Entity

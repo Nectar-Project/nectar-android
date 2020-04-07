@@ -15,7 +15,7 @@ class Aliment(uuid: String, nameUuid: String): AlimentRaw(uuid, nameUuid) {
     lateinit var images: List<AlimentImage>
 
     fun getName(): String {
-        return name.strings[0].value
+        return name.getValue()
     }
 }
 
@@ -25,7 +25,10 @@ class Aliment(uuid: String, nameUuid: String): AlimentRaw(uuid, nameUuid) {
         parentColumns = ["uuid"],
         childColumns = ["nameUuid"],
         onDelete = ForeignKey.CASCADE
-    )]
+    )],
+    indices = [
+        Index(value=["nameUuid"])
+    ]
 )
 open class AlimentRaw (
     @PrimaryKey

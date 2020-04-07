@@ -1,9 +1,6 @@
 package com.realitix.nectar.database.entity
 
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
-import androidx.room.Relation
+import androidx.room.*
 
 
 class Measure(uuid: String, nameUuid: String): MeasureRaw(uuid, nameUuid) {
@@ -11,7 +8,7 @@ class Measure(uuid: String, nameUuid: String): MeasureRaw(uuid, nameUuid) {
     lateinit var name: StringKey
 
     fun getName(): String {
-        return name.strings[0].value
+        return name.getValue()
     }
 }
 
@@ -21,7 +18,10 @@ class Measure(uuid: String, nameUuid: String): MeasureRaw(uuid, nameUuid) {
         parentColumns = ["uuid"],
         childColumns = ["nameUuid"],
         onDelete = ForeignKey.CASCADE
-    )]
+    )],
+    indices = [
+        Index(value=["nameUuid"])
+    ]
 )
 open class MeasureRaw (
     @PrimaryKey

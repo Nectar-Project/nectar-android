@@ -8,15 +8,14 @@ class Book(uuid: String, nameUuid: String, author: String, publishDate: Long):
     BookRaw(uuid, nameUuid, author, publishDate) {
     @Relation(parentColumn = "nameUuid", entityColumn = "uuid", entity = StringKeyRaw::class)
     lateinit var name: StringKey
-
-    fun getName(): String {
-        return name.strings[0].value
-    }
-
     @Relation(parentColumn = "uuid", entityColumn = "bookUuid", entity = BookReceipeRaw::class)
     lateinit var receipes: List<BookReceipe>
     @Relation(parentColumn = "uuid", entityColumn = "bookUuid", entity = BookImageRaw::class)
     lateinit var images: List<BookImage>
+
+    fun getName(): String {
+        return name.getValue()
+    }
 }
 
 @Entity(
@@ -25,7 +24,10 @@ class Book(uuid: String, nameUuid: String, author: String, publishDate: Long):
         parentColumns = ["uuid"],
         childColumns = ["nameUuid"],
         onDelete = ForeignKey.CASCADE
-    )]
+    )],
+    indices = [
+        Index(value=["nameUuid"])
+    ]
 )
 open class BookRaw (
     @PrimaryKey

@@ -3,7 +3,6 @@ package com.realitix.nectar.database.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.realitix.nectar.database.entity.Receipe
-import com.realitix.nectar.database.entity.ReceipeNameRaw
 import com.realitix.nectar.database.entity.ReceipeRaw
 
 @Dao
@@ -14,11 +13,12 @@ interface ReceipeDao {
 
     @Transaction
     @Query("""
-        SELECT ReceipeRaw.*
+        SELECT DISTINCT ReceipeRaw.*
         FROM ReceipeRaw
-        INNER JOIN ReceipeNameRaw ON ReceipeNameRaw.receipeUuid = ReceipeRaw.uuid
-        INNER JOIN ReceipeNameFts ON ReceipeNameRaw.rowid = ReceipeNameFts.rowid
-        WHERE ReceipeNameFts MATCH :term
+        INNER JOIN StringKeyRaw ON StringKeyRaw.uuid = ReceipeRaw.nameUuid
+        INNER JOIN StringKeyValueRaw ON StringKeyValueRaw.stringKeyUuid = StringKeyRaw.uuid
+        INNER JOIN StringKeyValueFts ON StringKeyValueFts.rowid = StringKeyValueRaw.rowid
+        WHERE StringKeyValueFts MATCH :term
     """)
     fun search(term: String): LiveData<List<Receipe>>
 
@@ -33,9 +33,6 @@ interface ReceipeDao {
     @Update
     suspend fun update(receipe: ReceipeRaw)
 
-    @Update
-    suspend fun updateName(receipeName: ReceipeNameRaw)
-
     @Transaction
     @Query("SELECT * FROM ReceipeRaw WHERE uuid=:uuid")
     suspend fun has(uuid: String): Receipe?
@@ -45,9 +42,6 @@ interface ReceipeDao {
 
     @Insert
     fun insert(receipe: ReceipeRaw)
-
-    @Insert
-    suspend fun insertName(receipeName: ReceipeNameRaw)
 
     @Transaction
     @Query("SELECT * FROM ReceipeRaw WHERE ReceipeRaw.uuid=:uuid")

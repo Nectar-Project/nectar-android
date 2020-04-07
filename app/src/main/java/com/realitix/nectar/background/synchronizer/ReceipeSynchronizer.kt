@@ -9,7 +9,7 @@ class ReceipeSynchronizer(repository: ReceipeRepository, baseRepositoryFolder: F
     BaseSynchronizer<ReceipeSynchronizer.ParseResult, ReceipeRepository>(repository, baseRepositoryFolder) {
     class ParseResult(
         val uuid: String,
-        val names: Map<String, String>,
+        val nameUuid: String,
         val nbPeople: Int,
         val stars: Int,
         val tags: List<String>,
@@ -32,12 +32,7 @@ class ReceipeSynchronizer(repository: ReceipeRepository, baseRepositoryFolder: F
     override fun updateDb(repo: ReceipeRepository, parseResult: ParseResult) {
         // Create receipe only if not exists
         if(repo.getReceipe(parseResult.uuid) == null) {
-            repo.insertReceipe(ReceipeRaw(parseResult.uuid, parseResult.nbPeople, parseResult.stars))
-        }
-
-        // names
-        for((lang, name) in parseResult.names) {
-            repo.insertReceipeName(ReceipeNameRaw(parseResult.uuid, lang, name))
+            repo.insertReceipe(ReceipeRaw(parseResult.uuid, parseResult.nameUuid, parseResult.nbPeople, parseResult.stars))
         }
 
         // tags
@@ -82,11 +77,6 @@ class ReceipeSynchronizer(repository: ReceipeRepository, baseRepositoryFolder: F
     override fun populateParseResult(repo: ReceipeRepository, uuid: String): ParseResult {
         val receipe = repo.getReceipe(uuid)!!
 
-        val names = mutableMapOf<String, String>()
-        for(n in receipe.names) {
-            names[n.language] = n.name
-        }
-
         val tags = mutableListOf<String>()
         for(a in receipe.tags) {
             tags.add(a.tagUuid)
@@ -111,6 +101,6 @@ class ReceipeSynchronizer(repository: ReceipeRepository, baseRepositoryFolder: F
             steps.add(Step(s.uuid, null, s.description, s.duration, aliments, receipes))
         }
 
-        return ParseResult(receipe.uuid, names, receipe.nbPeople, receipe.stars, tags, utensils, steps)
+        return ParseResult(receipe.uuid, receipe.nameUuid, receipe.nbPeople, receipe.stars, tags, utensils, steps)
     }
 }

@@ -6,8 +6,7 @@ import com.realitix.nectar.util.EntityType
 import java.io.File
 
 class StateSynchronizer(repository: StateRepository, baseRepositoryFolder: File):
-    NameBaseSynchronizer<StateRaw, StateNameRaw>(repository, baseRepositoryFolder) {
-    override fun getNew(uuid: String): StateRaw = StateRaw(uuid)
-    override fun getNewName(uuid: String, lang: String, name: String): StateNameRaw = StateNameRaw(uuid, lang, name)
+    NameBaseSynchronizer<StateRaw>(repository, baseRepositoryFolder) {
+    override fun getNew(uuid: String, nameUuid: String): StateRaw = StateRaw(uuid, nameUuid)
     override fun getEntityType(): EntityType = EntityType.STATE
 }
