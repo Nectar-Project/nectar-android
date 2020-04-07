@@ -4,9 +4,11 @@ package com.realitix.nectar.database.entity
 import androidx.room.*
 
 
-class Aliment(uuid: String): AlimentRaw(uuid) {
-    @Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentNameRaw::class)
-    lateinit var names: List<AlimentName>
+class Aliment(uuid: String, nameUuid: String): AlimentRaw(uuid, nameUuid) {
+    //@Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentNameRaw::class)
+    //lateinit var names: List<AlimentName>
+    @Relation(parentColumn = "nameUuid", entityColumn = "uuid", entity = StringKeyRaw::class)
+    lateinit var name: StringKey
     @Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentTagRaw::class)
     lateinit var tags: List<AlimentTag>
     @Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentStateRaw::class)
@@ -15,14 +17,16 @@ class Aliment(uuid: String): AlimentRaw(uuid) {
     lateinit var images: List<AlimentImage>
 
     fun getName(): String {
-        return names[0].name
+        return name.strings[0].value
+        //return names[0].name
     }
 }
 
 @Entity
 open class AlimentRaw (
     @PrimaryKey
-    var uuid: String
+    var uuid: String,
+    var nameUuid: String
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -31,12 +35,15 @@ open class AlimentRaw (
         other as AlimentRaw
 
         if (uuid != other.uuid) return false
+        if (nameUuid != other.nameUuid) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        return uuid.hashCode()
+        var result = uuid.hashCode()
+        result = 31 * result + nameUuid.hashCode()
+        return result
     }
 }
 

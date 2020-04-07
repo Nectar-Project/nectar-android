@@ -1,4 +1,4 @@
-package com.realitix.nectar.work.synchronizer
+package com.realitix.nectar.background.synchronizer
 
 import com.realitix.nectar.database.entity.*
 import com.realitix.nectar.repository.TagRepository

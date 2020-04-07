@@ -17,6 +17,9 @@ interface GitRepositoryDao: BaseDao<GitRepositoryRaw> {
     @Query("SELECT * FROM GitRepositoryRaw")
     fun list(): List<GitRepository>
 
+    @Query("SELECT * FROM GitRepositoryRaw WHERE enabled=1")
+    fun listEnabled(): List<GitRepository>
+
     @Query("SELECT * FROM GitRepositoryRaw")
     fun listLive(): LiveData<List<GitRepository>>
 }

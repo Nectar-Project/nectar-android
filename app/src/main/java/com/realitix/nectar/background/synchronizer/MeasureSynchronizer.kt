@@ -1,8 +1,7 @@
-package com.realitix.nectar.work.synchronizer
+package com.realitix.nectar.background.synchronizer
 
 import com.realitix.nectar.database.entity.*
 import com.realitix.nectar.repository.MeasureRepository
-import com.realitix.nectar.repository.NameRepositoryInterface
 import com.realitix.nectar.util.EntityType
 import java.io.File
 

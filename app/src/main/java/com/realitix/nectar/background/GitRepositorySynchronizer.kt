@@ -1,17 +1,17 @@
-package com.realitix.nectar.work
+package com.realitix.nectar.background
 
 import android.content.Context
-import androidx.work.*
+import android.util.Log
 import com.realitix.nectar.repository.*
 import com.realitix.nectar.util.EntityType
 import com.realitix.nectar.util.GitManager
 import com.realitix.nectar.util.NectarUtil
 import com.realitix.nectar.util.UuidGenerator
-import com.realitix.nectar.work.synchronizer.*
+import com.realitix.nectar.background.synchronizer.*
 import java.io.File
 
-class GitRepositoryWorker(val context: Context, workerParams: WorkerParameters)
-    : Worker(context, workerParams) {
+class GitRepositorySynchronizer(val context: Context): Thread() {
+    var run = true
 
     private val synchronizerMap = mapOf(
         EntityType.STATE to StateSynchronizer(StateRepository(context), NectarUtil.getRepositoryFolder(context)),
@@ -22,7 +22,8 @@ class GitRepositoryWorker(val context: Context, workerParams: WorkerParameters)
         EntityType.RECEIPE to ReceipeSynchronizer(ReceipeRepository(context), NectarUtil.getRepositoryFolder(context)),
         EntityType.MEAL to MealSynchronizer(MealRepository(context), NectarUtil.getRepositoryFolder(context)),
         EntityType.IMAGE to ImageSynchronizer(ImageRepository(context), NectarUtil.getRepositoryFolder(context), NectarUtil.getImageFolder(context)),
-        EntityType.BOOK to BookSynchronizer(BookRepository(context), NectarUtil.getRepositoryFolder(context))
+        EntityType.BOOK to BookSynchronizer(BookRepository(context), NectarUtil.getRepositoryFolder(context)),
+        EntityType.STRING_KEY to StringKeySynchronizer(NameRepository(context), NectarUtil.getRepositoryFolder(context))
     )
 
     private fun fromGitToDbRepository(gitRepositoryName: String, diff: GitManager.DiffResult) {
@@ -33,7 +34,7 @@ class GitRepositoryWorker(val context: Context, workerParams: WorkerParameters)
     }
 
     private fun synchronizeFromGitToDb() {
-        val repos = GitRepoRepository(context).listGitRepositories()
+        val repos = GitRepoRepository(context).listEnabled()
         val baseRepositoryFolder = NectarUtil.getRepositoryFolder(context)
 
         for(repo in repos) {
@@ -88,10 +89,17 @@ class GitRepositoryWorker(val context: Context, workerParams: WorkerParameters)
         }
     }
 
-    override fun doWork(): Result {
-        synchronizeFromGitToDb()
-        synchronizeFromDbToGit()
+    fun stopOnNextIteration() {
+        run = false
+    }
 
-        return Result.success()
+    override fun run() {
+        val millis: Long = 1000*60
+        while(run) {
+            Log.e("Nectar", "Run Synchronization")
+            synchronizeFromGitToDb()
+            synchronizeFromDbToGit()
+            sleep(millis)
+        }
     }
 }

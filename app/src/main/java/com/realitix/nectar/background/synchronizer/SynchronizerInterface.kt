@@ -1,4 +1,4 @@
-package com.realitix.nectar.work.synchronizer
+package com.realitix.nectar.background.synchronizer
 
 
 interface SynchronizerInterface {

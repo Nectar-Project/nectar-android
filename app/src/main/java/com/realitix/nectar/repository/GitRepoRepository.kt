@@ -12,6 +12,10 @@ class GitRepoRepository(val context: Context) {
         return NectarDatabase.getInstance(context).gitRepositoryDao().list()
     }
 
+    fun listEnabled(): List<GitRepository> {
+        return NectarDatabase.getInstance(context).gitRepositoryDao().listEnabled()
+    }
+
     fun listLive(): LiveData<List<GitRepository>> {
         return NectarDatabase.getInstance(context).gitRepositoryDao().listLive()
     }

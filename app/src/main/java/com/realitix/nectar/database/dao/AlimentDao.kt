@@ -10,23 +10,17 @@ import com.realitix.nectar.database.entity.AlimentRaw
 @Dao
 interface AlimentDao: BaseDao<AlimentRaw> {
     @Transaction
-    @Query("""
+    @Query(
+        """
         SELECT DISTINCT AlimentRaw.*
         FROM AlimentRaw
-        INNER JOIN AlimentNameRaw ON AlimentNameRaw.alimentUuid = AlimentRaw.uuid
-        INNER JOIN AlimentNameFts ON AlimentNameRaw.rowid = AlimentNameFts.rowid
-        WHERE AlimentNameFts MATCH :term
-    """)
+        INNER JOIN StringKeyRaw ON StringKeyRaw.uuid = AlimentRaw.nameUuid
+        INNER JOIN StringKeyValueRaw ON StringKeyValueRaw.stringKeyUuid = StringKeyRaw.uuid
+        INNER JOIN StringKeyValueFts ON StringKeyValueFts.rowid = StringKeyValueRaw.rowid
+        WHERE StringKeyValueFts MATCH :term
+    """
+    )
     fun search(term: String): LiveData<List<Aliment>>
-
-    @Transaction
-    @Query("""
-        SELECT AlimentRaw.*
-        FROM AlimentRaw
-        INNER JOIN AlimentNameRaw ON AlimentNameRaw.alimentUuid = AlimentRaw.uuid
-        WHERE AlimentNameRaw.name LIKE :name
-    """)
-    fun getByName(name: String): Aliment?
 
     @Transaction
     @Query("SELECT * FROM AlimentRaw WHERE uuid = :uuid")

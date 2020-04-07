@@ -4,7 +4,7 @@ import android.content.Context
 import com.realitix.nectar.database.entity.*
 import com.realitix.nectar.repository.*
 import com.realitix.nectar.util.*
-import com.realitix.nectar.work.synchronizer.*
+import com.realitix.nectar.background.synchronizer.*
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

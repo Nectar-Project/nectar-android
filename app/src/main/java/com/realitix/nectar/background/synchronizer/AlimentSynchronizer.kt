@@ -1,4 +1,4 @@
-package com.realitix.nectar.work.synchronizer
+package com.realitix.nectar.background.synchronizer
 
 import com.realitix.nectar.database.entity.*
 import com.realitix.nectar.repository.AlimentRepository
@@ -13,7 +13,7 @@ class AlimentSynchronizer(
 ): BaseSynchronizer<AlimentSynchronizer.ParseResult, AlimentRepository>(repository, baseRepositoryFolder) {
     class ParseResult(
         val uuid: String,
-        val names: Map<String, String>,
+        val nameUuid: String,
         val images: List<String>,
         val tags: List<String>,
         val states: Map<String, State>
@@ -27,12 +27,7 @@ class AlimentSynchronizer(
     override fun updateDb(repo: AlimentRepository, parseResult: ParseResult) {
         // Create aliment only if not exists
         if(repo.getAliment(parseResult.uuid) == null) {
-            repo.insertAliment(AlimentRaw(parseResult.uuid))
-        }
-
-        // names
-        for((lang, name) in parseResult.names) {
-            repo.insertAlimentName(AlimentNameRaw(parseResult.uuid, lang, name))
+            repo.insertAliment(AlimentRaw(parseResult.uuid, parseResult.nameUuid))
         }
 
         // images
@@ -59,11 +54,6 @@ class AlimentSynchronizer(
     override fun populateParseResult(repo: AlimentRepository, uuid: String): ParseResult {
         val aliment = repo.getAliment(uuid)!!
 
-        val names = mutableMapOf<String, String>()
-        for(a in aliment.names) {
-            names[a.language] = a.name
-        }
-
         val images = mutableListOf<String>()
         for(a in aliment.images) {
             images.add(a.imageUuid)
@@ -83,6 +73,6 @@ class AlimentSynchronizer(
             states[state.stateUuid] = State(measures, state.nutrition)
         }
 
-        return ParseResult(aliment.uuid, names, images, tags, states)
+        return ParseResult(aliment.uuid, aliment.nameUuid, images, tags, states)
     }
 }

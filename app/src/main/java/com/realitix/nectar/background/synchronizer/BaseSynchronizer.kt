@@ -1,9 +1,8 @@
-package com.realitix.nectar.work.synchronizer
+package com.realitix.nectar.background.synchronizer
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.Parser
-import com.beust.klaxon.json
 import com.realitix.nectar.util.EntityType
 import java.io.File
 
