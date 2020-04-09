@@ -20,8 +20,7 @@ class MainActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Fix bug with instrumented tests
+        // Fix bug with instrumented tests (force database reload)
         NectarDatabase.reloadInstance()
 
         setContentView(R.layout.activity_main)

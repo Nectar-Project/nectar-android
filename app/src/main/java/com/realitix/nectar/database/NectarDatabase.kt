@@ -76,46 +76,13 @@ abstract class NectarDatabase : RoomDatabase() {
 
     companion object {
         private var instance: NectarDatabase? = null
+        private var callback: Callback? = null
+
         @Synchronized
         fun getInstance(context: Context): NectarDatabase {
             if (instance == null) {
-                val callback = object: Callback() {
-                    fun init(db: SupportSQLiteDatabase) {
-                        // Create DB Entry for default repository
-                        val repo = GitRepository(
-                            generateUuid(),
-                            NectarUtil.getProperty(context, "defaultGitRepositoryName"),
-                            NectarUtil.getProperty(context, "defaultGitRepositoryUrl"),
-                            enabled = true,
-                            rescan = true,
-                            readOnly = true,
-                            lastCheck = 0,
-                            frequency = 60*60*6,
-                            credentials = null
-                        )
-                        val contentValues = ContentValues()
-                        contentValues.put("uuid", repo.uuid)
-                        contentValues.put("name", repo.name)
-                        contentValues.put("url", repo.url)
-                        contentValues.put("enabled", repo.enabled)
-                        contentValues.put("rescan", repo.rescan)
-                        contentValues.put("readOnly", repo.readOnly)
-                        contentValues.put("lastCheck", repo.lastCheck)
-                        contentValues.put("frequency", repo.frequency)
-                        contentValues.putNull("credentials_username")
-                        contentValues.putNull("credentials_password")
-                        db.insert("GitRepositoryRaw", OnConflictStrategy.IGNORE, contentValues)
-                    }
-
-                    override fun onCreate(db: SupportSQLiteDatabase) {
-                        super.onCreate(db)
-                        init(db)
-                    }
-
-                    override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
-                        super.onDestructiveMigration(db)
-                        init(db)
-                    }
+                if(callback == null) {
+                    setInitCallback(getDefaultInitCallback(context))
                 }
 
                 instance = Room.databaseBuilder(
@@ -123,10 +90,66 @@ abstract class NectarDatabase : RoomDatabase() {
                         NectarDatabase::class.java,
                         NectarUtil.getProperty(context, "databaseName"))
                     .fallbackToDestructiveMigration()
-                    .addCallback(callback)
+                    .addCallback(callback!!)
                     .build()
             }
             return instance as NectarDatabase
+        }
+
+        @Synchronized
+        fun setInitCallback(cb: Callback?) {
+            callback = cb
+        }
+
+        private fun getDefaultInitCallback(context: Context): Callback {
+            return object: Callback() {
+                fun init(db: SupportSQLiteDatabase) {
+                    // Create DB Entry for default repository
+                    val repo = GitRepositoryRaw(
+                        generateUuid(),
+                        NectarUtil.getProperty(context, "defaultGitRepositoryName"),
+                        NectarUtil.getProperty(context, "defaultGitRepositoryUrl"),
+                        enabled = true,
+                        rescan = true,
+                        readOnly = true,
+                        lastCheck = 0,
+                        frequency = 60 * 60 * 6,
+                        credentials = null
+                    )
+                    db.insert("GitRepositoryRaw", OnConflictStrategy.IGNORE, gitRepositoryRawToContentValues(repo))
+                }
+
+                override fun onCreate(db: SupportSQLiteDatabase) {
+                    super.onCreate(db)
+                    init(db)
+                }
+
+                override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
+                    super.onDestructiveMigration(db)
+                    init(db)
+                }
+            }
+        }
+
+        fun gitRepositoryRawToContentValues(repo: GitRepositoryRaw): ContentValues {
+            val contentValues = ContentValues()
+            contentValues.put("uuid", repo.uuid)
+            contentValues.put("name", repo.name)
+            contentValues.put("url", repo.url)
+            contentValues.put("enabled", repo.enabled)
+            contentValues.put("rescan", repo.rescan)
+            contentValues.put("readOnly", repo.readOnly)
+            contentValues.put("lastCheck", repo.lastCheck)
+            contentValues.put("frequency", repo.frequency)
+            if(repo.credentials == null) {
+                contentValues.putNull("credentials_username")
+                contentValues.putNull("credentials_password")
+            }
+            else {
+                contentValues.put("credentials_username", repo.credentials!!.username)
+                contentValues.put("credentials_password", repo.credentials!!.password)
+            }
+            return contentValues
         }
 
         @Synchronized

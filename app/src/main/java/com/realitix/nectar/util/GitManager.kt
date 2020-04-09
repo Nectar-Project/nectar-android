@@ -1,6 +1,8 @@
 package com.realitix.nectar.util
 
+import android.util.Log
 import com.realitix.nectar.database.entity.GitCredentials
+import com.realitix.nectar.util.NectarUtil.Companion.isUuidValid
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.ResetCommand
 import org.eclipse.jgit.diff.DiffEntry
@@ -9,6 +11,8 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
 import org.eclipse.jgit.treewalk.CanonicalTreeParser
 import java.io.File
 import java.nio.file.Files
+import java.nio.file.Path
+import java.util.stream.Stream
 
 
 class GitManager(private val repoDir: File, private val url: String, private val credentials: GitCredentials?) {
@@ -69,9 +73,23 @@ class GitManager(private val repoDir: File, private val url: String, private val
         for (entityType in EntityType.values()) {
             if (entityType == EntityType.UNKNOW)
                 continue
-            Files.list(File(repoDir, entityType.folderName).toPath()).forEach {
+
+            val stream: Stream<Path> =  try {
+                Files.list(File(repoDir, entityType.folderName).toPath())
+            }
+            catch(e: Exception) {
+                Log.w("Nectar", "Folder ${entityType.folderName} not found in $repoDir")
+                continue
+            }
+
+            stream.forEach {
                 val uuid = it.toFile().name
-                updates.add(entityType to uuid)
+                if(!isUuidValid(uuid)) {
+                    Log.w("Nectar", "Filename $uuid is not a valid uuid")
+                }
+                else {
+                    updates.add(entityType to uuid)
+                }
             }
         }
 

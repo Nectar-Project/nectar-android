@@ -41,6 +41,15 @@ class NectarUtil {
         fun getRepositoryFolder(context: Context): File = File(context.filesDir, getProperty(context, "repositoryNameFolder"))
         fun getImageFolder(context: Context): File = File(context.filesDir, getProperty(context, "imageFolder"))
 
+        fun isUuidValid(uuid: String): Boolean {
+            return try {
+                UUID.fromString(uuid)
+                true
+            } catch (exception: IllegalArgumentException) {
+               false
+            }
+        }
+
         fun searchMaker(search: String): String {
             var searchResult = ""
             if(!search.isBlank()) {
