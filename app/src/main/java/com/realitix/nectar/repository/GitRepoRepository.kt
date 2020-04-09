@@ -32,7 +32,11 @@ class GitRepoRepository(val context: Context) {
         NectarDatabase.getInstance(context).gitRepositoryDao().updateSuspend(repo)
     }
 
-    suspend fun insertGitRepositorySuspend(r: GitRepositoryRaw) {
+    suspend fun insertSuspend(r: GitRepositoryRaw) {
         NectarDatabase.getInstance(context).gitRepositoryDao().insertSuspend(r)
+    }
+
+    fun insert(r: GitRepositoryRaw) {
+        NectarDatabase.getInstance(context).gitRepositoryDao().insert(r)
     }
 }

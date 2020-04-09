@@ -4,6 +4,18 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 
+def getTestGitRepositoryUsername() {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    return properties.getProperty("testGitRepositoryUsername")
+}
+
+def getTestGitRepositoryPassword() {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    return properties.getProperty("testGitRepositoryPassword")
+}
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -20,6 +32,10 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            buildConfigField "String", "testGitRepositoryUsername", "\""+getTestGitRepositoryUsername()+"\""
+            buildConfigField "String", "testGitRepositoryPassword", "\""+getTestGitRepositoryPassword()+"\""
         }
     }
     compileOptions {

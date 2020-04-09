@@ -2,6 +2,7 @@ package com.realitix.nectar.database
 
 import android.content.ContentValues
 import android.content.Context
+import android.util.Log
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.realitix.nectar.database.dao.*
@@ -126,6 +127,13 @@ abstract class NectarDatabase : RoomDatabase() {
                     .build()
             }
             return instance as NectarDatabase
+        }
+
+        @Synchronized
+        fun reloadInstance() {
+            if(instance != null) {
+                instance = null
+            }
         }
     }
 }
