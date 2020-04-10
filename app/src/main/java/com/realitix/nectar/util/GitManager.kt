@@ -143,4 +143,13 @@ class GitManager(private val repoDir: File, private val url: String, private val
     fun push() {
         git.push().call()
     }
+
+    fun clean() {
+        Files.list(repoDir.toPath()).forEach {
+            val f = it.toFile()
+            if(f.name != ".git") {
+                f.deleteRecursively()
+            }
+        }
+    }
 }

@@ -10,8 +10,7 @@ import com.realitix.nectar.util.UuidGenerator
 import com.realitix.nectar.background.synchronizer.*
 import java.io.File
 
-class GitRepositorySynchronizer(val context: Context): Thread() {
-    private var run = true
+class GitRepositorySynchronizer(val context: Context) {
 
     private val synchronizerMap = mapOf(
         EntityType.STATE to StateSynchronizer(StateRepository(context), NectarUtil.getRepositoryFolder(context)),
@@ -92,16 +91,8 @@ class GitRepositorySynchronizer(val context: Context): Thread() {
         }
     }
 
-    fun stopOnNextIteration() {
-        run = false
-    }
-
-    override fun run() {
-        val millis: Long = 1000*60
-        while(run) {
-            synchronizeFromGitToDb()
-            synchronizeFromDbToGit()
-            sleep(millis)
-        }
+    fun exec() {
+        synchronizeFromGitToDb()
+        synchronizeFromDbToGit()
     }
 }

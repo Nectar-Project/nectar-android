@@ -24,6 +24,10 @@ class GitRepoRepository(val context: Context) {
         return NectarDatabase.getInstance(context).gitRepositoryDao().getSuspend(uuid)
     }
 
+    fun getByName(name: String): GitRepository? {
+        return NectarDatabase.getInstance(context).gitRepositoryDao().getByName(name)
+    }
+
     fun updateGitRepository(repo: GitRepository) {
         NectarDatabase.getInstance(context).gitRepositoryDao().update(repo)
     }

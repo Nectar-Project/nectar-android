@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.work.*
+import com.realitix.nectar.background.GitRepositoryBackgroundThread
 import com.realitix.nectar.background.GitRepositorySynchronizer
 import com.realitix.nectar.database.NectarDatabase
 import kotlinx.android.synthetic.main.activity_main.*
@@ -16,7 +17,11 @@ import kotlin.concurrent.thread
 
 
 class MainActivity: AppCompatActivity() {
-    private lateinit var gitSynchronizer: GitRepositorySynchronizer
+    companion object {
+        var enableSynchronizer = true
+    }
+
+    private lateinit var gitSynchronizer: GitRepositoryBackgroundThread
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,15 +32,19 @@ class MainActivity: AppCompatActivity() {
         navigation.setupWithNavController(findNavController(this, R.id.nav_host_fragment))
     }
 
-    override fun onPause() {
-        gitSynchronizer.stopOnNextIteration()
-        super.onPause()
-    }
-
     override fun onResume() {
         super.onResume()
-        gitSynchronizer = GitRepositorySynchronizer(this)
-        gitSynchronizer.start()
+        if(enableSynchronizer) {
+            gitSynchronizer = GitRepositoryBackgroundThread(this)
+            gitSynchronizer.start()
+        }
+    }
+
+    override fun onPause() {
+        if(enableSynchronizer) {
+            gitSynchronizer.stopOnNextIteration()
+        }
+        super.onPause()
     }
 
     override fun onSupportNavigateUp() = findNavController(this, R.id.nav_host_fragment).navigateUp()

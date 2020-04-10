@@ -1,25 +1,27 @@
-package com.realitix.nectar
+package com.realitix.nectar.util
 
-import android.util.Log
 import androidx.room.OnConflictStrategy
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
+import com.realitix.nectar.BuildConfig
+import com.realitix.nectar.MainActivity
 import com.realitix.nectar.database.NectarDatabase
 import com.realitix.nectar.database.entity.GitCredentials
 import com.realitix.nectar.database.entity.GitRepositoryRaw
-import com.realitix.nectar.repository.GitRepoRepository
-import com.realitix.nectar.util.NectarUtil
 import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
 import java.io.File
 import java.lang.Exception
 
-class NectarActivityTestRule: ActivityTestRule<MainActivity>(MainActivity::class.java) {
+class NectarActivityTestRule: ActivityTestRule<MainActivity>(
+    MainActivity::class.java) {
     override fun beforeActivityLaunched() {
         super.beforeActivityLaunched()
         val context = InstrumentationRegistry.getInstrumentation().targetContext
 
+        // disable automatic synchronization
+        MainActivity.enableSynchronizer = false
 
         // clean database
         context.deleteDatabase(NectarUtil.getProperty(context, "databaseName"))

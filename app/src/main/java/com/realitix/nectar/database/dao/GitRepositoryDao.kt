@@ -14,6 +14,9 @@ interface GitRepositoryDao: BaseDao<GitRepositoryRaw> {
     @Query("SELECT * FROM GitRepositoryRaw WHERE uuid=:uuid")
     suspend fun getSuspend(uuid: String): GitRepository?
 
+    @Query("SELECT * FROM GitRepositoryRaw WHERE name=:name")
+    fun getByName(name: String): GitRepository?
+
     @Query("SELECT * FROM GitRepositoryRaw")
     fun list(): List<GitRepository>
 
