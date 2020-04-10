@@ -16,25 +16,27 @@ import java.lang.Exception
 
 class NectarActivityTestRule: ActivityTestRule<MainActivity>(
     MainActivity::class.java) {
+    private val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+    private val testContext = InstrumentationRegistry.getInstrumentation().context
+
     override fun beforeActivityLaunched() {
         super.beforeActivityLaunched()
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
 
         // disable automatic synchronization
         MainActivity.enableSynchronizer = false
 
         // clean database
-        context.deleteDatabase(NectarUtil.getProperty(context, "databaseName"))
+        appContext.deleteDatabase(NectarUtil.getProperty(appContext, "databaseName"))
 
         // clean repositories folder
-        File(context.filesDir, NectarUtil.getProperty(context, "repositoryNameFolder")).deleteRecursively()
+        File(appContext.filesDir, NectarUtil.getProperty(appContext, "repositoryNameFolder")).deleteRecursively()
+        File(appContext.filesDir, NectarUtil.getProperty(testContext, "repositoryNameFolder")).deleteRecursively()
 
         // add test repository
         NectarDatabase.setInitCallback(getRoomCallback())
     }
 
     private fun getRoomCallback(): RoomDatabase.Callback {
-        val testContext = InstrumentationRegistry.getInstrumentation().context
         val username = BuildConfig.testGitRepositoryUsername
         val password = BuildConfig.testGitRepositoryPassword
         val nullValue = "null"

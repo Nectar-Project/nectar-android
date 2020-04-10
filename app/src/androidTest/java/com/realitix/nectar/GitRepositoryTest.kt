@@ -11,6 +11,7 @@ import com.realitix.nectar.repository.GitRepoRepository
 import com.realitix.nectar.util.GitManager
 import com.realitix.nectar.util.NectarActivityTestRule
 import com.realitix.nectar.util.NectarUtil
+import com.realitix.nectar.util.ZipUtil
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -37,13 +38,13 @@ class GitRepositoryTest {
     fun checkAppReceiveDataToGitRepository() {
         // 1. clone repo and fill it with data
         val gitRepository = GitRepoRepository(appContext).getByName(NectarUtil.getProperty(testContext, "defaultGitRepositoryName"))!!
-
         val repoDir = File(File(
             appContext.filesDir,
             NectarUtil.getProperty(testContext, "repositoryNameFolder")),
             gitRepository.name)
         val gitManager = GitManager(repoDir, gitRepository.url, gitRepository.credentials)
         gitManager.clean()
+        ZipUtil.unzipFromAssets(testContext, "test_repository.zip", repoDir.absolutePath)
 
         // run synchronization
 
