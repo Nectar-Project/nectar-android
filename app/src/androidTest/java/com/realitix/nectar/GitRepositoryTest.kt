@@ -48,7 +48,7 @@ class GitRepositoryTest {
         gitManager.push()
 
         // 2. run synchronization
-        AndroidTestUtil().runSynchronizer(appContext)
+        GitRepositorySynchronizer(appContext).exec()
 
         // 3. check data synchonized
         onView(withId(R.id.settingsFragment)).perform(click())
