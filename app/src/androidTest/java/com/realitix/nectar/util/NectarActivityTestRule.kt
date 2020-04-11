@@ -1,5 +1,6 @@
 package com.realitix.nectar.util
 
+import android.util.Log
 import androidx.room.OnConflictStrategy
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase

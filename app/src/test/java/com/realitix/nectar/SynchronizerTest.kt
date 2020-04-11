@@ -202,4 +202,41 @@ class SynchronizerUnitTest {
         inOrder.verify(repository).getRaw(uuid)
         inOrder.verify(repository).insert(UtensilRaw(uuid, nameUuid))
     }
+
+    @Test
+    fun stringKeyGitToDb() {
+        val uuid = "50b00a4d-39ba-4a40-9362-25edd9a2ac45"
+        val valueFr = "Pomme"
+        val valueEn = "Apple"
+
+        val repository: StringKeyRepository = mock(StringKeyRepository::class.java)
+        val s = StringKeySynchronizer(repository, getRepositoryFolder())
+        s.fromGitToDb(TEST_REPOSITORY_NAME, uuid)
+
+        val inOrder = inOrder(repository)
+        inOrder.verify(repository).get(uuid)
+        inOrder.verify(repository).insert(StringKeyRaw(uuid))
+        inOrder.verify(repository).insertValue(StringKeyValueRaw(uuid, "fr", valueFr))
+        inOrder.verify(repository).insertValue(StringKeyValueRaw(uuid, "en", valueEn))
+    }
+
+    @Test
+    fun bookGitToDb() {
+        val uuid = "e9ccbaf4-6744-4c20-a5a2-97c525ddd94d"
+        val nameUuid = "55017f67-8ecd-4446-ac1a-d39c4cc302e1"
+        val author = "Auteur test"
+        val publishDate: Long = 1585834301
+        val imageUuid = "e56f15a5-29f5-4ba7-8c9a-f750a31198ce"
+        val receipeUuid = "592bfb6a-0519-4ba6-855c-f4e467eb98fc"
+
+        val repository: BookRepository = mock(BookRepository::class.java)
+        val s = BookSynchronizer(repository, getRepositoryFolder())
+        s.fromGitToDb(TEST_REPOSITORY_NAME, uuid)
+
+        val inOrder = inOrder(repository)
+        inOrder.verify(repository).getBook(uuid)
+        inOrder.verify(repository).insertBook(BookRaw(uuid, nameUuid, author, publishDate))
+        inOrder.verify(repository).insertBookImage(BookImageRaw(uuid, imageUuid))
+        inOrder.verify(repository).insertBookReceipe(BookReceipeRaw(uuid, receipeUuid))
+    }
 }

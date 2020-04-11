@@ -133,15 +133,26 @@ class GitManager(private val repoDir: File, private val url: String, private val
     }
 
     fun addAll() {
+        // Add modified and removed files
         git.add().setUpdate(true).addFilepattern(".").call()
+        // Add new files
+        git.add().setUpdate(false).addFilepattern(".").call()
     }
 
     fun commit() {
         git.commit().setMessage("Commit all changes").call()
     }
 
-    fun push() {
-        git.push().call()
+    fun push(): Boolean {
+        if(credentials == null) {
+            Log.w("Nectar", "Can't push without credentials")
+            return false
+        }
+        git.push()
+            .setCredentialsProvider(UsernamePasswordCredentialsProvider(credentials.username, credentials.password))
+            .call()
+
+        return true
     }
 
     fun clean() {
