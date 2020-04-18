@@ -57,14 +57,14 @@ class GitRepositorySynchronizer(val context: Context) {
                 }
 
                 repo.lastCheck = currentTimestamp
-                GitRepoRepository(context).updateGitRepository(repo)
+                GitRepoRepository(context).update(repo)
             }
         }
     }
 
     private fun synchronizeFromDbToGit() {
         val baseRepositoryFolder = NectarUtil.getRepositoryFolder(context)
-        val gitRepositories = GitRepoRepository(context).listGitRepositories()
+        val gitRepositories = GitRepoRepository(context).list()
         val updates = DatabaseUpdateRepository(context).list()
 
         for(g in gitRepositories) {

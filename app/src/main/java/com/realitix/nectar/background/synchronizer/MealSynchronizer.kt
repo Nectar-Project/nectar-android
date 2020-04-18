@@ -1,12 +1,18 @@
 package com.realitix.nectar.background.synchronizer
 
 import com.realitix.nectar.database.entity.*
+import com.realitix.nectar.repository.MealAlimentRepository
+import com.realitix.nectar.repository.MealReceipeRepository
 import com.realitix.nectar.repository.MealRepository
 import com.realitix.nectar.util.EntityType
 import java.io.File
 
-class MealSynchronizer(repository: MealRepository, baseRepositoryFolder: File):
-    BaseSynchronizer<MealSynchronizer.ParseResult, MealRepository>(repository, baseRepositoryFolder) {
+class MealSynchronizer(
+    private val rMeal: MealRepository,
+    private val rMealAliment: MealAlimentRepository,
+    private val rMealReceipe: MealReceipeRepository,
+    baseRepositoryFolder: File
+): BaseSynchronizer<MealSynchronizer.ParseResult>(baseRepositoryFolder) {
     data class ParseResult(
         val uuid: String,
         val nbPeople: Int,
@@ -19,25 +25,25 @@ class MealSynchronizer(repository: MealRepository, baseRepositoryFolder: File):
     override fun getEntityType(): EntityType = EntityType.MEAL
     override fun getParseResult(repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(repositoryName, uuid)
 
-    override fun updateDb(repo: MealRepository, parseResult: ParseResult) {
+    override fun updateDb(parseResult: ParseResult) {
         // Create meal only if not exists
-        if(repo.getMeal(parseResult.uuid) == null) {
-            repo.insertMeal(MealRaw(parseResult.uuid, parseResult.timestamp, parseResult.nbPeople, parseResult.description))
+        if(rMeal.get(parseResult.uuid) == null) {
+            rMeal.insert(MealRaw(parseResult.uuid, parseResult.timestamp, parseResult.nbPeople, parseResult.description))
         }
 
         // aliments
         for ((alimentUuid, quantity) in parseResult.aliments) {
-            repo.insertMealAliment(MealAlimentRaw(alimentUuid, parseResult.uuid, quantity))
+            rMealAliment.insert(MealAlimentRaw(alimentUuid, parseResult.uuid, quantity))
         }
 
         // receipes
         for (receipeUuid in parseResult.receipes) {
-            repo.insertMealReceipe(MealReceipeRaw(receipeUuid, parseResult.uuid))
+            rMealReceipe.insert(MealReceipeRaw(receipeUuid, parseResult.uuid))
         }
     }
 
-    override fun populateParseResult(repo: MealRepository, uuid: String): ParseResult {
-        val meal = repo.getMeal(uuid)!!
+    override fun populateParseResult(uuid: String): ParseResult {
+        val meal = rMeal.get(uuid)!!
 
         val aliments = mutableMapOf<String, Int>()
         for(a in meal.aliments) {

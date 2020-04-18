@@ -3,26 +3,39 @@ package com.realitix.nectar.database.dao
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import com.realitix.nectar.database.entity.GitRepository
 import com.realitix.nectar.database.entity.GitRepositoryRaw
 
 @Dao
-interface GitRepositoryDao: BaseDao<GitRepositoryRaw> {
-    @Query("SELECT * FROM GitRepositoryRaw WHERE uuid=:uuid")
-    fun get(uuid: String): GitRepository?
-
-    @Query("SELECT * FROM GitRepositoryRaw WHERE uuid=:uuid")
-    suspend fun getSuspend(uuid: String): GitRepository?
-
+abstract class GitRepositoryDao: BaseDao<GitRepositoryRaw, GitRepository>() {
     @Query("SELECT * FROM GitRepositoryRaw WHERE name=:name")
-    fun getByName(name: String): GitRepository?
-
-    @Query("SELECT * FROM GitRepositoryRaw")
-    fun list(): List<GitRepository>
+    abstract fun getByName(name: String): GitRepository?
 
     @Query("SELECT * FROM GitRepositoryRaw WHERE enabled=1")
-    fun listEnabled(): List<GitRepository>
+    abstract fun listEnabled(): List<GitRepository>
 
+    @Transaction
+    @Query("SELECT * FROM GitRepositoryRaw WHERE uuid = :uuid")
+    abstract override fun getLive(uuid: String): LiveData<GitRepository>
+
+    @Transaction
+    @Query("SELECT * FROM GitRepositoryRaw WHERE uuid = :uuid")
+    abstract override fun get(uuid: String): GitRepository?
+
+    @Transaction
+    @Query("SELECT * FROM GitRepositoryRaw WHERE uuid = :uuid")
+    abstract override suspend fun getSuspend(uuid: String): GitRepository?
+
+    @Transaction
     @Query("SELECT * FROM GitRepositoryRaw")
-    fun listLive(): LiveData<List<GitRepository>>
+    abstract override fun list(): List<GitRepository>
+
+    @Transaction
+    @Query("SELECT * FROM GitRepositoryRaw")
+    abstract override fun listLive(): LiveData<List<GitRepository>>
+
+    @Transaction
+    @Query("SELECT * FROM GitRepositoryRaw")
+    abstract override suspend fun listSuspend(): List<GitRepository>
 }

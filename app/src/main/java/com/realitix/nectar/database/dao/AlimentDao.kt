@@ -8,7 +8,7 @@ import com.realitix.nectar.database.entity.Aliment
 import com.realitix.nectar.database.entity.AlimentRaw
 
 @Dao
-interface AlimentDao: BaseDao<AlimentRaw> {
+abstract class AlimentDao: BaseDao<AlimentRaw, Aliment>() {
     @Transaction
     @Query(
         """
@@ -20,13 +20,31 @@ interface AlimentDao: BaseDao<AlimentRaw> {
         WHERE StringKeyValueFts MATCH :term
     """
     )
-    fun search(term: String): LiveData<List<Aliment>>
+    abstract fun search(term: String): LiveData<List<Aliment>>
 
     @Transaction
     @Query("SELECT * FROM AlimentRaw WHERE uuid = :uuid")
-    fun getLive(uuid: String): LiveData<Aliment>
+    abstract override fun getLive(uuid: String): LiveData<Aliment>
 
     @Transaction
     @Query("SELECT * FROM AlimentRaw WHERE uuid = :uuid")
-    fun get(uuid: String): Aliment?
+    abstract override fun get(uuid: String): Aliment?
+
+    @Transaction
+    @Query("SELECT * FROM AlimentRaw WHERE uuid = :uuid")
+    abstract override suspend fun getSuspend(uuid: String): Aliment?
+
+    @Transaction
+    @Query("SELECT * FROM AlimentRaw ")
+    abstract override fun list(): List<Aliment>
+
+    @Transaction
+    @Query("SELECT * FROM AlimentRaw ")
+    abstract override fun listLive(): LiveData<List<Aliment>>
+
+    @Transaction
+    @Query("SELECT * FROM AlimentRaw ")
+    abstract override suspend fun listSuspend(): List<Aliment>
+
+
 }

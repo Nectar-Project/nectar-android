@@ -6,16 +6,32 @@ import com.realitix.nectar.database.entity.Meal
 import com.realitix.nectar.database.entity.MealRaw
 
 @Dao
-interface MealDao: BaseDao<MealRaw> {
+abstract class MealDao: BaseDao<MealRaw, Meal>() {
     @Transaction
     @Query("SELECT * FROM MealRaw WHERE timestamp BETWEEN :begin AND :end ORDER BY timestamp")
-    fun search(begin: Long, end: Long): LiveData<List<Meal>>
+    abstract fun search(begin: Long, end: Long): LiveData<List<Meal>>
 
     @Transaction
-    @Query("SELECT * FROM MealRaw WHERE uuid=:uuid")
-    fun get(uuid: String): Meal?
+    @Query("SELECT * FROM MealRaw WHERE uuid = :uuid")
+    abstract override fun getLive(uuid: String): LiveData<Meal>
 
     @Transaction
-    @Query("SELECT * FROM MealRaw WHERE uuid=:uuid")
-    fun getLive(uuid: String): LiveData<Meal>
+    @Query("SELECT * FROM MealRaw WHERE uuid = :uuid")
+    abstract override fun get(uuid: String): Meal?
+
+    @Transaction
+    @Query("SELECT * FROM MealRaw WHERE uuid = :uuid")
+    abstract override suspend fun getSuspend(uuid: String): Meal?
+
+    @Transaction
+    @Query("SELECT * FROM MealRaw")
+    abstract override fun list(): List<Meal>
+
+    @Transaction
+    @Query("SELECT * FROM MealRaw")
+    abstract override fun listLive(): LiveData<List<Meal>>
+
+    @Transaction
+    @Query("SELECT * FROM MealRaw")
+    abstract override suspend fun listSuspend(): List<Meal>
 }

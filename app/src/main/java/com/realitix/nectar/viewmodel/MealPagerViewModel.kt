@@ -7,7 +7,7 @@ import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
 import kotlinx.coroutines.runBlocking
 
 class MealPagerViewModel constructor(val repository: MealRepository, timestamp: Long) : ViewModel() {
-    val meals: LiveData<List<Meal>> = repository.listMeals(timestamp)
+    val meals: LiveData<List<Meal>> = repository.listDay(timestamp)
 
     fun createMeal(timestamp: Long): String {
         val rid = generateUuid()

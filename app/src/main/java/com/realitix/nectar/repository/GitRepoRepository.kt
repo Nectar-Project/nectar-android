@@ -1,46 +1,13 @@
 package com.realitix.nectar.repository
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import com.realitix.nectar.database.NectarDatabase
+import com.realitix.nectar.database.dao.BaseDao
 import com.realitix.nectar.database.entity.GitRepository
 import com.realitix.nectar.database.entity.GitRepositoryRaw
 
-class GitRepoRepository(val context: Context) {
-
-    fun listGitRepositories(): List<GitRepository> {
-        return NectarDatabase.getInstance(context).gitRepositoryDao().list()
-    }
-
-    fun listEnabled(): List<GitRepository> {
-        return NectarDatabase.getInstance(context).gitRepositoryDao().listEnabled()
-    }
-
-    fun listLive(): LiveData<List<GitRepository>> {
-        return NectarDatabase.getInstance(context).gitRepositoryDao().listLive()
-    }
-
-    suspend fun getSuspend(uuid: String): GitRepository? {
-        return NectarDatabase.getInstance(context).gitRepositoryDao().getSuspend(uuid)
-    }
-
-    fun getByName(name: String): GitRepository? {
-        return NectarDatabase.getInstance(context).gitRepositoryDao().getByName(name)
-    }
-
-    fun updateGitRepository(repo: GitRepository) {
-        NectarDatabase.getInstance(context).gitRepositoryDao().update(repo)
-    }
-
-    suspend fun updateSuspend(repo: GitRepository) {
-        NectarDatabase.getInstance(context).gitRepositoryDao().updateSuspend(repo)
-    }
-
-    suspend fun insertSuspend(r: GitRepositoryRaw) {
-        NectarDatabase.getInstance(context).gitRepositoryDao().insertSuspend(r)
-    }
-
-    fun insert(r: GitRepositoryRaw) {
-        NectarDatabase.getInstance(context).gitRepositoryDao().insert(r)
-    }
+class GitRepoRepository(val context: Context): GenericRepository<GitRepositoryRaw, GitRepository>() {
+    override fun getDao() = NectarDatabase.getInstance(context).gitRepositoryDao()
+    fun listEnabled(): List<GitRepository> = getDao().listEnabled()
+    fun getByName(name: String): GitRepository? = getDao().getByName(name)
 }

@@ -62,8 +62,6 @@ abstract class NectarDatabase : RoomDatabase() {
     abstract fun mealDao(): MealDao
     abstract fun mealReceipeDao(): MealReceipeDao
     abstract fun measureDao(): MeasureDao
-    abstract fun nameDao(): StringKeyDao
-    abstract fun nameValueDao(): StringKeyValueDao
     abstract fun receipeDao(): ReceipeDao
     abstract fun receipeTagDao(): ReceipeTagDao
     abstract fun receipeUtensilDao(): ReceipeUtensilDao
@@ -71,6 +69,8 @@ abstract class NectarDatabase : RoomDatabase() {
     abstract fun receipeStepDao(): ReceipeStepDao
     abstract fun receipeStepReceipeDao(): ReceipeStepReceipeDao
     abstract fun stateDao(): StateDao
+    abstract fun stringKeyDao(): StringKeyDao
+    abstract fun stringKeyValueDao(): StringKeyValueDao
     abstract fun tagDao(): TagDao
     abstract fun utensilDao(): UtensilDao
 

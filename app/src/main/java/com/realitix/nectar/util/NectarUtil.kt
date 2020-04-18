@@ -1,6 +1,9 @@
 package com.realitix.nectar.util
 
 import android.content.Context
+import com.beust.klaxon.JsonObject
+import com.beust.klaxon.Klaxon
+import com.beust.klaxon.Parser
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -16,6 +19,7 @@ class NectarUtil {
         private val pattern2 = initSimpleDate("HH:mm")
         private val pattern3 = initSimpleDate("EEEE d MMMM YYYY")
 
+        fun timestamp() = System.currentTimeMillis()/1000
         fun beginDayTimestamp(timestamp: Long): Long = floor((timestamp / nbSecondsInDay).toDouble()).toLong() * nbSecondsInDay
         fun endDayTimestamp(timestamp: Long): Long = beginDayTimestamp(timestamp) + nbSecondsInDay
         fun hourTimestamp(hour: Int): Long = hour * nbSecondsInHour
@@ -62,6 +66,17 @@ class NectarUtil {
                 }
             }
             return "$searchResult*"
+        }
+
+        fun writeToJsonFile(out: File, obj: Any) {
+            val builder = StringBuilder(Klaxon().toJsonString(obj))
+            val json = (Parser().parse(builder) as JsonObject).toJsonString(true)
+
+            // Create directory and file if not exist
+            out.parentFile?.mkdirs()
+            out.createNewFile()
+
+            out.writeText(json)
         }
     }
 }

@@ -1,20 +1,29 @@
 package com.realitix.nectar.database.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
-interface BaseDao<in ERaw> {
+abstract class BaseDao<in ERaw, E> {
+    abstract fun list(): List<@JvmSuppressWildcards E>
+    abstract fun listLive(): LiveData<List<@JvmSuppressWildcards E>>
+    abstract suspend fun listSuspend(): List<@JvmSuppressWildcards E>
+
+    abstract fun get(uuid: String): E?
+    abstract fun getLive(uuid: String): LiveData<E>
+    abstract suspend fun getSuspend(uuid: String): E?
+
     @Insert
-    fun insert(obj: ERaw)
+    abstract fun insert(obj: ERaw)
     @Insert
-    suspend fun insertSuspend(obj: ERaw)
+    abstract suspend fun insertSuspend(obj: ERaw)
 
     @Update
-    fun update(obj: ERaw)
+    abstract fun update(obj: ERaw)
     @Update
-    suspend fun updateSuspend(obj: ERaw)
+    abstract suspend fun updateSuspend(obj: ERaw)
 
     @Delete
-    fun delete(obj: ERaw)
+    abstract fun delete(obj: ERaw)
     @Delete
-    suspend fun deleteSuspend(obj: ERaw)
+    abstract suspend fun deleteSuspend(obj: ERaw)
 }

@@ -5,22 +5,28 @@ import androidx.room.*
 import com.realitix.nectar.database.entity.*
 
 @Dao
-interface ReceipeStepDao {
+abstract class ReceipeStepDao: BaseDao<ReceipeStepRaw, ReceipeStep>() {
     @Transaction
-    @Query("SELECT * FROM ReceipeStepRaw WHERE uuid=:uuid")
-    operator fun get(uuid: String): ReceipeStep?
-
-    @Transaction
-    @Query("SELECT * FROM ReceipeStepRaw WHERE uuid=:uuid")
-    fun getFull(uuid: String): LiveData<ReceipeStep>
+    @Query("SELECT * FROM ReceipeStepRaw WHERE uuid = :uuid")
+    abstract override fun getLive(uuid: String): LiveData<ReceipeStep>
 
     @Transaction
-    @Query("SELECT * FROM ReceipeStepRaw WHERE uuid=:uuid")
-    suspend fun has(uuid: String): ReceipeStep?
+    @Query("SELECT * FROM ReceipeStepRaw WHERE uuid = :uuid")
+    abstract override fun get(uuid: String): ReceipeStep?
 
-    @Insert
-    suspend fun insertSuspended(receipeStep: ReceipeStepRaw)
+    @Transaction
+    @Query("SELECT * FROM ReceipeStepRaw WHERE uuid = :uuid")
+    abstract override suspend fun getSuspend(uuid: String): ReceipeStep?
 
-    @Insert
-    fun insert(receipeStep: ReceipeStepRaw)
+    @Transaction
+    @Query("SELECT * FROM ReceipeStepRaw")
+    abstract override fun list(): List<ReceipeStep>
+
+    @Transaction
+    @Query("SELECT * FROM ReceipeStepRaw")
+    abstract override fun listLive(): LiveData<List<ReceipeStep>>
+
+    @Transaction
+    @Query("SELECT * FROM ReceipeStepRaw")
+    abstract override suspend fun listSuspend(): List<ReceipeStep>
 }

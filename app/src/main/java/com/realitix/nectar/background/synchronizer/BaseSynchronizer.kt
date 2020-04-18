@@ -4,17 +4,17 @@ import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.Parser
 import com.realitix.nectar.util.EntityType
+import com.realitix.nectar.util.NectarUtil
 import java.io.File
 
-abstract class BaseSynchronizer<P, R>(
-    private val repository: R,
+abstract class BaseSynchronizer<P>(
     private val baseRepositoryFolder: File
 ): SynchronizerInterface {
 
     abstract fun getEntityType(): EntityType
     abstract fun getParseResult(repositoryName: String, uuid: String): P
-    abstract fun updateDb(repo: R, parseResult: P)
-    abstract fun populateParseResult(repo: R, uuid: String): P
+    abstract fun updateDb(parseResult: P)
+    abstract fun populateParseResult(uuid: String): P
 
     private fun getEntityFile(repositoryName: String, uuid: String): File {
         val repoFolder = File(baseRepositoryFolder, repositoryName)
@@ -24,16 +24,12 @@ abstract class BaseSynchronizer<P, R>(
 
     fun readFile(repositoryName: String, uuid: String): String = getEntityFile(repositoryName, uuid).readText()
 
-    fun writeFile(repositoryName: String, uuid: String, out: P) {
-        val entityFile = getEntityFile(repositoryName, uuid)
-        val builder = StringBuilder(Klaxon().toJsonString(out!!))
-        val result = (Parser().parse(builder) as JsonObject).toJsonString(true)
-        entityFile.writeText(result)
-        println("Result: ${result}")
+    private fun writeFile(repositoryName: String, uuid: String, out: P) {
+        NectarUtil.writeToJsonFile(getEntityFile(repositoryName, uuid), out!!)
     }
 
     inline fun <reified P> parse(json: String): P = Klaxon().parse<P>(json)!!
     inline fun <reified P> getInnerParseResult(repositoryName: String, uuid: String): P = parse(readFile(repositoryName, uuid))
-    override fun fromGitToDb(gitRepositoryName: String, uuid: String) = updateDb(repository, getParseResult(gitRepositoryName, uuid))
-    override fun fromDbToGit(gitRepositoryName: String, uuid: String) = writeFile(gitRepositoryName, uuid, populateParseResult(repository, uuid))
+    override fun fromGitToDb(gitRepositoryName: String, uuid: String) = updateDb(getParseResult(gitRepositoryName, uuid))
+    override fun fromDbToGit(gitRepositoryName: String, uuid: String) = writeFile(gitRepositoryName, uuid, populateParseResult(uuid))
 }

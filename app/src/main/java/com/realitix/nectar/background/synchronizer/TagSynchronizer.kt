@@ -6,7 +6,7 @@ import com.realitix.nectar.util.EntityType
 import java.io.File
 
 class TagSynchronizer(repository: TagRepository, baseRepositoryFolder: File):
-    NameBaseSynchronizer<TagRaw>(repository, baseRepositoryFolder) {
-    override fun getNew(uuid: String, nameUuid: String): TagRaw = TagRaw(uuid, nameUuid)
+    NameBaseSynchronizer<TagRaw, Tag>(repository, baseRepositoryFolder) {
+    override fun getNew(uuid: String, nameUuid: String) = TagRaw(uuid, nameUuid)
     override fun getEntityType(): EntityType = EntityType.TAG
 }

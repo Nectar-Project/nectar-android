@@ -1,27 +1,26 @@
 package com.realitix.nectar.background.synchronizer
 
-import com.realitix.nectar.repository.NameRepositoryInterface
+import com.realitix.nectar.repository.NameGenericRepository
 import java.io.File
 
-abstract class NameBaseSynchronizer<U>(repository: NameRepositoryInterface<U>, baseRepositoryFolder: File):
-    BaseSynchronizer<NameBaseSynchronizer.ParseResult, NameRepositoryInterface<U>>(repository, baseRepositoryFolder) {
+abstract class NameBaseSynchronizer<ERaw, E>(
+    private val rName: NameGenericRepository<ERaw, E>,
+    baseRepositoryFolder: File
+): BaseSynchronizer<NameBaseSynchronizer.ParseResult>(baseRepositoryFolder) {
     class ParseResult(
         val uuid: String,
         val nameUuid: String
     )
 
-    abstract fun getNew(uuid: String, nameUuid: String): U
+    abstract fun getNew(uuid: String, nameUuid: String): ERaw
     override fun getParseResult(repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(repositoryName, uuid)
 
-    override fun updateDb(repo: NameRepositoryInterface<U>, parseResult: ParseResult) {
+    override fun updateDb(parseResult: ParseResult) {
         // Create tag only if not exists
-        if(repo.getRaw(parseResult.uuid) == null) {
-            repo.insert(getNew(parseResult.uuid, parseResult.nameUuid))
+        if(rName.get(parseResult.uuid) == null) {
+            rName.insert(getNew(parseResult.uuid, parseResult.nameUuid))
         }
     }
 
-    override fun populateParseResult(
-        repo: NameRepositoryInterface<U>,
-        uuid: String
-    ): ParseResult = ParseResult(uuid, repo.getNameUuid(uuid))
+    override fun populateParseResult(uuid: String): ParseResult = ParseResult(uuid, rName.getNameUuid(uuid))
 }

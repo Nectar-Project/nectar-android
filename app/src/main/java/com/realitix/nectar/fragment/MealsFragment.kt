@@ -11,6 +11,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.realitix.nectar.R
+import com.realitix.nectar.util.NectarUtil
 import com.realitix.nectar.util.ViewPagerAdapter
 import kotlinx.android.synthetic.main.fragment_meals.*
 
@@ -18,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_meals.*
 class MealsFragment : Fragment() {
     private var timestamp: Long = -1
     private val adapter: ViewPagerAdapter by lazy {
-        ViewPagerAdapter(System.currentTimeMillis()/1000, childFragmentManager)
+        ViewPagerAdapter(NectarUtil.timestamp(), childFragmentManager)
     }
 
     override fun onCreateView(

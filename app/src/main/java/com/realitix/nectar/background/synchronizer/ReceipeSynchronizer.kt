@@ -1,12 +1,19 @@
 package com.realitix.nectar.background.synchronizer
 
 import com.realitix.nectar.database.entity.*
-import com.realitix.nectar.repository.ReceipeRepository
+import com.realitix.nectar.repository.*
 import com.realitix.nectar.util.EntityType
 import java.io.File
 
-class ReceipeSynchronizer(repository: ReceipeRepository, baseRepositoryFolder: File):
-    BaseSynchronizer<ReceipeSynchronizer.ParseResult, ReceipeRepository>(repository, baseRepositoryFolder) {
+class ReceipeSynchronizer(
+    private val rReceipe: ReceipeRepository,
+    private val rReceipeTag: ReceipeTagRepository,
+    private val rReceipeUtensil: ReceipeUtensilRepository,
+    private val rReceipeStep: ReceipeStepRepository,
+    private val rReceipeStepAliment: ReceipeStepAlimentRepository,
+    private val rReceipeStepReceipe: ReceipeStepReceipeRepository,
+    baseRepositoryFolder: File
+): BaseSynchronizer<ReceipeSynchronizer.ParseResult>(baseRepositoryFolder) {
     class ParseResult(
         val uuid: String,
         val nameUuid: String,
@@ -29,25 +36,25 @@ class ReceipeSynchronizer(repository: ReceipeRepository, baseRepositoryFolder: F
     override fun getEntityType(): EntityType = EntityType.RECEIPE
     override fun getParseResult(repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(repositoryName, uuid)
 
-    override fun updateDb(repo: ReceipeRepository, parseResult: ParseResult) {
+    override fun updateDb(parseResult: ParseResult) {
         // Create receipe only if not exists
-        if(repo.getReceipe(parseResult.uuid) == null) {
-            repo.insertReceipe(ReceipeRaw(parseResult.uuid, parseResult.nameUuid, parseResult.nbPeople, parseResult.stars))
+        if(rReceipe.get(parseResult.uuid) == null) {
+            rReceipe.insert(ReceipeRaw(parseResult.uuid, parseResult.nameUuid, parseResult.nbPeople, parseResult.stars))
         }
 
         // tags
         for(tagUuid in parseResult.tags) {
-            repo.insertReceipeTag(ReceipeTagRaw(parseResult.uuid, tagUuid))
+            rReceipeTag.insert(ReceipeTagRaw(parseResult.uuid, tagUuid))
         }
 
         // utensils
         for(utensilUid in parseResult.utensils) {
-            repo.insertReceipeUtensil(ReceipeUtensilRaw(parseResult.uuid, utensilUid))
+            rReceipeUtensil.insert(ReceipeUtensilRaw(parseResult.uuid, utensilUid))
         }
 
         // steps
         for(step in parseResult.steps) {
-            repo.insertReceipeStep(
+            rReceipeStep.insert(
                 ReceipeStepRaw(
                     step.stepUuid,
                     parseResult.uuid,
@@ -58,7 +65,7 @@ class ReceipeSynchronizer(repository: ReceipeRepository, baseRepositoryFolder: F
             )
             // aliments
             for ((alimentUuid, quantity) in step.aliments) {
-                repo.insertReceipeStepAliment(
+                rReceipeStepAliment.insert(
                     ReceipeStepAlimentRaw(
                         alimentUuid,
                         step.stepUuid,
@@ -69,13 +76,13 @@ class ReceipeSynchronizer(repository: ReceipeRepository, baseRepositoryFolder: F
 
             // receipes
             for (receipeUuid in step.receipes) {
-                repo.insertReceipeStepReceipe(ReceipeStepReceipeRaw(receipeUuid, step.stepUuid))
+                rReceipeStepReceipe.insert(ReceipeStepReceipeRaw(receipeUuid, step.stepUuid))
             }
         }
     }
 
-    override fun populateParseResult(repo: ReceipeRepository, uuid: String): ParseResult {
-        val receipe = repo.getReceipe(uuid)!!
+    override fun populateParseResult(uuid: String): ParseResult {
+        val receipe = rReceipe.get(uuid)!!
 
         val tags = mutableListOf<String>()
         for(a in receipe.tags) {
