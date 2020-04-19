@@ -6,31 +6,35 @@ import com.realitix.nectar.database.entity.ReceipeStep
 import com.realitix.nectar.database.entity.StringKeyRaw
 import com.realitix.nectar.database.entity.StringKeyValueRaw
 import com.realitix.nectar.repository.ReceipeRepository
+import com.realitix.nectar.repository.ReceipeStepRepository
 import com.realitix.nectar.repository.StringKeyRepository
+import com.realitix.nectar.repository.StringKeyValueRepository
 import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
 import kotlinx.coroutines.launch
 
 class ReceipeViewModel (
-    private val receipeRepository: ReceipeRepository,
-    private val stringKeyRepository: StringKeyRepository,
+    rReceipe: ReceipeRepository,
+    private val rReceipeStep: ReceipeStepRepository,
+    private val rStringKey: StringKeyRepository,
+    private val rStringKeyValue: StringKeyValueRepository,
     receipeUuid: String
 ) : ViewModel() {
-    val receipe: LiveData<Receipe> = receipeRepository.getReceipeFull(receipeUuid)
+    val receipe: LiveData<Receipe> = rReceipe.getLive(receipeUuid)
 
     fun updateReceipeName(newName: String) {
         viewModelScope.launch {
-            val keyValue = stringKeyRepository.getValueSuspend(receipe.value!!.nameUuid, "fr")!!
+            val keyValue = rStringKeyValue.getLangSuspend(receipe.value!!.nameUuid, "fr")!!
             keyValue.value = newName
-            stringKeyRepository.updateValueSuspend(keyValue)
+            rStringKeyValue.updateSuspend(keyValue)
         }
     }
 
     fun createStep(description: String) {
         viewModelScope.launch {
             val sid = generateUuid()
-            stringKeyRepository.insertSuspend(StringKeyRaw(sid))
-            stringKeyRepository.insertValueSuspend(StringKeyValueRaw(sid, "fr", description))
-            receipeRepository.insertReceipeStepSuspend(ReceipeStep(generateUuid(), receipe.value!!.uuid, null, sid, 0))
+            rStringKey.insertSuspend(StringKeyRaw(sid))
+            rStringKeyValue.insertSuspend(StringKeyValueRaw(sid, "fr", description))
+            rReceipeStep.insertSuspend(ReceipeStep(generateUuid(), receipe.value!!.uuid, null, sid, 0))
         }
     }
 }

@@ -15,7 +15,9 @@ import com.realitix.nectar.R
 import com.realitix.nectar.util.GenericAdapter
 import com.realitix.nectar.database.entity.ReceipeStep
 import com.realitix.nectar.repository.ReceipeRepository
+import com.realitix.nectar.repository.ReceipeStepRepository
 import com.realitix.nectar.repository.StringKeyRepository
+import com.realitix.nectar.repository.StringKeyValueRepository
 import com.realitix.nectar.util.RecyclerItemClickListener
 import com.realitix.nectar.util.SingleLineItemViewHolder
 import com.realitix.nectar.viewmodel.ReceipeViewModel
@@ -30,7 +32,9 @@ class ReceipeFragment : Fragment() {
             RepositoryViewModelFactory {
                 ReceipeViewModel(
                     ReceipeRepository(requireContext()),
+                    ReceipeStepRepository(requireContext()),
                     StringKeyRepository(requireContext()),
+                    StringKeyValueRepository(requireContext()),
                     receipeUuid
                 )
             }

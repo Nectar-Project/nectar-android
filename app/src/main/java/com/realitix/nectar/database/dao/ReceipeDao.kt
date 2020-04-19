@@ -6,7 +6,7 @@ import com.realitix.nectar.database.entity.Receipe
 import com.realitix.nectar.database.entity.ReceipeRaw
 
 @Dao
-abstract class ReceipeDao: BaseDao<ReceipeRaw, Receipe>() {
+abstract class ReceipeDao: GenericGetUuidDao<ReceipeRaw, Receipe>() {
     @Transaction
     @Query("""
         SELECT DISTINCT ReceipeRaw.*

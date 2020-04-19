@@ -7,19 +7,7 @@ import androidx.room.Transaction
 import com.realitix.nectar.database.entity.*
 
 @Dao
-abstract class DatabaseUpdateDao: BaseDao<DatabaseUpdateRaw, DatabaseUpdate>() {
-    @Transaction
-    @Query("SELECT * FROM DatabaseUpdateRaw WHERE entityUuid = :uuid")
-    abstract override fun getLive(uuid: String): LiveData<DatabaseUpdate>
-
-    @Transaction
-    @Query("SELECT * FROM DatabaseUpdateRaw WHERE entityUuid = :uuid")
-    abstract override fun get(uuid: String): DatabaseUpdate?
-
-    @Transaction
-    @Query("SELECT * FROM DatabaseUpdateRaw WHERE entityUuid = :uuid")
-    abstract override suspend fun getSuspend(uuid: String): DatabaseUpdate?
-
+abstract class DatabaseUpdateDao: GenericCrudDao<DatabaseUpdateRaw, DatabaseUpdate>() {
     @Transaction
     @Query("SELECT * FROM DatabaseUpdateRaw")
     abstract override fun list(): List<DatabaseUpdate>

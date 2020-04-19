@@ -9,7 +9,7 @@ import com.realitix.nectar.database.entity.AlimentStateRaw
 
 
 @Dao
-abstract class AlimentStateDao: BaseDao<AlimentStateRaw, AlimentState>() {
+abstract class AlimentStateDao: GenericGetUuidDao<AlimentStateRaw, AlimentState>() {
     @Transaction
     @Query("SELECT * FROM AlimentStateRaw WHERE uuid = :uuid")
     abstract override fun getLive(uuid: String): LiveData<AlimentState>

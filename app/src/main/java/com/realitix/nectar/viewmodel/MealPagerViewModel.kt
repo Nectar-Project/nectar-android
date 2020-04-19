@@ -6,13 +6,13 @@ import com.realitix.nectar.repository.MealRepository
 import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
 import kotlinx.coroutines.runBlocking
 
-class MealPagerViewModel constructor(val repository: MealRepository, timestamp: Long) : ViewModel() {
-    val meals: LiveData<List<Meal>> = repository.listDay(timestamp)
+class MealPagerViewModel constructor(val rMeal: MealRepository, timestamp: Long) : ViewModel() {
+    val meals: LiveData<List<Meal>> = rMeal.listDay(timestamp)
 
     fun createMeal(timestamp: Long): String {
         val rid = generateUuid()
         runBlocking {
-            repository.createMeal(Meal(rid, timestamp, 1, "Description"))
+            rMeal.insertSuspend(Meal(rid, timestamp, 1, "Description"))
         }
         return rid
     }

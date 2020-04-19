@@ -7,26 +7,18 @@ import androidx.room.Transaction
 import com.realitix.nectar.database.entity.*
 
 @Dao
-abstract class StringKeyValueDao: BaseDao<StringKeyValueRaw, StringKeyValue>() {
+abstract class StringKeyValueDao: GenericGetJoinDao<StringKeyValueRaw, StringKeyValue>() {
     @Transaction
-    @Query("SELECT * FROM StringKeyValueRaw WHERE stringKeyUuid=:uuid AND language=:lang")
-    abstract fun getLang(uuid: String, lang: String): StringKeyValue?
+    @Query("SELECT * FROM StringKeyValueRaw WHERE stringKeyUuid = :uuid1 AND language = :uuid2")
+    abstract override fun getLive(uuid1: String, uuid2: String): LiveData<StringKeyValue>
 
     @Transaction
-    @Query("SELECT * FROM StringKeyValueRaw WHERE stringKeyUuid=:uuid AND language=:lang")
-    abstract suspend fun getLangSuspend(uuid: String, lang: String): StringKeyValue?
+    @Query("SELECT * FROM StringKeyValueRaw WHERE stringKeyUuid = :uuid1 AND language = :uuid2")
+    abstract override fun get(uuid1: String, uuid2: String): StringKeyValue?
 
     @Transaction
-    @Query("SELECT * FROM StringKeyValueRaw WHERE stringKeyUuid = :uuid")
-    abstract override fun getLive(uuid: String): LiveData<StringKeyValue>
-
-    @Transaction
-    @Query("SELECT * FROM StringKeyValueRaw WHERE stringKeyUuid = :uuid")
-    abstract override fun get(uuid: String): StringKeyValue?
-
-    @Transaction
-    @Query("SELECT * FROM StringKeyValueRaw WHERE stringKeyUuid = :uuid")
-    abstract override suspend fun getSuspend(uuid: String): StringKeyValue?
+    @Query("SELECT * FROM StringKeyValueRaw WHERE stringKeyUuid = :uuid1 AND language = :uuid2")
+    abstract override suspend fun getSuspend(uuid1: String, uuid2: String): StringKeyValue?
 
     @Transaction
     @Query("SELECT * FROM StringKeyValueRaw")

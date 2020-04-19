@@ -6,7 +6,7 @@ import com.realitix.nectar.database.entity.Meal
 import com.realitix.nectar.database.entity.MealRaw
 
 @Dao
-abstract class MealDao: BaseDao<MealRaw, Meal>() {
+abstract class MealDao: GenericGetUuidDao<MealRaw, Meal>() {
     @Transaction
     @Query("SELECT * FROM MealRaw WHERE timestamp BETWEEN :begin AND :end ORDER BY timestamp")
     abstract fun search(begin: Long, end: Long): LiveData<List<Meal>>

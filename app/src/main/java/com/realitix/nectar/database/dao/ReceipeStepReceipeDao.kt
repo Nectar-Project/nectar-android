@@ -8,18 +8,18 @@ import com.realitix.nectar.database.entity.ReceipeStepReceipe
 import com.realitix.nectar.database.entity.ReceipeStepReceipeRaw
 
 @Dao
-abstract class ReceipeStepReceipeDao: BaseDao<ReceipeStepReceipeRaw, ReceipeStepReceipe>() {
+abstract class ReceipeStepReceipeDao: GenericGetJoinDao<ReceipeStepReceipeRaw, ReceipeStepReceipe>() {
     @Transaction
-    @Query("SELECT * FROM ReceipeStepReceipeRaw WHERE stepUuid = :uuid")
-    abstract override fun getLive(uuid: String): LiveData<ReceipeStepReceipe>
+    @Query("SELECT * FROM ReceipeStepReceipeRaw WHERE stepUuid = :uuid1 AND receipeUuid = :uuid2")
+    abstract override fun getLive(uuid1: String, uuid2: String): LiveData<ReceipeStepReceipe>
 
     @Transaction
-    @Query("SELECT * FROM ReceipeStepReceipeRaw WHERE stepUuid = :uuid")
-    abstract override fun get(uuid: String): ReceipeStepReceipe?
+    @Query("SELECT * FROM ReceipeStepReceipeRaw WHERE stepUuid = :uuid1 AND receipeUuid = :uuid2")
+    abstract override fun get(uuid1: String, uuid2: String): ReceipeStepReceipe?
 
     @Transaction
-    @Query("SELECT * FROM ReceipeStepReceipeRaw WHERE stepUuid = :uuid")
-    abstract override suspend fun getSuspend(uuid: String): ReceipeStepReceipe?
+    @Query("SELECT * FROM ReceipeStepReceipeRaw WHERE stepUuid = :uuid1 AND receipeUuid = :uuid2")
+    abstract override suspend fun getSuspend(uuid1: String, uuid2: String): ReceipeStepReceipe?
 
     @Transaction
     @Query("SELECT * FROM ReceipeStepReceipeRaw")

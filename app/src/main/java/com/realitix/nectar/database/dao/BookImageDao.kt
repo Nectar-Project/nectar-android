@@ -7,18 +7,18 @@ import androidx.room.Transaction
 import com.realitix.nectar.database.entity.*
 
 @Dao
-abstract class BookImageDao: BaseDao<BookImageRaw, BookImage>() {
+abstract class BookImageDao: GenericGetJoinDao<BookImageRaw, BookImage>() {
     @Transaction
-    @Query("SELECT * FROM BookImageRaw WHERE bookUuid = :uuid")
-    abstract override fun getLive(uuid: String): LiveData<BookImage>
+    @Query("SELECT * FROM BookImageRaw WHERE bookUuid = :uuid1 AND imageUuid = :uuid2")
+    abstract override fun getLive(uuid1: String, uuid2: String): LiveData<BookImage>
 
     @Transaction
-    @Query("SELECT * FROM BookImageRaw WHERE bookUuid = :uuid")
-    abstract override fun get(uuid: String): BookImage?
+    @Query("SELECT * FROM BookImageRaw WHERE bookUuid = :uuid1 AND imageUuid = :uuid2")
+    abstract override fun get(uuid1: String, uuid2: String): BookImage?
 
     @Transaction
-    @Query("SELECT * FROM BookImageRaw WHERE bookUuid = :uuid")
-    abstract override suspend fun getSuspend(uuid: String): BookImage?
+    @Query("SELECT * FROM BookImageRaw WHERE bookUuid = :uuid1 AND imageUuid = :uuid2")
+    abstract override suspend fun getSuspend(uuid1: String, uuid2: String): BookImage?
 
     @Transaction
     @Query("SELECT * FROM BookImageRaw")

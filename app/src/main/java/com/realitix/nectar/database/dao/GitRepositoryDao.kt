@@ -8,7 +8,7 @@ import com.realitix.nectar.database.entity.GitRepository
 import com.realitix.nectar.database.entity.GitRepositoryRaw
 
 @Dao
-abstract class GitRepositoryDao: BaseDao<GitRepositoryRaw, GitRepository>() {
+abstract class GitRepositoryDao: GenericGetUuidDao<GitRepositoryRaw, GitRepository>() {
     @Query("SELECT * FROM GitRepositoryRaw WHERE name=:name")
     abstract fun getByName(name: String): GitRepository?
 

@@ -8,18 +8,18 @@ import com.realitix.nectar.database.entity.MealReceipe
 import com.realitix.nectar.database.entity.MealReceipeRaw
 
 @Dao
-abstract class MealReceipeDao: BaseDao<MealReceipeRaw, MealReceipe>() {
+abstract class MealReceipeDao: GenericGetJoinDao<MealReceipeRaw, MealReceipe>() {
     @Transaction
-    @Query("SELECT * FROM MealReceipeRaw WHERE mealUuid = :uuid")
-    abstract override fun getLive(uuid: String): LiveData<MealReceipe>
+    @Query("SELECT * FROM MealReceipeRaw WHERE mealUuid = :uuid1 AND receipeUuid = :uuid2")
+    abstract override fun getLive(uuid1: String, uuid2: String): LiveData<MealReceipe>
 
     @Transaction
-    @Query("SELECT * FROM MealReceipeRaw WHERE mealUuid = :uuid")
-    abstract override fun get(uuid: String): MealReceipe?
+    @Query("SELECT * FROM MealReceipeRaw WHERE mealUuid = :uuid1 AND receipeUuid = :uuid2")
+    abstract override fun get(uuid1: String, uuid2: String): MealReceipe?
 
     @Transaction
-    @Query("SELECT * FROM MealReceipeRaw WHERE mealUuid = :uuid")
-    abstract override suspend fun getSuspend(uuid: String): MealReceipe?
+    @Query("SELECT * FROM MealReceipeRaw WHERE mealUuid = :uuid1 AND receipeUuid = :uuid2")
+    abstract override suspend fun getSuspend(uuid1: String, uuid2: String): MealReceipe?
 
     @Transaction
     @Query("SELECT * FROM MealReceipeRaw")

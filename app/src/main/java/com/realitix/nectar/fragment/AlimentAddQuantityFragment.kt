@@ -12,9 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.realitix.nectar.MainActivity
 import com.realitix.nectar.R
-import com.realitix.nectar.repository.AlimentRepository
-import com.realitix.nectar.repository.MealRepository
-import com.realitix.nectar.repository.ReceipeRepository
+import com.realitix.nectar.repository.*
 import com.realitix.nectar.viewmodel.AlimentAddQuantityViewModel
 import com.realitix.nectar.viewmodel.RepositoryViewModelFactory
 import kotlinx.android.synthetic.main.fragment_aliment_add_quantity.*
@@ -29,8 +27,8 @@ class AlimentAddQuantityFragment : Fragment() {
         factoryProducer = {
             RepositoryViewModelFactory {
                 AlimentAddQuantityViewModel(
-                    ReceipeRepository(requireContext()),
-                    MealRepository(requireContext()),
+                    ReceipeStepAlimentRepository(requireContext()),
+                    MealAlimentRepository(requireContext()),
                     AlimentRepository(requireContext()),
                     alimentUuid, objUuid, enumId
                 )

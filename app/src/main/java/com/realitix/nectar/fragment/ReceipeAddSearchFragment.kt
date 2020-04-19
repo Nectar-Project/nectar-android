@@ -15,8 +15,10 @@ import androidx.navigation.ui.setupWithNavController
 import com.realitix.nectar.MainActivity
 import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.Receipe
+import com.realitix.nectar.repository.MealReceipeRepository
 import com.realitix.nectar.repository.MealRepository
 import com.realitix.nectar.repository.ReceipeRepository
+import com.realitix.nectar.repository.ReceipeStepReceipeRepository
 import com.realitix.nectar.util.GenericAdapter
 import com.realitix.nectar.util.RecyclerItemClickListener
 import com.realitix.nectar.util.SingleLineItemViewHolder
@@ -35,7 +37,8 @@ class ReceipeAddSearchFragment : Fragment() {
             RepositoryViewModelFactory {
                 ReceipeAddSearchViewModel(
                     ReceipeRepository(requireContext()),
-                    MealRepository(requireContext()),
+                    ReceipeStepReceipeRepository(requireContext()),
+                    MealReceipeRepository(requireContext()),
                     objUuid, enumId
                 )
             }

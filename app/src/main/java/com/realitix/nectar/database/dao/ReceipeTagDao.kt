@@ -8,18 +8,18 @@ import com.realitix.nectar.database.entity.ReceipeTag
 import com.realitix.nectar.database.entity.ReceipeTagRaw
 
 @Dao
-abstract class ReceipeTagDao: BaseDao<ReceipeTagRaw, ReceipeTag>() {
+abstract class ReceipeTagDao: GenericGetJoinDao<ReceipeTagRaw, ReceipeTag>() {
     @Transaction
-    @Query("SELECT * FROM ReceipeTagRaw WHERE receipeUuid = :uuid")
-    abstract override fun getLive(uuid: String): LiveData<ReceipeTag>
+    @Query("SELECT * FROM ReceipeTagRaw WHERE receipeUuid = :uuid1 AND tagUuid = :uuid2")
+    abstract override fun getLive(uuid1: String, uuid2: String): LiveData<ReceipeTag>
 
     @Transaction
-    @Query("SELECT * FROM ReceipeTagRaw WHERE receipeUuid = :uuid")
-    abstract override fun get(uuid: String): ReceipeTag?
+    @Query("SELECT * FROM ReceipeTagRaw WHERE receipeUuid = :uuid1 AND tagUuid = :uuid2")
+    abstract override fun get(uuid1: String, uuid2: String): ReceipeTag?
 
     @Transaction
-    @Query("SELECT * FROM ReceipeTagRaw WHERE receipeUuid = :uuid")
-    abstract override suspend fun getSuspend(uuid: String): ReceipeTag?
+    @Query("SELECT * FROM ReceipeTagRaw WHERE receipeUuid = :uuid1 AND tagUuid = :uuid2")
+    abstract override suspend fun getSuspend(uuid1: String, uuid2: String): ReceipeTag?
 
     @Transaction
     @Query("SELECT * FROM ReceipeTagRaw")

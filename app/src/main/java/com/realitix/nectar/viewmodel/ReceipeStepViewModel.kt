@@ -4,8 +4,14 @@ import androidx.lifecycle.*
 import com.realitix.nectar.database.entity.Receipe
 import com.realitix.nectar.database.entity.ReceipeStep
 import com.realitix.nectar.repository.ReceipeRepository
+import com.realitix.nectar.repository.ReceipeStepRepository
 
-class ReceipeStepViewModel constructor(var repository: ReceipeRepository, receipeUuid: String, stepUuid: String) : ViewModel() {
-    val receipe: LiveData<Receipe> = repository.getReceipeLive(receipeUuid)
-    val step: LiveData<ReceipeStep> = repository.getReceipeStepFull(stepUuid)
+class ReceipeStepViewModel constructor(
+    rReceipe: ReceipeRepository,
+    rReceipeStep: ReceipeStepRepository,
+    receipeUuid: String,
+    stepUuid: String
+) : ViewModel() {
+    val receipe: LiveData<Receipe> = rReceipe.getLive(receipeUuid)
+    val step: LiveData<ReceipeStep> = rReceipeStep.getLive(stepUuid)
 }

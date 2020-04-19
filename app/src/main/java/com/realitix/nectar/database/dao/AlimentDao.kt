@@ -8,7 +8,7 @@ import com.realitix.nectar.database.entity.Aliment
 import com.realitix.nectar.database.entity.AlimentRaw
 
 @Dao
-abstract class AlimentDao: BaseDao<AlimentRaw, Aliment>() {
+abstract class AlimentDao: GenericGetUuidDao<AlimentRaw, Aliment>() {
     @Transaction
     @Query(
         """
@@ -45,6 +45,4 @@ abstract class AlimentDao: BaseDao<AlimentRaw, Aliment>() {
     @Transaction
     @Query("SELECT * FROM AlimentRaw ")
     abstract override suspend fun listSuspend(): List<Aliment>
-
-
 }

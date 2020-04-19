@@ -5,7 +5,7 @@ import androidx.room.*
 import com.realitix.nectar.database.entity.*
 
 @Dao
-abstract class ReceipeStepDao: BaseDao<ReceipeStepRaw, ReceipeStep>() {
+abstract class ReceipeStepDao: GenericGetUuidDao<ReceipeStepRaw, ReceipeStep>() {
     @Transaction
     @Query("SELECT * FROM ReceipeStepRaw WHERE uuid = :uuid")
     abstract override fun getLive(uuid: String): LiveData<ReceipeStep>

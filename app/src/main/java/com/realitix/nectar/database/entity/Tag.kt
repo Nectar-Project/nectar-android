@@ -23,9 +23,10 @@ class Tag(uuid: String, nameUuid: String): TagRaw(uuid, nameUuid) {
     ]
 )
 open class TagRaw (
-    uuid: String,
+    @PrimaryKey
+    var uuid: String,
     var nameUuid: String
-): UuidEntity(uuid) {
+) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

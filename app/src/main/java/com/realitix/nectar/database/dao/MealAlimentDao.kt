@@ -8,18 +8,18 @@ import com.realitix.nectar.database.entity.MealAliment
 import com.realitix.nectar.database.entity.MealAlimentRaw
 
 @Dao
-abstract class MealAlimentDao: BaseDao<MealAlimentRaw, MealAliment>() {
+abstract class MealAlimentDao: GenericGetJoinDao<MealAlimentRaw, MealAliment>() {
     @Transaction
-    @Query("SELECT * FROM MealAlimentRaw WHERE mealUuid = :uuid")
-    abstract override fun getLive(uuid: String): LiveData<MealAliment>
+    @Query("SELECT * FROM MealAlimentRaw WHERE mealUuid = :uuid1 AND alimentUuid = :uuid2")
+    abstract override fun getLive(uuid1: String, uuid2: String): LiveData<MealAliment>
 
     @Transaction
-    @Query("SELECT * FROM MealAlimentRaw WHERE mealUuid = :uuid")
-    abstract override fun get(uuid: String): MealAliment?
+    @Query("SELECT * FROM MealAlimentRaw WHERE mealUuid = :uuid1 AND alimentUuid = :uuid2")
+    abstract override fun get(uuid1: String, uuid2: String): MealAliment?
 
     @Transaction
-    @Query("SELECT * FROM MealAlimentRaw WHERE mealUuid = :uuid")
-    abstract override suspend fun getSuspend(uuid: String): MealAliment?
+    @Query("SELECT * FROM MealAlimentRaw WHERE mealUuid = :uuid1 AND alimentUuid = :uuid2")
+    abstract override suspend fun getSuspend(uuid1: String, uuid2: String): MealAliment?
 
     @Transaction
     @Query("SELECT * FROM MealAlimentRaw")

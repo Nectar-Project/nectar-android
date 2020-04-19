@@ -1,16 +1,9 @@
 package com.realitix.nectar.repository
 
 import android.content.Context
-import android.database.sqlite.SQLiteConstraintException
-import android.util.Log
-import androidx.lifecycle.LiveData
 import com.realitix.nectar.database.NectarDatabase
-import com.realitix.nectar.database.dao.BaseDao
-import com.realitix.nectar.database.dao.ReceipeDao
-import com.realitix.nectar.database.dao.ReceipeTagDao
 import com.realitix.nectar.database.entity.*
-import com.realitix.nectar.util.NectarUtil
 
-class ReceipeTagRepository(val context: Context): GenericRepository<ReceipeTagRaw, ReceipeTag>() {
+class ReceipeTagRepository(val context: Context): GenericCrudRepository<ReceipeTagRaw, ReceipeTag>() {
     override fun getDao() = NectarDatabase.getInstance(context).receipeTagDao()
 }

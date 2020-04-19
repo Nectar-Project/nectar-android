@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.realitix.nectar.R
 import com.realitix.nectar.repository.ReceipeRepository
+import com.realitix.nectar.repository.ReceipeStepRepository
 import com.realitix.nectar.util.*
 import com.realitix.nectar.viewmodel.ReceipeStepViewModel
 import com.realitix.nectar.viewmodel.RepositoryViewModelFactory
@@ -28,7 +29,12 @@ class ReceipeStepFragment : Fragment() {
     private val viewModel: ReceipeStepViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                ReceipeStepViewModel(ReceipeRepository(requireContext()), receipeUuid, stepUuid)
+                ReceipeStepViewModel(
+                    ReceipeRepository(requireContext()),
+                    ReceipeStepRepository(requireContext()),
+                    receipeUuid,
+                    stepUuid
+                )
             }
         }
     )
