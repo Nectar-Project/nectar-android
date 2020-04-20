@@ -10,11 +10,8 @@ class AlimentImageRepository(val context: Context, updater: EntityUpdaterInterfa
     GenericGetJoinRepository<AlimentImageRaw, AlimentImage>(updater) {
     override fun getDao() = NectarDatabase.getInstance(context).alimentImageDao()
 
-    class Updater(val context: Context): EntityUpdaterInterface<AlimentImageRaw> {
-        override fun onEntityUpdate(entity: AlimentImageRaw) {
-            NectarDatabase.getInstance(context).databaseUpdateDao().insert(
-                DatabaseUpdateRaw(entity.alimentUuid, EntityType.ALIMENT, NectarUtil.timestamp())
-            )
-        }
+    class Updater(context: Context): GenericEntityUpdater<AlimentImageRaw>(context) {
+        override fun newDatabaseUpdate(entity: AlimentImageRaw) = DatabaseUpdateRaw(
+            entity.alimentUuid, EntityType.ALIMENT, NectarUtil.timestamp())
     }
 }

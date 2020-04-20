@@ -1,12 +1,31 @@
 package com.realitix.nectar.repository
 
+import android.content.Context
 import com.realitix.nectar.database.dao.GenericCrudDao
+import com.realitix.nectar.database.entity.DatabaseUpdateRaw
 
 abstract class GenericCrudRepository<ERaw, E>(private val entityUpdaterListener: EntityUpdaterInterface<ERaw>) {
     abstract fun getDao(): GenericCrudDao<ERaw, E>
 
     interface EntityUpdaterInterface<ERaw> {
         fun onEntityUpdate(entity: ERaw)
+        suspend fun onEntityUpdateSuspend(entity: ERaw)
+    }
+
+    abstract class GenericEntityUpdater<ERaw>(val context: Context): EntityUpdaterInterface<ERaw> {
+        abstract fun newDatabaseUpdate(entity: ERaw): DatabaseUpdateRaw
+
+        override fun onEntityUpdate(entity: ERaw) {
+            DatabaseUpdateRepository(context).insert(newDatabaseUpdate(entity))
+        }
+        override suspend fun onEntityUpdateSuspend(entity: ERaw) {
+            DatabaseUpdateRepository(context).insertSuspend(newDatabaseUpdate(entity))
+        }
+    }
+
+    class NoTrackEntityUpdater<ERaw>: EntityUpdaterInterface<ERaw> {
+        override fun onEntityUpdate(entity: ERaw) {}
+        override suspend fun onEntityUpdateSuspend(entity: ERaw) {}
     }
 
     // list
@@ -22,7 +41,7 @@ abstract class GenericCrudRepository<ERaw, E>(private val entityUpdaterListener:
 
     open suspend fun insertSuspend(i: ERaw) {
         getDao().insertSuspend(i)
-        entityUpdaterListener.onEntityUpdate(i)
+        entityUpdaterListener.onEntityUpdateSuspend(i)
     }
 
     // update
@@ -33,7 +52,7 @@ abstract class GenericCrudRepository<ERaw, E>(private val entityUpdaterListener:
 
     open suspend fun updateSuspend(i: ERaw) {
         getDao().updateSuspend(i)
-        entityUpdaterListener.onEntityUpdate(i)
+        entityUpdaterListener.onEntityUpdateSuspend(i)
     }
 
     // delete
@@ -44,6 +63,6 @@ abstract class GenericCrudRepository<ERaw, E>(private val entityUpdaterListener:
 
     open suspend fun deleteSuspend(i: ERaw) {
         getDao().deleteSuspend(i)
-        entityUpdaterListener.onEntityUpdate(i)
+        entityUpdaterListener.onEntityUpdateSuspend(i)
     }
 }

@@ -10,11 +10,8 @@ class AlimentStateRepository(val context: Context, updater: EntityUpdaterInterfa
     GenericGetUuidRepository<AlimentStateRaw, AlimentState>(updater) {
     override fun getDao() = NectarDatabase.getInstance(context).alimentStateDao()
 
-    class Updater(val context: Context): EntityUpdaterInterface<AlimentStateRaw> {
-        override fun onEntityUpdate(entity: AlimentStateRaw) {
-            NectarDatabase.getInstance(context).databaseUpdateDao().insert(
-                DatabaseUpdateRaw(entity.alimentUuid, EntityType.ALIMENT, NectarUtil.timestamp())
-            )
-        }
+    class Updater(context: Context): GenericEntityUpdater<AlimentStateRaw>(context) {
+        override fun newDatabaseUpdate(entity: AlimentStateRaw) = DatabaseUpdateRaw(
+            entity.alimentUuid, EntityType.ALIMENT, NectarUtil.timestamp())
     }
 }

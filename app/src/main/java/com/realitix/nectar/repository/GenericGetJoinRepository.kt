@@ -1,7 +1,6 @@
 package com.realitix.nectar.repository
 
 import com.realitix.nectar.database.dao.GenericGetJoinDao
-import com.realitix.nectar.database.dao.GenericGetUuidDao
 
 abstract class GenericGetJoinRepository<ERaw, E>(listener: EntityUpdaterInterface<ERaw>): GenericCrudRepository<ERaw, E>(listener) {
     abstract override fun getDao(): GenericGetJoinDao<ERaw, E>

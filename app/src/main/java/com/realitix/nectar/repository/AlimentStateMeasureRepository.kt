@@ -7,17 +7,13 @@ import com.realitix.nectar.util.EntityType
 import com.realitix.nectar.util.NectarUtil
 
 class AlimentStateMeasureRepository(val context: Context, updater: EntityUpdaterInterface<AlimentStateMeasureRaw> = Updater(context)):
-    GenericCrudRepository<AlimentStateMeasureRaw, AlimentStateMeasure>(updater) {
+    GenericGetJoinRepository<AlimentStateMeasureRaw, AlimentStateMeasure>(updater) {
     override fun getDao() = NectarDatabase.getInstance(context).alimentStateMeasureDao()
 
-    class Updater(val context: Context): EntityUpdaterInterface<AlimentStateMeasureRaw> {
-        override fun onEntityUpdate(entity: AlimentStateMeasureRaw) {
-            NectarDatabase.getInstance(context).databaseUpdateDao().insert(
-                DatabaseUpdateRaw(
-                    AlimentStateRepository(context).get(entity.alimentStateUuid)!!.alimentUuid,
-                    EntityType.ALIMENT, NectarUtil.timestamp()
-                )
+    class Updater(context: Context): GenericEntityUpdater<AlimentStateMeasureRaw>(context) {
+        override fun newDatabaseUpdate(entity: AlimentStateMeasureRaw) = DatabaseUpdateRaw(
+                AlimentStateRepository(context).get(entity.alimentStateUuid)!!.alimentUuid,
+                EntityType.ALIMENT, NectarUtil.timestamp()
             )
-        }
     }
 }
