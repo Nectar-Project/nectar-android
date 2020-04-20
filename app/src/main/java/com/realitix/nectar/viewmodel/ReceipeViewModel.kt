@@ -23,7 +23,7 @@ class ReceipeViewModel (
 
     fun updateReceipeName(newName: String) {
         viewModelScope.launch {
-            val keyValue = rStringKeyValue.getLangSuspend(receipe.value!!.nameUuid, "fr")!!
+            val keyValue = rStringKeyValue.getSuspend(receipe.value!!.nameUuid, "fr")!!
             keyValue.value = newName
             rStringKeyValue.updateSuspend(keyValue)
         }

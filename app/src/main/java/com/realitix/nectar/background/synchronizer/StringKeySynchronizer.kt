@@ -27,7 +27,7 @@ class StringKeySynchronizer(
 
         // names
         for((lang, jsonValue) in parseResult.values) {
-            val value = rStringKeyValue.getLang(parseResult.uuid, lang)
+            val value = rStringKeyValue.get(parseResult.uuid, lang)
             if(value == null) {
                 rStringKeyValue.insert(StringKeyValueRaw(parseResult.uuid, lang, jsonValue))
             }
