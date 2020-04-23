@@ -33,6 +33,7 @@ import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
         StringKeyValueFts::class,
         ReceipeRaw::class,
         ReceipeImageRaw::class,
+        ReceipeMeasureRaw::class,
         ReceipeStepRaw::class,
         ReceipeStepAlimentRaw::class,
         ReceipeStepReceipeRaw::class,
@@ -63,6 +64,7 @@ abstract class NectarDatabase : RoomDatabase() {
     abstract fun mealReceipeDao(): MealReceipeDao
     abstract fun measureDao(): MeasureDao
     abstract fun receipeDao(): ReceipeDao
+    abstract fun receipeMeasureDao(): ReceipeMeasureDao
     abstract fun receipeTagDao(): ReceipeTagDao
     abstract fun receipeUtensilDao(): ReceipeUtensilDao
     abstract fun receipeStepAlimentDao(): ReceipeStepAlimentDao

@@ -12,8 +12,7 @@ class BookSynchronizer(
     private val rBookImage: BookImageRepository,
     private val rBookReceipe: BookReceipeRepository,
     baseRepositoryFolder: File
-):
-    BaseSynchronizer<BookSynchronizer.ParseResult>(baseRepositoryFolder) {
+): BaseSynchronizer<BookSynchronizer.ParseResult>(baseRepositoryFolder) {
     class ParseResult(
         val uuid: String,
         val nameUuid: String,

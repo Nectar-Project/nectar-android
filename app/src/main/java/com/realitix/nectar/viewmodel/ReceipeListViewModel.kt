@@ -10,11 +10,11 @@ import com.realitix.nectar.repository.StringKeyValueRepository
 import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
 import kotlinx.coroutines.runBlocking
 
-class ReceipeListViewModel constructor(
+class ReceipeListViewModel (
     private val rReceipe: ReceipeRepository,
     private val rStringKey: StringKeyRepository,
     private val rStringKeyValue: StringKeyValueRepository
-) : ViewModel() {
+): ViewModel() {
     val receipes: LiveData<List<Receipe>> = rReceipe.listLive()
 
     fun createReceipe(): String {
@@ -26,7 +26,7 @@ class ReceipeListViewModel constructor(
             rStringKeyValue.insertSuspend(StringKeyValue(sid, "fr", "Nouvelle recette"))
 
             // create receipe
-            rReceipe.insertSuspend(Receipe(rid, sid, 2, 2))
+            rReceipe.insertSuspend(Receipe(rid, sid, 2))
         }
         return rid
     }

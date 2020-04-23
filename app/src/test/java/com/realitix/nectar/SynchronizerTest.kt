@@ -36,16 +36,59 @@ class SynchronizerUnitTest {
 
         // Loop through each file and parse it
         val synchronizerMap = mapOf(
-            EntityType.STATE to StateSynchronizer(StateRepository(context), getRepositoryFolder()),
-            EntityType.TAG to TagSynchronizer(TagRepository(context), getRepositoryFolder()),
-            EntityType.MEASURE to MeasureSynchronizer(MeasureRepository(context), getRepositoryFolder()),
-            EntityType.ALIMENT to AlimentSynchronizer(AlimentRepository(context), getRepositoryFolder(), UuidGenerator()),
-            EntityType.UTENSIL to UtensilSynchronizer(UtensilRepository(context), getRepositoryFolder()),
-            EntityType.RECEIPE to ReceipeSynchronizer(ReceipeRepository(context), getRepositoryFolder()),
-            EntityType.MEAL to MealSynchronizer(MealRepository(context), getRepositoryFolder()),
-            EntityType.BOOK to BookSynchronizer(BookRepository(context), getRepositoryFolder()),
-            EntityType.STRING_KEY to StringKeySynchronizer(StringKeyRepository(context), getRepositoryFolder())
+            EntityType.STATE to StateSynchronizer(
+                StateRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                getRepositoryFolder()
+            ),
+            EntityType.TAG to TagSynchronizer(
+                TagRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                getRepositoryFolder()
+            ),
+            EntityType.MEASURE to MeasureSynchronizer(
+                MeasureRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                getRepositoryFolder()
+            ),
+            EntityType.ALIMENT to AlimentSynchronizer(
+                AlimentRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                AlimentImageRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                AlimentTagRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                AlimentStateRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                AlimentStateMeasureRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                getRepositoryFolder(), UuidGenerator()
+            ),
+            EntityType.UTENSIL to UtensilSynchronizer(
+                UtensilRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                getRepositoryFolder()
+            ),
+            EntityType.RECEIPE to ReceipeSynchronizer(
+                ReceipeRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                ReceipeMeasureRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                ReceipeTagRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                ReceipeUtensilRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                ReceipeStepRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                ReceipeStepAlimentRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                ReceipeStepReceipeRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                getRepositoryFolder()
+            ),
+            EntityType.MEAL to MealSynchronizer(
+                MealRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                MealAlimentRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                MealReceipeRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                getRepositoryFolder()
+            ),
+            EntityType.BOOK to BookSynchronizer(
+                BookRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                BookImageRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                BookReceipeRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                getRepositoryFolder()
+            ),
+            EntityType.STRING_KEY to StringKeySynchronizer(
+                StringKeyRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                StringKeyValueRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                getRepositoryFolder()
+            )
         )
+
         try {
             for (entityType in EntityType.values()) {
                 Files.list(File(repositoryFile, entityType.folderName).toPath()).forEach {
@@ -75,24 +118,26 @@ class SynchronizerUnitTest {
         val timestamp: Long = 10
         val description = "test"
         val quantity = 10
-        val repository: MealRepository = mock(MealRepository::class.java)
+        val rMeal = mock(MealRepository::class.java)
+        val rMealAliment = mock(MealAlimentRepository::class.java)
+        val rMealReceipe = mock(MealReceipeRepository::class.java)
 
-        val ms = MealSynchronizer(repository, getRepositoryFolder())
+        val ms = MealSynchronizer(rMeal, rMealAliment, rMealReceipe, getRepositoryFolder())
         ms.fromGitToDb(TEST_REPOSITORY_NAME, mealUuid)
 
-        val inOrder = inOrder(repository)
-        inOrder.verify(repository).getMeal(mealUuid)
-        inOrder.verify(repository).insertMeal(MealRaw(mealUuid, timestamp, nbPeople, description))
-        inOrder.verify(repository).insertMealAliment(MealAlimentRaw(alimentUuid, mealUuid, quantity))
-        inOrder.verify(repository).insertMealReceipe(MealReceipeRaw(receipeUuid, mealUuid))
+        verify(rMeal).get(mealUuid)
+        verify(rMeal).insert(MealRaw(mealUuid, timestamp, nbPeople, description))
+        verify(rMealAliment).insert(MealAlimentRaw(alimentUuid, mealUuid, quantity))
+        verify(rMealReceipe).insert(MealReceipeRaw(receipeUuid, mealUuid))
     }
 
     @Test
     fun receipeGitToDb() {
         val receipeUuid = "592bfb6a-0519-4ba6-855c-f4e467eb98fc"
         val nameUuid = "592bfb6a-0519-4ba6-855c-f4e467eb98fc"
-        val nbPeople = 2
         val stars = 2
+        val measureUuid = "592bfb6a-0519-4ba6-855c-f4e467eb98fc"
+        val measureQuantity = 3
         val tagUuid = "1f0ce536-a01d-4c7c-9412-d696920ea051"
         val utensilUuid = "a70ac073-cee8-4e45-b88e-eaeecf186150"
         val stepUuid = "60d1b1a1-f4ab-4d8a-8b8b-dbb248b90318"
@@ -102,19 +147,27 @@ class SynchronizerUnitTest {
         val stepAlimentQuantity = 100
         val stepReceipeUuid = "a7a12c60-1604-48ee-9991-0e4baa0800df"
 
-        val repository: ReceipeRepository = mock(ReceipeRepository::class.java)
+        val rReceipe = mock(ReceipeRepository::class.java)
+        val rReceipeMeasure = mock(ReceipeMeasureRepository::class.java)
+        val rReceipeTag = mock(ReceipeTagRepository::class.java)
+        val rReceipeUtensil = mock(ReceipeUtensilRepository::class.java)
+        val rReceipeStep = mock(ReceipeStepRepository::class.java)
+        val rReceipeStepAliment = mock(ReceipeStepAlimentRepository::class.java)
+        val rReceipeStepReceipe = mock(ReceipeStepReceipeRepository::class.java)
 
-        val s = ReceipeSynchronizer(repository, getRepositoryFolder())
+        val s = ReceipeSynchronizer(rReceipe, rReceipeMeasure, rReceipeTag, rReceipeUtensil,
+            rReceipeStep, rReceipeStepAliment, rReceipeStepReceipe, getRepositoryFolder())
+
         s.fromGitToDb(TEST_REPOSITORY_NAME, receipeUuid)
 
-        val inOrder = inOrder(repository)
-        inOrder.verify(repository).getReceipe(receipeUuid)
-        inOrder.verify(repository).insertReceipe(ReceipeRaw(receipeUuid, nameUuid, nbPeople, stars))
-        inOrder.verify(repository).insertReceipeTag(ReceipeTagRaw(receipeUuid, tagUuid))
-        inOrder.verify(repository).insertReceipeUtensil(ReceipeUtensilRaw(receipeUuid, utensilUuid))
-        inOrder.verify(repository).insertReceipeStep(ReceipeStepRaw(stepUuid, receipeUuid, null, stepDescriptionUuid, stepDuration))
-        inOrder.verify(repository).insertReceipeStepAliment(ReceipeStepAlimentRaw(stepAlimentUuid, stepUuid, stepAlimentQuantity))
-        inOrder.verify(repository).insertReceipeStepReceipe(ReceipeStepReceipeRaw(stepReceipeUuid, stepUuid))
+        verify(rReceipe).get(receipeUuid)
+        verify(rReceipe).insert(ReceipeRaw(receipeUuid, nameUuid, stars))
+        verify(rReceipeMeasure).insert(ReceipeMeasureRaw(receipeUuid, measureUuid, measureQuantity))
+        verify(rReceipeTag).insert(ReceipeTagRaw(receipeUuid, tagUuid))
+        verify(rReceipeUtensil).insert(ReceipeUtensilRaw(receipeUuid, utensilUuid))
+        verify(rReceipeStep).insert(ReceipeStepRaw(stepUuid, receipeUuid, null, stepDescriptionUuid, stepDuration))
+        verify(rReceipeStepAliment).insert(ReceipeStepAlimentRaw(stepAlimentUuid, stepUuid, stepAlimentQuantity))
+        verify(rReceipeStepReceipe).insert(ReceipeStepReceipeRaw(stepReceipeUuid, stepUuid))
     }
 
     @Test
@@ -130,21 +183,25 @@ class SynchronizerUnitTest {
         val nutrition = Nutrition(n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n)
         val measureQuantity = 10
 
-        val repository: AlimentRepository = mock(AlimentRepository::class.java)
+        val rAliment = mock(AlimentRepository::class.java)
+        val rAlimentImage = mock(AlimentImageRepository::class.java)
+        val rAlimentTag = mock(AlimentTagRepository::class.java)
+        val rAlimentState = mock(AlimentStateRepository::class.java)
+        val rAlimentStateMeasure = mock(AlimentStateMeasureRepository::class.java)
 
-        val s = AlimentSynchronizer(repository, getRepositoryFolder(), object: UuidGeneratorInterface {
+        val s = AlimentSynchronizer(rAliment, rAlimentImage, rAlimentTag,
+            rAlimentState, rAlimentStateMeasure, getRepositoryFolder(), object: UuidGeneratorInterface {
             override fun generateUuid(): String = alimentStateUuid
         })
 
         s.fromGitToDb(TEST_REPOSITORY_NAME, alimentUuid)
 
-        val inOrder = inOrder(repository)
-        inOrder.verify(repository).getAliment(alimentUuid)
-        inOrder.verify(repository).insertAliment(AlimentRaw(alimentUuid, nameUuid))
-        inOrder.verify(repository).insertAlimentImage(AlimentImageRaw(alimentUuid, imageUuid))
-        inOrder.verify(repository).insertAlimentTag(AlimentTagRaw(alimentUuid, tagUuid))
-        inOrder.verify(repository).insertAlimentState(AlimentStateRaw(alimentStateUuid, alimentUuid, stateUuid, nutrition))
-        inOrder.verify(repository).insertAlimentStateMeasure(AlimentStateMeasureRaw(alimentStateUuid, measureUuid, measureQuantity))
+        verify(rAliment).get(alimentUuid)
+        verify(rAliment).insert(AlimentRaw(alimentUuid, nameUuid))
+        verify(rAlimentImage).insert(AlimentImageRaw(alimentUuid, imageUuid))
+        verify(rAlimentTag).insert(AlimentTagRaw(alimentUuid, tagUuid))
+        verify(rAlimentState).insert(AlimentStateRaw(alimentStateUuid, alimentUuid, stateUuid, nutrition))
+        verify(rAlimentStateMeasure).insert(AlimentStateMeasureRaw(alimentStateUuid, measureUuid, measureQuantity))
     }
 
     @Test
@@ -152,13 +209,12 @@ class SynchronizerUnitTest {
         val uuid = "419d4083-4d6d-4436-a383-fc6efd601357"
         val nameUuid = "419d4083-4d6d-4436-a383-fc6efd601357"
 
-        val repository: StateRepository = mock(StateRepository::class.java)
-        val s = StateSynchronizer(repository, getRepositoryFolder())
+        val rState = mock(StateRepository::class.java)
+        val s = StateSynchronizer(rState, getRepositoryFolder())
         s.fromGitToDb(TEST_REPOSITORY_NAME, uuid)
 
-        val inOrder = inOrder(repository)
-        inOrder.verify(repository).getRaw(uuid)
-        inOrder.verify(repository).insert(StateRaw(uuid, nameUuid))
+        verify(rState).get(uuid)
+        verify(rState).insert(StateRaw(uuid, nameUuid))
     }
 
     @Test
@@ -166,13 +222,12 @@ class SynchronizerUnitTest {
         val uuid = "1f0ce536-a01d-4c7c-9412-d696920ea051"
         val nameUuid = "1f0ce536-a01d-4c7c-9412-d696920ea051"
 
-        val repository: MeasureRepository = mock(MeasureRepository::class.java)
-        val s = MeasureSynchronizer(repository, getRepositoryFolder())
+        val rMeasure = mock(MeasureRepository::class.java)
+        val s = MeasureSynchronizer(rMeasure, getRepositoryFolder())
         s.fromGitToDb(TEST_REPOSITORY_NAME, uuid)
 
-        val inOrder = inOrder(repository)
-        inOrder.verify(repository).getRaw(uuid)
-        inOrder.verify(repository).insert(MeasureRaw(uuid, nameUuid))
+        verify(rMeasure).get(uuid)
+        verify(rMeasure).insert(MeasureRaw(uuid, nameUuid))
     }
 
     @Test
@@ -180,13 +235,12 @@ class SynchronizerUnitTest {
         val uuid = "1f0ce536-a01d-4c7c-9412-d696920ea051"
         val nameUuid = "1f0ce536-a01d-4c7c-9412-d696920ea051"
 
-        val repository: TagRepository = mock(TagRepository::class.java)
-        val s = TagSynchronizer(repository, getRepositoryFolder())
+        val rTag = mock(TagRepository::class.java)
+        val s = TagSynchronizer(rTag, getRepositoryFolder())
         s.fromGitToDb(TEST_REPOSITORY_NAME, uuid)
 
-        val inOrder = inOrder(repository)
-        inOrder.verify(repository).getRaw(uuid)
-        inOrder.verify(repository).insert(TagRaw(uuid, nameUuid))
+        verify(rTag).get(uuid)
+        verify(rTag).insert(TagRaw(uuid, nameUuid))
     }
 
     @Test
@@ -194,13 +248,12 @@ class SynchronizerUnitTest {
         val uuid = "a70ac073-cee8-4e45-b88e-eaeecf186150"
         val nameUuid = "a70ac073-cee8-4e45-b88e-eaeecf186150"
 
-        val repository: UtensilRepository = mock(UtensilRepository::class.java)
-        val s = UtensilSynchronizer(repository, getRepositoryFolder())
+        val rUtensil = mock(UtensilRepository::class.java)
+        val s = UtensilSynchronizer(rUtensil, getRepositoryFolder())
         s.fromGitToDb(TEST_REPOSITORY_NAME, uuid)
 
-        val inOrder = inOrder(repository)
-        inOrder.verify(repository).getRaw(uuid)
-        inOrder.verify(repository).insert(UtensilRaw(uuid, nameUuid))
+        verify(rUtensil).get(uuid)
+        verify(rUtensil).insert(UtensilRaw(uuid, nameUuid))
     }
 
     @Test
@@ -209,15 +262,15 @@ class SynchronizerUnitTest {
         val valueFr = "Pomme"
         val valueEn = "Apple"
 
-        val repository: StringKeyRepository = mock(StringKeyRepository::class.java)
-        val s = StringKeySynchronizer(repository, getRepositoryFolder())
+        val rStringKey = mock(StringKeyRepository::class.java)
+        val rStringKeyValue = mock(StringKeyValueRepository::class.java)
+        val s = StringKeySynchronizer(rStringKey, rStringKeyValue, getRepositoryFolder())
         s.fromGitToDb(TEST_REPOSITORY_NAME, uuid)
 
-        val inOrder = inOrder(repository)
-        inOrder.verify(repository).get(uuid)
-        inOrder.verify(repository).insert(StringKeyRaw(uuid))
-        inOrder.verify(repository).insertValue(StringKeyValueRaw(uuid, "fr", valueFr))
-        inOrder.verify(repository).insertValue(StringKeyValueRaw(uuid, "en", valueEn))
+        verify(rStringKey).get(uuid)
+        verify(rStringKey).insert(StringKeyRaw(uuid))
+        verify(rStringKeyValue).insert(StringKeyValueRaw(uuid, "fr", valueFr))
+        verify(rStringKeyValue).insert(StringKeyValueRaw(uuid, "en", valueEn))
     }
 
     @Test
@@ -229,14 +282,15 @@ class SynchronizerUnitTest {
         val imageUuid = "e56f15a5-29f5-4ba7-8c9a-f750a31198ce"
         val receipeUuid = "592bfb6a-0519-4ba6-855c-f4e467eb98fc"
 
-        val repository: BookRepository = mock(BookRepository::class.java)
-        val s = BookSynchronizer(repository, getRepositoryFolder())
+        val rBook = mock(BookRepository::class.java)
+        val rBookImage = mock(BookImageRepository::class.java)
+        val rBookReceipe = mock(BookReceipeRepository::class.java)
+        val s = BookSynchronizer(rBook, rBookImage, rBookReceipe, getRepositoryFolder())
         s.fromGitToDb(TEST_REPOSITORY_NAME, uuid)
 
-        val inOrder = inOrder(repository)
-        inOrder.verify(repository).getBook(uuid)
-        inOrder.verify(repository).insertBook(BookRaw(uuid, nameUuid, author, publishDate))
-        inOrder.verify(repository).insertBookImage(BookImageRaw(uuid, imageUuid))
-        inOrder.verify(repository).insertBookReceipe(BookReceipeRaw(uuid, receipeUuid))
+        verify(rBook).get(uuid)
+        verify(rBook).insert(BookRaw(uuid, nameUuid, author, publishDate))
+        verify(rBookImage).insert(BookImageRaw(uuid, imageUuid))
+        verify(rBookReceipe).insert(BookReceipeRaw(uuid, receipeUuid))
     }
 }

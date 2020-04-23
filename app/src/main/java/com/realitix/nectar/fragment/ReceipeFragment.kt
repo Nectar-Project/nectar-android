@@ -77,7 +77,7 @@ class ReceipeFragment : Fragment() {
 
         viewModel.receipe.observe(viewLifecycleOwner) {
             name.text = it.getName()
-            nbPeople.text = it.nbPeople.toString()
+            nbPeople.text = "TO REMOVE"
             stars.text = it.stars.toString()
             nameTextInput.setText(it.getName())
             adapter.setData(it.steps)

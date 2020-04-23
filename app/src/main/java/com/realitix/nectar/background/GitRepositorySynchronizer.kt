@@ -13,47 +13,60 @@ import java.io.File
 class GitRepositorySynchronizer(val context: Context) {
 
     private val synchronizerMap = mapOf(
-        EntityType.STATE to StateSynchronizer(StateRepository(context), NectarUtil.getRepositoryFolder(context)),
-        EntityType.TAG to TagSynchronizer(TagRepository(context), NectarUtil.getRepositoryFolder(context)),
-        EntityType.MEASURE to MeasureSynchronizer(MeasureRepository(context), NectarUtil.getRepositoryFolder(context)),
+        EntityType.STATE to StateSynchronizer(
+            StateRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            NectarUtil.getRepositoryFolder(context)
+        ),
+        EntityType.TAG to TagSynchronizer(
+            TagRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            NectarUtil.getRepositoryFolder(context)
+        ),
+        EntityType.MEASURE to MeasureSynchronizer(
+            MeasureRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            NectarUtil.getRepositoryFolder(context)
+        ),
         EntityType.ALIMENT to AlimentSynchronizer(
-            AlimentRepository(context),
-            AlimentImageRepository(context),
-            AlimentTagRepository(context),
-            AlimentStateRepository(context),
-            AlimentStateMeasureRepository(context),
+            AlimentRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            AlimentImageRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            AlimentTagRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            AlimentStateRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            AlimentStateMeasureRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
             NectarUtil.getRepositoryFolder(context), UuidGenerator()
         ),
-        EntityType.UTENSIL to UtensilSynchronizer(UtensilRepository(context), NectarUtil.getRepositoryFolder(context)),
+        EntityType.UTENSIL to UtensilSynchronizer(
+            UtensilRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            NectarUtil.getRepositoryFolder(context)
+        ),
         EntityType.RECEIPE to ReceipeSynchronizer(
-            ReceipeRepository(context),
-            ReceipeTagRepository(context),
-            ReceipeUtensilRepository(context),
-            ReceipeStepRepository(context),
-            ReceipeStepAlimentRepository(context),
-            ReceipeStepReceipeRepository(context),
+            ReceipeRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            ReceipeMeasureRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            ReceipeTagRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            ReceipeUtensilRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            ReceipeStepRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            ReceipeStepAlimentRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            ReceipeStepReceipeRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
             NectarUtil.getRepositoryFolder(context)
         ),
         EntityType.MEAL to MealSynchronizer(
-            MealRepository(context),
-            MealAlimentRepository(context),
-            MealReceipeRepository(context),
+            MealRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            MealAlimentRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            MealReceipeRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
             NectarUtil.getRepositoryFolder(context)
         ),
         EntityType.IMAGE to ImageSynchronizer(
-            ImageRepository(context),
+            ImageRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
             NectarUtil.getRepositoryFolder(context),
             NectarUtil.getImageFolder(context)
         ),
         EntityType.BOOK to BookSynchronizer(
-            BookRepository(context),
-            BookImageRepository(context),
-            BookReceipeRepository(context),
+            BookRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            BookImageRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            BookReceipeRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
             NectarUtil.getRepositoryFolder(context)
         ),
         EntityType.STRING_KEY to StringKeySynchronizer(
-            StringKeyRepository(context),
-            StringKeyValueRepository(context),
+            StringKeyRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            StringKeyValueRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
             NectarUtil.getRepositoryFolder(context)
         )
     )

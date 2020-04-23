@@ -120,4 +120,9 @@
         android:name="com.realitix.nectar.fragment.SettingsFragment"
         android:label="@string/action_settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/alimentsFragment"
+        android:name="com.realitix.nectar.fragment.AlimentsFragment"
+        android:label="Liste des aliments"
+        tools:layout="@layout/fragment_aliments" />
 </navigation>

@@ -7,6 +7,7 @@ import java.io.File
 
 class ReceipeSynchronizer(
     private val rReceipe: ReceipeRepository,
+    private val rReceipeMeasure: ReceipeMeasureRepository,
     private val rReceipeTag: ReceipeTagRepository,
     private val rReceipeUtensil: ReceipeUtensilRepository,
     private val rReceipeStep: ReceipeStepRepository,
@@ -17,8 +18,8 @@ class ReceipeSynchronizer(
     class ParseResult(
         val uuid: String,
         val nameUuid: String,
-        val nbPeople: Int,
         val stars: Int,
+        val measures: Map<String, Int>,
         val tags: List<String>,
         val utensils: List<String>,
         val steps: List<Step>
@@ -39,7 +40,12 @@ class ReceipeSynchronizer(
     override fun updateDb(parseResult: ParseResult) {
         // Create receipe only if not exists
         if(rReceipe.get(parseResult.uuid) == null) {
-            rReceipe.insert(ReceipeRaw(parseResult.uuid, parseResult.nameUuid, parseResult.nbPeople, parseResult.stars))
+            rReceipe.insert(ReceipeRaw(parseResult.uuid, parseResult.nameUuid, parseResult.stars))
+        }
+
+        // measures
+        for((measureUuid, quantity) in parseResult.measures) {
+            rReceipeMeasure.insert(ReceipeMeasureRaw(parseResult.uuid, measureUuid, quantity))
         }
 
         // tags
@@ -84,6 +90,11 @@ class ReceipeSynchronizer(
     override fun populateParseResult(uuid: String): ParseResult {
         val receipe = rReceipe.get(uuid)!!
 
+        val measures = mutableMapOf<String, Int>()
+        for(a in receipe.measures) {
+            measures[a.measureUuid] = a.quantity
+        }
+
         val tags = mutableListOf<String>()
         for(a in receipe.tags) {
             tags.add(a.tagUuid)
@@ -108,6 +119,6 @@ class ReceipeSynchronizer(
             steps.add(Step(s.uuid, null, s.descriptionUuid, s.duration, aliments, receipes))
         }
 
-        return ParseResult(receipe.uuid, receipe.nameUuid, receipe.nbPeople, receipe.stars, tags, utensils, steps)
+        return ParseResult(receipe.uuid, receipe.nameUuid, receipe.stars, measures, tags, utensils, steps)
     }
 }

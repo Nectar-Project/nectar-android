@@ -6,6 +6,11 @@
         android:title="Recettes" />
 
     <item
+        android:id="@+id/alimentsFragment"
+        android:icon="@drawable/ic_add_black_24dp"
+        android:title="Aliments" />
+
+    <item
         android:id="@+id/mealsFragment"
         android:icon="@android:drawable/ic_dialog_email"
         android:title="Comment" />
