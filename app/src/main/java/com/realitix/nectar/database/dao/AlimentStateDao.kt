@@ -9,18 +9,22 @@ import com.realitix.nectar.database.entity.AlimentStateRaw
 
 
 @Dao
-abstract class AlimentStateDao: GenericGetUuidDao<AlimentStateRaw, AlimentState>() {
+abstract class AlimentStateDao: GenericGetJoinDao<AlimentStateRaw, AlimentState>() {
     @Transaction
-    @Query("SELECT * FROM AlimentStateRaw WHERE uuid = :uuid")
-    abstract override fun getLive(uuid: String): LiveData<AlimentState>
+    @Query("SELECT * FROM AlimentStateRaw WHERE alimentUuid = :uuid1 AND stateUuid = :uuid2")
+    abstract override fun getLive(uuid1: String, uuid2: String): LiveData<AlimentState>
+
+    @Transaction
+    @Query("SELECT * FROM AlimentStateRaw WHERE alimentUuid = :uuid1 AND stateUuid = :uuid2")
+    abstract override fun get(uuid1: String, uuid2: String): AlimentState?
+
+    @Transaction
+    @Query("SELECT * FROM AlimentStateRaw WHERE alimentUuid = :uuid1 AND stateUuid = :uuid2")
+    abstract override suspend fun getSuspend(uuid1: String, uuid2: String): AlimentState?
 
     @Transaction
     @Query("SELECT * FROM AlimentStateRaw WHERE uuid = :uuid")
-    abstract override fun get(uuid: String): AlimentState?
-
-    @Transaction
-    @Query("SELECT * FROM AlimentStateRaw WHERE uuid = :uuid")
-    abstract override suspend fun getSuspend(uuid: String): AlimentState?
+    abstract fun getUuid(uuid: String): AlimentState?
 
     @Transaction
     @Query("SELECT * FROM AlimentStateRaw")

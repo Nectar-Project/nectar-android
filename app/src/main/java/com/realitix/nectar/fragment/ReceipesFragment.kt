@@ -1,6 +1,8 @@
 package com.realitix.nectar.fragment
 
+import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -78,9 +80,15 @@ class ReceipesFragment : Fragment() {
 
 
         fab.setOnClickListener {
-            val receipeUuid = viewModel.createReceipe()
-            val action = ReceipesFragmentDirections.actionReceipesToSingle(receipeUuid)
-            findNavController().navigate(action)
+            val dialog = NameDialogFragment( object: NameDialogFragment.OnValidateListener {
+                override fun onValidate(dialog: NameDialogFragment) {
+                    val receipeUuid = viewModel.createReceipe(dialog.getName())
+                    val action = ReceipesFragmentDirections.actionReceipesToSingle(receipeUuid)
+                    findNavController().navigate(action)
+                }
+            })
+
+            dialog.show(parentFragmentManager, "create_receipe")
         }
     }
 }

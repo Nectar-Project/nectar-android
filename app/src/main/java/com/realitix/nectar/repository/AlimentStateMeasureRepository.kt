@@ -12,7 +12,7 @@ class AlimentStateMeasureRepository(val context: Context, updater: EntityUpdater
 
     class Updater(context: Context): GenericEntityUpdater<AlimentStateMeasureRaw>(context) {
         override fun newDatabaseUpdate(entity: AlimentStateMeasureRaw) = DatabaseUpdateRaw(
-                AlimentStateRepository(context).get(entity.alimentStateUuid)!!.alimentUuid,
+                AlimentStateRepository(context).getUuid(entity.alimentStateUuid)!!.alimentUuid,
                 EntityType.ALIMENT, NectarUtil.timestamp()
             )
     }

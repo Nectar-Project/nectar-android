@@ -29,7 +29,7 @@ class MealReceipe(receipeUuid: String, mealUuid: String): MealReceipeRaw(receipe
         Index(value=["mealUuid"])
     ]
 )
-open class MealReceipeRaw(var receipeUuid: String, var mealUuid: String) {
+open class MealReceipeRaw(var mealUuid: String, var receipeUuid: String) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

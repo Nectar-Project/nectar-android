@@ -74,7 +74,12 @@ class GitRepositorySynchronizer(val context: Context) {
     private fun fromGitToDbRepository(gitRepositoryName: String, diff: GitManager.DiffResult) {
         val sortedUpdates = diff.updates.sortedWith(compareBy{it.first.ordinal})
         for((dt, uuid) in sortedUpdates) {
-            synchronizerMap[dt]?.fromGitToDb(gitRepositoryName, uuid)
+            try {
+                synchronizerMap[dt]?.fromGitToDb(gitRepositoryName, uuid)
+            }
+            catch(e: Exception) {
+                Log.e("nectar", "fromGitToDb error in repo $gitRepositoryName: ${dt.folderName}/$uuid can't be parsed. Error: $e")
+            }
         }
     }
 

@@ -17,13 +17,13 @@ class ReceipeListViewModel (
 ): ViewModel() {
     val receipes: LiveData<List<Receipe>> = rReceipe.listLive()
 
-    fun createReceipe(): String {
+    fun createReceipe(name: String): String {
         val rid = generateUuid()
         val sid = generateUuid()
         runBlocking {
             // create name
             rStringKey.insertSuspend(StringKeyRaw(sid))
-            rStringKeyValue.insertSuspend(StringKeyValue(sid, "fr", "Nouvelle recette"))
+            rStringKeyValue.insertSuspend(StringKeyValue(sid, "fr", name))
 
             // create receipe
             rReceipe.insertSuspend(Receipe(rid, sid, 2))

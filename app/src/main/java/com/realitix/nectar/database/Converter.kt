@@ -4,9 +4,9 @@ import androidx.room.TypeConverter
 import com.realitix.nectar.util.EntityType
 
 class Converter {
+    // EntityType
     @TypeConverter
-    fun entityTypeToOrdinal(v: EntityType): Int = v.ordinal
-
+    fun entityTypeToOrdinal(v: EntityType) = v.ordinal
     @TypeConverter
-    fun ordinalToEntityType(v: Int): EntityType = EntityType.values()[v]
+    fun ordinalToEntityType(v: Int) = EntityType.values()[v]
 }

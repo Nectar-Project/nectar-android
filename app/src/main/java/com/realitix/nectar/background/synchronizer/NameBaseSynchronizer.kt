@@ -16,7 +16,7 @@ abstract class NameBaseSynchronizer<ERaw, E>(
     override fun getParseResult(repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(repositoryName, uuid)
 
     override fun updateDb(parseResult: ParseResult) {
-        // Create tag only if not exists
+        // Create name only if not exists
         if(rName.get(parseResult.uuid) == null) {
             rName.insert(getNew(parseResult.uuid, parseResult.nameUuid))
         }

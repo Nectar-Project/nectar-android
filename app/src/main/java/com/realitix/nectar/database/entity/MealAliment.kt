@@ -29,7 +29,7 @@ class MealAliment(alimentUuid: String, mealUuid: String, quantity: Int): MealAli
         Index(value=["mealUuid"])
     ]
 )
-open class MealAlimentRaw(var alimentUuid: String, var mealUuid: String, var quantity: Int) {
+open class MealAlimentRaw(var mealUuid: String, var alimentUuid: String, var quantity: Int) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

@@ -29,6 +29,7 @@ class AlimentSynchronizer(
     override fun getParseResult(repositoryName: String, uuid: String): ParseResult = getInnerParseResult(repositoryName, uuid)
 
     override fun updateDb(parseResult: ParseResult) {
+
         // Create aliment only if not exists
         if(rAliment.get(parseResult.uuid) == null) {
             rAliment.insert(AlimentRaw(parseResult.uuid, parseResult.nameUuid))
@@ -36,21 +37,33 @@ class AlimentSynchronizer(
 
         // images
         for(imageUuid in parseResult.images) {
-            rAlimentImage.insert(AlimentImageRaw(parseResult.uuid, imageUuid))
+            if(rAlimentImage.get(parseResult.uuid, imageUuid) == null) {
+                rAlimentImage.insert(AlimentImageRaw(parseResult.uuid, imageUuid))
+            }
         }
 
         // tags
         for(tagUuid in parseResult.tags) {
-            rAlimentTag.insert(AlimentTagRaw(parseResult.uuid, tagUuid))
+            if(rAlimentTag.get(parseResult.uuid, tagUuid) == null) {
+                rAlimentTag.insert(AlimentTagRaw(parseResult.uuid, tagUuid))
+            }
         }
 
         // states
         for((stateUuid, state) in parseResult.states) {
             // nutrition
-            val alimentStateUuid = uuidGenerator.generateUuid()
-            rAlimentState.insert(AlimentStateRaw(alimentStateUuid, parseResult.uuid, stateUuid, state.nutrition))
+            var alimentStateUuid = uuidGenerator.generateUuid()
+            if(rAlimentState.get(parseResult.uuid, stateUuid) == null) {
+                rAlimentState.insert(AlimentStateRaw(alimentStateUuid, parseResult.uuid, stateUuid, state.nutrition))
+            }
+            else {
+                alimentStateUuid = rAlimentState.get(parseResult.uuid, stateUuid)!!.uuid
+            }
+
             for((measureUuid, quantity) in state.measures) {
-                rAlimentStateMeasure.insert(AlimentStateMeasureRaw(alimentStateUuid, measureUuid, quantity))
+                if(rAlimentStateMeasure.get(alimentStateUuid, measureUuid) == null) {
+                    rAlimentStateMeasure.insert(AlimentStateMeasureRaw(alimentStateUuid, measureUuid, quantity))
+                }
             }
         }
     }

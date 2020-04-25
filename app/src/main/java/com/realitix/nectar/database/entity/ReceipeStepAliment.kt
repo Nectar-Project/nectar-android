@@ -26,7 +26,7 @@ class ReceipeStepAliment(alimentUuid: String, stepUuid: String, quantity: Int): 
         Index(value=["stepUuid"])
     ]
 )
-open class ReceipeStepAlimentRaw(var alimentUuid: String, var stepUuid: String, var quantity: Int) {
+open class ReceipeStepAlimentRaw(var stepUuid: String, var alimentUuid: String, var quantity: Int) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

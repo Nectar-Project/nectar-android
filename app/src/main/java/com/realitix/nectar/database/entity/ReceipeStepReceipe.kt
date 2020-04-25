@@ -26,7 +26,7 @@ class ReceipeStepReceipe(receipeUuid: String, stepUuid: String): ReceipeStepRece
         Index(value=["stepUuid"])
     ]
 )
-open class ReceipeStepReceipeRaw(var receipeUuid: String, var stepUuid: String) {
+open class ReceipeStepReceipeRaw(var stepUuid: String, var receipeUuid: String) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

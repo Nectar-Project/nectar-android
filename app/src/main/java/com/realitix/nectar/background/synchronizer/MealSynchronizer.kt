@@ -33,12 +33,16 @@ class MealSynchronizer(
 
         // aliments
         for ((alimentUuid, quantity) in parseResult.aliments) {
-            rMealAliment.insert(MealAlimentRaw(alimentUuid, parseResult.uuid, quantity))
+            if(rMealAliment.get(parseResult.uuid, alimentUuid) == null) {
+                rMealAliment.insert(MealAlimentRaw(parseResult.uuid, alimentUuid, quantity))
+            }
         }
 
         // receipes
         for (receipeUuid in parseResult.receipes) {
-            rMealReceipe.insert(MealReceipeRaw(receipeUuid, parseResult.uuid))
+            if(rMealReceipe.get(parseResult.uuid, receipeUuid) == null) {
+                rMealReceipe.insert(MealReceipeRaw(parseResult.uuid, receipeUuid))
+            }
         }
     }
 

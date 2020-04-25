@@ -7,8 +7,10 @@ import com.realitix.nectar.util.EntityType
 import com.realitix.nectar.util.NectarUtil
 
 class AlimentStateRepository(val context: Context, updater: EntityUpdaterInterface<AlimentStateRaw> = Updater(context)):
-    GenericGetUuidRepository<AlimentStateRaw, AlimentState>(updater) {
+    GenericGetJoinRepository<AlimentStateRaw, AlimentState>(updater) {
     override fun getDao() = NectarDatabase.getInstance(context).alimentStateDao()
+
+    fun getUuid(uuid: String): AlimentState? = getDao().getUuid(uuid)
 
     class Updater(context: Context): GenericEntityUpdater<AlimentStateRaw>(context) {
         override fun newDatabaseUpdate(entity: AlimentStateRaw) = DatabaseUpdateRaw(

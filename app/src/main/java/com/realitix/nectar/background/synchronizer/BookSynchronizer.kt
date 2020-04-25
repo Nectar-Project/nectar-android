@@ -33,12 +33,16 @@ class BookSynchronizer(
 
         // images
         for(imageUuid in parseResult.images) {
-            rBookImage.insert(BookImageRaw(parseResult.uuid, imageUuid))
+            if(rBookImage.get(parseResult.uuid, imageUuid) == null) {
+                rBookImage.insert(BookImageRaw(parseResult.uuid, imageUuid))
+            }
         }
 
         // receipes
         for(receipeUuid in parseResult.receipes) {
-            rBookReceipe.insert(BookReceipeRaw(parseResult.uuid, receipeUuid))
+            if(rBookReceipe.get(parseResult.uuid, receipeUuid) == null) {
+                rBookReceipe.insert(BookReceipeRaw(parseResult.uuid, receipeUuid))
+            }
         }
     }
 

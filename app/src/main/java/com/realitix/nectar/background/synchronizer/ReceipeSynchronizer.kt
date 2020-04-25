@@ -45,44 +45,56 @@ class ReceipeSynchronizer(
 
         // measures
         for((measureUuid, quantity) in parseResult.measures) {
-            rReceipeMeasure.insert(ReceipeMeasureRaw(parseResult.uuid, measureUuid, quantity))
+            if(rReceipeMeasure.get(parseResult.uuid, measureUuid) == null) {
+                rReceipeMeasure.insert(ReceipeMeasureRaw(parseResult.uuid, measureUuid, quantity))
+            }
         }
 
         // tags
         for(tagUuid in parseResult.tags) {
-            rReceipeTag.insert(ReceipeTagRaw(parseResult.uuid, tagUuid))
+            if(rReceipeTag.get(parseResult.uuid, tagUuid) == null) {
+                rReceipeTag.insert(ReceipeTagRaw(parseResult.uuid, tagUuid))
+            }
         }
 
         // utensils
         for(utensilUid in parseResult.utensils) {
-            rReceipeUtensil.insert(ReceipeUtensilRaw(parseResult.uuid, utensilUid))
+            if(rReceipeUtensil.get(parseResult.uuid, utensilUid) == null) {
+                rReceipeUtensil.insert(ReceipeUtensilRaw(parseResult.uuid, utensilUid))
+            }
         }
 
         // steps
         for(step in parseResult.steps) {
-            rReceipeStep.insert(
-                ReceipeStepRaw(
-                    step.stepUuid,
-                    parseResult.uuid,
-                    step.previousStepUuid,
-                    step.descriptionUuid,
-                    step.duration
-                )
-            )
-            // aliments
-            for ((alimentUuid, quantity) in step.aliments) {
-                rReceipeStepAliment.insert(
-                    ReceipeStepAlimentRaw(
-                        alimentUuid,
+            if(rReceipeStep.get(step.stepUuid) == null) {
+                rReceipeStep.insert(
+                    ReceipeStepRaw(
                         step.stepUuid,
-                        quantity
+                        parseResult.uuid,
+                        step.previousStepUuid,
+                        step.descriptionUuid,
+                        step.duration
                     )
                 )
+            }
+            // aliments
+            for ((alimentUuid, quantity) in step.aliments) {
+                if(rReceipeStepAliment.get(step.stepUuid, alimentUuid) == null) {
+                    rReceipeStepAliment.insert(
+                        ReceipeStepAlimentRaw(
+                            step.stepUuid,
+                            alimentUuid,
+                            quantity
+                        )
+                    )
+                }
             }
 
             // receipes
             for (receipeUuid in step.receipes) {
-                rReceipeStepReceipe.insert(ReceipeStepReceipeRaw(receipeUuid, step.stepUuid))
+                if(rReceipeStepReceipe.get(step.stepUuid, receipeUuid) == null) {
+                    rReceipeStepReceipe.insert(ReceipeStepReceipeRaw(step.stepUuid, receipeUuid))
+                }
             }
         }
     }
