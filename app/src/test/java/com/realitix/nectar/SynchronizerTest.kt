@@ -127,8 +127,8 @@ class SynchronizerUnitTest {
 
         verify(rMeal).get(mealUuid)
         verify(rMeal).insert(MealRaw(mealUuid, timestamp, nbPeople, description))
-        verify(rMealAliment).insert(MealAlimentRaw(alimentUuid, mealUuid, quantity))
-        verify(rMealReceipe).insert(MealReceipeRaw(receipeUuid, mealUuid))
+        verify(rMealAliment).insert(MealAlimentRaw(mealUuid, alimentUuid, quantity))
+        verify(rMealReceipe).insert(MealReceipeRaw(mealUuid, receipeUuid))
     }
 
     @Test
@@ -166,8 +166,8 @@ class SynchronizerUnitTest {
         verify(rReceipeTag).insert(ReceipeTagRaw(receipeUuid, tagUuid))
         verify(rReceipeUtensil).insert(ReceipeUtensilRaw(receipeUuid, utensilUuid))
         verify(rReceipeStep).insert(ReceipeStepRaw(stepUuid, receipeUuid, null, stepDescriptionUuid, stepDuration))
-        verify(rReceipeStepAliment).insert(ReceipeStepAlimentRaw(stepAlimentUuid, stepUuid, stepAlimentQuantity))
-        verify(rReceipeStepReceipe).insert(ReceipeStepReceipeRaw(stepReceipeUuid, stepUuid))
+        verify(rReceipeStepAliment).insert(ReceipeStepAlimentRaw(stepUuid, stepAlimentUuid, stepAlimentQuantity))
+        verify(rReceipeStepReceipe).insert(ReceipeStepReceipeRaw(stepUuid, stepReceipeUuid))
     }
 
     @Test
