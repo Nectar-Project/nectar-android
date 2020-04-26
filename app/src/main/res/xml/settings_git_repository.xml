@@ -7,6 +7,11 @@
         app:key="backButton"
         app:summary="Come back to general settings"
         app:title="Back" />
+    <Preference
+        android:icon="@drawable/ic_play_arrow_black_24dp"
+        app:key="syncButton"
+        app:summary="Run a manual synchronization now"
+        app:title="Manual synchronization" />
 
     <PreferenceCategory android:title="Informations sur le dépôt">
         <SwitchPreferenceCompat
@@ -25,12 +30,8 @@
         <EditTextPreference
             app:key="url"
             app:summary="Url du dépôt"
-            app:title="Url" />
-        <SwitchPreferenceCompat
-            app:key="rescan"
-            app:title="Forcer un scan total"
-            app:summaryOn="La prochaine synchonization forcera un scan total"
-            app:summaryOff="La prohcaine synchonization fonctionnera normalement"/>
+            app:title="Url"
+            android:inputType="textWebEmailAddress" />
         <DropDownPreference
             app:title="Fréquence de synchronization"
             app:key="frequency"

@@ -14,7 +14,7 @@ import kotlin.reflect.full.memberProperties
 
 class GitRepositoryDataStore(
     var repository: GitRepoRepository,
-    val frequencyEntryValues: Array<String>,
+    private val frequencyEntryValues: Array<String>,
     uuid: String
 ): PreferenceDataStore() {
     val r = runBlocking { repository.getSuspend(uuid)!! }
@@ -25,7 +25,10 @@ class GitRepositoryDataStore(
             "rescan" -> r.rescan = value
             "readOnly" -> r.readOnly = value
             "credential" -> {
-                if(value) r.credentials = GitCredentials("", "")
+                if(value) {
+                    r.credentials = GitCredentials("", "")
+                    r.readOnly = false
+                }
                 else r.credentials = null
             }
             else -> throw Exception("Can't put boolean $key")

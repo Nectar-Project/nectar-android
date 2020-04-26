@@ -103,7 +103,6 @@ class SettingsInnerFragment: PreferenceFragmentCompat() {
 
     companion object {
         @JvmStatic
-        fun newInstance() = SettingsInnerFragment()
-            .apply {}
+        fun newInstance() = SettingsInnerFragment().apply {}
     }
 }

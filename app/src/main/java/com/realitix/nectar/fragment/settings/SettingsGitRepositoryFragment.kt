@@ -1,15 +1,20 @@
 package com.realitix.nectar.fragment.settings
 
 
-import android.content.Context
 import android.os.Bundle
-import android.view.View
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.webkit.URLUtil
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.preference.*
+import android.widget.Toast
+import androidx.preference.EditTextPreference
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
 import com.realitix.nectar.R
+import com.realitix.nectar.background.GitRepositorySynchronizer
 import com.realitix.nectar.repository.GitRepoRepository
+import java.lang.Compiler.command
+import kotlin.concurrent.thread
 
 
 class SettingsGitRepositoryFragment: PreferenceFragmentCompat() {
@@ -61,6 +66,27 @@ class SettingsGitRepositoryFragment: PreferenceFragmentCompat() {
         val backButton = preferenceManager.preferenceScreen.findPreference<Preference>("backButton")!!
         backButton.setOnPreferenceClickListener {
             parentFragmentManager.popBackStack()
+            true
+        }
+
+        val syncButton = preferenceManager.preferenceScreen.findPreference<Preference>("syncButton")!!
+        syncButton.setOnPreferenceClickListener {
+            Toast.makeText(requireContext(), "Launching synchronization", Toast.LENGTH_LONG).show()
+            val mHandler = object : Handler(Looper.getMainLooper()) {
+                override fun handleMessage(message: Message?) {
+                    Toast.makeText(requireContext(), "Synchronization finished", Toast.LENGTH_SHORT).show()
+                }
+            }
+            thread(start=true) {
+                val rGitRepository = GitRepoRepository(requireContext())
+                val r = rGitRepository.get(uuid)!!
+                r.rescan = true
+                rGitRepository.update(r)
+                GitRepositorySynchronizer(requireContext()).exec(uuid)
+                // Toast must be done in UI Thread
+                mHandler.obtainMessage().sendToTarget()
+            }
+
             true
         }
 

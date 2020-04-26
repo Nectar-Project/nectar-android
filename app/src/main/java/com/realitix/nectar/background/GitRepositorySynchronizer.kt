@@ -8,6 +8,7 @@ import com.realitix.nectar.util.GitManager
 import com.realitix.nectar.util.NectarUtil
 import com.realitix.nectar.util.UuidGenerator
 import com.realitix.nectar.background.synchronizer.*
+import com.realitix.nectar.database.entity.GitRepository
 import java.io.File
 
 class GitRepositorySynchronizer(val context: Context) {
@@ -83,67 +84,81 @@ class GitRepositorySynchronizer(val context: Context) {
         }
     }
 
-    private fun synchronizeFromGitToDb() {
-        val repos = GitRepoRepository(context).listEnabled()
-        val baseRepositoryFolder = NectarUtil.getRepositoryFolder(context)
+    @Synchronized
+    private fun synchronizeFromGitToDb(
+        gitRepository: GitRepository,
+        currentTimestamp: Long,
+        baseRepositoryFolder: File
+    ) {
+        val manager = GitManager(
+            File(baseRepositoryFolder, gitRepository.name),
+            gitRepository.url,
+            gitRepository.credentials
+        )
 
-        for(repo in repos) {
-            val currentTimestamp: Long = System.currentTimeMillis() / 1000
-            if(currentTimestamp - repo.lastCheck >= repo.frequency) {
-                val manager = GitManager(
-                    File(baseRepositoryFolder, repo.name),
-                    repo.url,
-                    repo.credentials
-                )
-
-                if(repo.rescan) {
-                    Log.i("Nectar", "Rescan repo ${repo.name}")
-                    fromGitToDbRepository(repo.name, manager.rescan())
-                    repo.rescan = false
-                }
-                else if (manager.fetch()) {
-                    Log.i("Nectar", "Sync repo ${repo.name}")
-                    fromGitToDbRepository(repo.name, manager.diff())
-                    manager.sync()
-                }
-
-                repo.lastCheck = currentTimestamp
-                GitRepoRepository(context).update(repo)
-            }
+        if(gitRepository.rescan) {
+            fromGitToDbRepository(gitRepository.name, manager.rescan())
+        }
+        else if ((currentTimestamp - gitRepository.lastCheck >= gitRepository.frequency) && manager.fetch()) {
+            fromGitToDbRepository(gitRepository.name, manager.diff())
+            manager.sync()
         }
     }
 
-    private fun synchronizeFromDbToGit() {
-        val baseRepositoryFolder = NectarUtil.getRepositoryFolder(context)
-        val gitRepositories = GitRepoRepository(context).list()
-        val updates = DatabaseUpdateRepository(context).list()
+    @Synchronized
+    private fun synchronizeFromDbToGit(
+       gitRepository: GitRepository,
+       baseRepositoryFolder: File
+    ) {
+        val rDatabaseUpdate = DatabaseUpdateRepository(context)
+        val updates = rDatabaseUpdate.list()
 
-        for(g in gitRepositories) {
-            if(g.readOnly)
-                continue
+        if(gitRepository.readOnly)
+            return
 
-            var updated = false
-            for(u in updates) {
-                synchronizerMap[u.entityType]?.fromDbToGit(g.name, u.entityUuid)
-                updated = true
-            }
+        var updated = false
+        for(u in updates) {
+            synchronizerMap[u.entityType]?.fromDbToGit(gitRepository.name, u.entityUuid)
+            updated = true
+        }
 
-            if(updated) {
-                Log.i("Nectar", "Push updates to ${g.name}")
-                val manager = GitManager(
-                    File(baseRepositoryFolder, g.name),
-                    g.url,
-                    g.credentials
-                )
-                manager.addAll()
-                manager.commit()
-                manager.push()
-            }
+        if(updated) {
+            Log.i("Nectar", "Push updates to ${gitRepository.name}")
+            val manager = GitManager(
+                File(baseRepositoryFolder, gitRepository.name),
+                gitRepository.url,
+                gitRepository.credentials
+            )
+            manager.addAll()
+            manager.commit()
+            manager.push()
+        }
+
+        // Clean updates
+        for(u in updates) {
+            rDatabaseUpdate.delete(u)
         }
     }
 
-    fun exec() {
-        synchronizeFromGitToDb()
-        synchronizeFromDbToGit()
+    @Synchronized
+    fun exec(gitRepositoryUuid: String? = null) {
+        val currentTimestamp: Long = System.currentTimeMillis() / 1000
+        val baseRepositoryFolder = NectarUtil.getRepositoryFolder(context)
+        val rGitRepository = GitRepoRepository(context)
+        val gitRepositories = if(gitRepositoryUuid == null) {
+            rGitRepository.listEnabled()
+        } else {
+            val g = rGitRepository.get(gitRepositoryUuid)!!
+            Log.i("Nectar", "Force sync of repository ${g.name}")
+            listOf(g)
+        }
+
+        for(gitRepository in gitRepositories) {
+            synchronizeFromGitToDb(gitRepository, currentTimestamp, baseRepositoryFolder)
+            synchronizeFromDbToGit(gitRepository, baseRepositoryFolder)
+            gitRepository.lastCheck = currentTimestamp
+            gitRepository.rescan = false
+            rGitRepository.update(gitRepository)
+        }
     }
 }
