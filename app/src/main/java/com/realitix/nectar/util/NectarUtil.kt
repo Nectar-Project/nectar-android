@@ -1,9 +1,12 @@
 package com.realitix.nectar.util
 
 import android.content.Context
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.Parser
+import com.realitix.nectar.R
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -77,6 +80,18 @@ class NectarUtil {
             out.createNewFile()
 
             out.writeText(json)
+        }
+
+        fun showNotification(context: Context, text: String) {
+            val builder = NotificationCompat.Builder(context, "nectar")
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle("Nectar")
+                .setContentText(text)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+            with(NotificationManagerCompat.from(context)) {
+                notify(10, builder.build())
+            }
         }
     }
 }

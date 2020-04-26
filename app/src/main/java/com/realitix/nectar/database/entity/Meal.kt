@@ -19,7 +19,9 @@ open class MealRaw(
     var timestamp: Long,
     var nbPeople: Int,
     var description: String
-) {
+): UuidInterface {
+    override fun getEntityUuid() = uuid
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

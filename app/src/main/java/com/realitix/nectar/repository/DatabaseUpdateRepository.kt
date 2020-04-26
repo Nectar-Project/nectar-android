@@ -5,6 +5,9 @@ import android.database.sqlite.SQLiteConstraintException
 import com.realitix.nectar.database.NectarDatabase
 import com.realitix.nectar.database.entity.DatabaseUpdate
 import com.realitix.nectar.database.entity.DatabaseUpdateRaw
+import com.realitix.nectar.database.entity.UuidInterface
+import com.realitix.nectar.util.EntityType
+import com.realitix.nectar.util.NectarUtil
 
 class DatabaseUpdateRepository(val context: Context, updater: EntityUpdaterInterface<DatabaseUpdateRaw> = NoTrackEntityUpdater()):
     GenericCrudRepository<DatabaseUpdateRaw, DatabaseUpdate>(updater) {
@@ -27,5 +30,32 @@ class DatabaseUpdateRepository(val context: Context, updater: EntityUpdaterInter
         catch (e: SQLiteConstraintException) {
             // Do nothing
         }
+    }
+
+    // Return all entities of database as DatabaseUpdate
+    fun rescan(): List<DatabaseUpdate> {
+        val result = mutableListOf<DatabaseUpdate>()
+
+        val entitiesMap = mapOf<EntityType, GenericGetUuidRepository<*, *>> (
+            EntityType.STATE to StateRepository(context),
+            EntityType.TAG to TagRepository(context),
+            EntityType.MEASURE to MeasureRepository(context),
+            EntityType.ALIMENT to AlimentRepository(context),
+            EntityType.UTENSIL to UtensilRepository(context),
+            EntityType.RECEIPE to ReceipeRepository(context),
+            EntityType.MEAL to MealRepository(context),
+            EntityType.IMAGE to ImageRepository(context),
+            EntityType.BOOK to BookRepository(context),
+            EntityType.STRING_KEY to StringKeyRepository(context)
+        )
+
+        for((k, v) in entitiesMap) {
+            val entities = v.list()
+            for(e in entities) {
+                result.add(DatabaseUpdate(e.getEntityUuid(), k, NectarUtil.timestamp()))
+            }
+        }
+
+        return result
     }
 }

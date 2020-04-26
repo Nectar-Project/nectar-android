@@ -72,7 +72,7 @@ class GitRepositorySynchronizer(val context: Context) {
         )
     )
 
-    private fun fromGitToDbRepository(gitRepositoryName: String, diff: GitManager.DiffResult) {
+    private fun fromGitToDbRepository(gitRepositoryName: String, diff: GitManager.DiffResult): Boolean {
         val sortedUpdates = diff.updates.sortedWith(compareBy{it.first.ordinal})
         for((dt, uuid) in sortedUpdates) {
             try {
@@ -82,6 +82,8 @@ class GitRepositorySynchronizer(val context: Context) {
                 Log.e("nectar", "fromGitToDb error in repo $gitRepositoryName: ${dt.folderName}/$uuid can't be parsed. Error: $e")
             }
         }
+
+        return sortedUpdates.isNotEmpty()
     }
 
     @Synchronized
@@ -89,20 +91,24 @@ class GitRepositorySynchronizer(val context: Context) {
         gitRepository: GitRepository,
         currentTimestamp: Long,
         baseRepositoryFolder: File
-    ) {
+    ): Boolean {
         val manager = GitManager(
             File(baseRepositoryFolder, gitRepository.name),
             gitRepository.url,
             gitRepository.credentials
         )
 
+        var updated = false
+
         if(gitRepository.rescan) {
-            fromGitToDbRepository(gitRepository.name, manager.rescan())
+            updated = fromGitToDbRepository(gitRepository.name, manager.rescan())
         }
         else if ((currentTimestamp - gitRepository.lastCheck >= gitRepository.frequency) && manager.fetch()) {
-            fromGitToDbRepository(gitRepository.name, manager.diff())
+            updated = fromGitToDbRepository(gitRepository.name, manager.diff())
             manager.sync()
         }
+
+        return updated
     }
 
     @Synchronized
@@ -110,11 +116,22 @@ class GitRepositorySynchronizer(val context: Context) {
        gitRepository: GitRepository,
        baseRepositoryFolder: File
     ) {
-        val rDatabaseUpdate = DatabaseUpdateRepository(context)
-        val updates = rDatabaseUpdate.list()
-
         if(gitRepository.readOnly)
             return
+
+        val manager = GitManager(
+            File(baseRepositoryFolder, gitRepository.name),
+            gitRepository.url,
+            gitRepository.credentials
+        )
+
+        // Sync server to local before local synchronization
+        if(manager.fetch()) {
+            manager.sync()
+        }
+
+        val rDatabaseUpdate = DatabaseUpdateRepository(context)
+        val updates = if(gitRepository.rescan) rDatabaseUpdate.rescan() else rDatabaseUpdate.list()
 
         var updated = false
         for(u in updates) {
@@ -124,11 +141,6 @@ class GitRepositorySynchronizer(val context: Context) {
 
         if(updated) {
             Log.i("Nectar", "Push updates to ${gitRepository.name}")
-            val manager = GitManager(
-                File(baseRepositoryFolder, gitRepository.name),
-                gitRepository.url,
-                gitRepository.credentials
-            )
             manager.addAll()
             manager.commit()
             manager.push()
@@ -153,12 +165,19 @@ class GitRepositorySynchronizer(val context: Context) {
             listOf(g)
         }
 
+        var updated = false
         for(gitRepository in gitRepositories) {
-            synchronizeFromGitToDb(gitRepository, currentTimestamp, baseRepositoryFolder)
+            val newUpdated = synchronizeFromGitToDb(gitRepository, currentTimestamp, baseRepositoryFolder)
             synchronizeFromDbToGit(gitRepository, baseRepositoryFolder)
             gitRepository.lastCheck = currentTimestamp
             gitRepository.rescan = false
             rGitRepository.update(gitRepository)
+
+            if(!updated) updated = newUpdated
+        }
+
+        if(updated) {
+            NectarUtil.showNotification(context, "Nectar updated")
         }
     }
 }

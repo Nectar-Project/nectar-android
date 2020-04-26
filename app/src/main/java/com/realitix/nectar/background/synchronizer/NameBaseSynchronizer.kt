@@ -1,9 +1,10 @@
 package com.realitix.nectar.background.synchronizer
 
+import com.realitix.nectar.database.entity.UuidInterface
 import com.realitix.nectar.repository.NameGenericRepository
 import java.io.File
 
-abstract class NameBaseSynchronizer<ERaw, E>(
+abstract class NameBaseSynchronizer<ERaw, E: UuidInterface>(
     private val rName: NameGenericRepository<ERaw, E>,
     baseRepositoryFolder: File
 ): BaseSynchronizer<NameBaseSynchronizer.ParseResult>(baseRepositoryFolder) {

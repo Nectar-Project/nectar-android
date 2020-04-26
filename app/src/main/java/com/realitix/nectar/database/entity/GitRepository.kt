@@ -23,7 +23,9 @@ open class GitRepositoryRaw(
     var frequency: Long,
     @Embedded(prefix="credentials_")
     var credentials: GitCredentials?
-)
+): UuidInterface {
+    override fun getEntityUuid() = uuid
+}
 
 class GitCredentials(
     var username: String,

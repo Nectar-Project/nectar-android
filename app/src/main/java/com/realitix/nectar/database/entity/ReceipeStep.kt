@@ -50,7 +50,9 @@ open class ReceipeStepRaw(
     var descriptionUuid: String,
     // Duration in minutes
     var duration: Int
-) {
+): UuidInterface {
+    override fun getEntityUuid() = uuid
+    
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
