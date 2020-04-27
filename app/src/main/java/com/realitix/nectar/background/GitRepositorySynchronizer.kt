@@ -10,6 +10,7 @@ import com.realitix.nectar.util.UuidGenerator
 import com.realitix.nectar.background.synchronizer.*
 import com.realitix.nectar.database.entity.GitRepository
 import java.io.File
+import org.eclipse.jgit.api.errors.TransportException
 
 class GitRepositorySynchronizer(val context: Context) {
 
@@ -91,7 +92,7 @@ class GitRepositorySynchronizer(val context: Context) {
         gitRepository: GitRepository,
         currentTimestamp: Long,
         baseRepositoryFolder: File
-    ): Boolean {
+    ) {
         val manager = GitManager(
             File(baseRepositoryFolder, gitRepository.name),
             gitRepository.url,
@@ -108,7 +109,9 @@ class GitRepositorySynchronizer(val context: Context) {
             manager.sync()
         }
 
-        return updated
+        if(updated) {
+            NectarUtil.showNotification(context, "Repository ${gitRepository.name} updated")
+        }
     }
 
     @Synchronized
@@ -140,10 +143,14 @@ class GitRepositorySynchronizer(val context: Context) {
         }
 
         if(updated) {
-            Log.i("Nectar", "Push updates to ${gitRepository.name}")
-            manager.addAll()
-            manager.commit()
-            manager.push()
+            // Check diff with origin
+            val diff = manager.diff()
+            if(diff.updates.isNotEmpty() || diff.deletes.isNotEmpty()) {
+                Log.i("Nectar", "Push updates to ${gitRepository.name}")
+                manager.addAll()
+                manager.commit()
+                manager.push()
+            }
         }
 
         // Clean updates
@@ -165,19 +172,17 @@ class GitRepositorySynchronizer(val context: Context) {
             listOf(g)
         }
 
-        var updated = false
         for(gitRepository in gitRepositories) {
-            val newUpdated = synchronizeFromGitToDb(gitRepository, currentTimestamp, baseRepositoryFolder)
-            synchronizeFromDbToGit(gitRepository, baseRepositoryFolder)
+            try {
+                synchronizeFromGitToDb(gitRepository, currentTimestamp, baseRepositoryFolder)
+                synchronizeFromDbToGit(gitRepository, baseRepositoryFolder)
+            } catch (e: TransportException) {
+                continue
+            }
+
             gitRepository.lastCheck = currentTimestamp
             gitRepository.rescan = false
             rGitRepository.update(gitRepository)
-
-            if(!updated) updated = newUpdated
-        }
-
-        if(updated) {
-            NectarUtil.showNotification(context, "Nectar updated")
         }
     }
 }
