@@ -13,6 +13,8 @@ import androidx.preference.PreferenceFragmentCompat
 import com.realitix.nectar.R
 import com.realitix.nectar.background.GitRepositorySynchronizer
 import com.realitix.nectar.repository.GitRepoRepository
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.lang.Compiler.command
 import kotlin.concurrent.thread
 
@@ -86,7 +88,17 @@ class SettingsGitRepositoryFragment: PreferenceFragmentCompat() {
                 // Toast must be done in UI Thread
                 mHandler.obtainMessage().sendToTarget()
             }
+            true
+        }
 
+        val deleteButton = preferenceManager.preferenceScreen.findPreference<Preference>("deleteButton")!!
+        deleteButton.setOnPreferenceClickListener {
+            GlobalScope.launch {
+                val rGitRepository = GitRepoRepository(requireContext())
+                val g = rGitRepository.getSuspend(uuid)!!
+                rGitRepository.deleteSuspend(g)
+            }
+            parentFragmentManager.popBackStack()
             true
         }
 

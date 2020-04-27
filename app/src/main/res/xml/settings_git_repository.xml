@@ -53,5 +53,10 @@
             app:title="Mot de passe"
             app:dependency="credential" />
     </PreferenceCategory>
+    <Preference
+        android:icon="@drawable/ic_delete_black_24dp"
+        app:key="deleteButton"
+        app:summary="Supprimer définitivement ce dépôt"
+        app:title="Supprimer" />
 
 </PreferenceScreen>
