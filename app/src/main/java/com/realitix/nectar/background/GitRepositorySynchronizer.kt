@@ -73,7 +73,7 @@ class GitRepositorySynchronizer(val context: Context) {
         )
     )
 
-    private fun fromGitToDbRepository(gitRepositoryName: String, diff: GitManager.DiffResult): Boolean {
+    private fun fromGitToDbRepository(gitRepositoryName: String, diff: GitManager.DiffResult) {
         val sortedUpdates = diff.updates.sortedWith(compareBy{it.first.ordinal})
         for((dt, uuid) in sortedUpdates) {
             try {
@@ -84,7 +84,7 @@ class GitRepositorySynchronizer(val context: Context) {
             }
         }
 
-        return sortedUpdates.isNotEmpty()
+        NectarUtil.showNotification(context, "Repository $gitRepositoryName updated")
     }
 
     @Synchronized
@@ -99,18 +99,12 @@ class GitRepositorySynchronizer(val context: Context) {
             gitRepository.credentials
         )
 
-        var updated = false
-
         if(gitRepository.rescan) {
-            updated = fromGitToDbRepository(gitRepository.name, manager.rescan())
+            fromGitToDbRepository(gitRepository.name, manager.rescan())
         }
         else if ((currentTimestamp - gitRepository.lastCheck >= gitRepository.frequency) && manager.fetch()) {
-            updated = fromGitToDbRepository(gitRepository.name, manager.diff())
+            fromGitToDbRepository(gitRepository.name, manager.diff())
             manager.sync()
-        }
-
-        if(updated) {
-            NectarUtil.showNotification(context, "Repository ${gitRepository.name} updated")
         }
     }
 

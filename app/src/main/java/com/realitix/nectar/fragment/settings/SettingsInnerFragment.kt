@@ -13,6 +13,7 @@ import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.GitRepository
+import com.realitix.nectar.database.entity.GitSelectiveSynchronization
 import com.realitix.nectar.repository.GitRepoRepository
 import com.realitix.nectar.util.UuidGenerator
 import com.realitix.nectar.viewmodel.RepositoryViewModelFactory
@@ -66,6 +67,7 @@ class SettingsInnerFragment: PreferenceFragmentCompat() {
                 readOnly = true,
                 lastCheck = 0,
                 frequency = 60*60, // One hour
+                selectiveSynchronization = GitSelectiveSynchronization(),
                 credentials = null
             ))
             false

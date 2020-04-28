@@ -7,6 +7,7 @@ import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.realitix.nectar.database.dao.*
 import com.realitix.nectar.database.entity.*
+import com.realitix.nectar.util.EntityType
 import com.realitix.nectar.util.NectarUtil
 import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
 
@@ -107,6 +108,10 @@ abstract class NectarDatabase : RoomDatabase() {
             return object: Callback() {
                 fun init(db: SupportSQLiteDatabase) {
                     // Create DB Entry for default repository
+                    val selective = GitSelectiveSynchronization(
+                        GitSelectiveSynchronization.SynchronizationType.SELECTIVE,
+                        EntityType.ALIMENT
+                    )
                     val repo = GitRepositoryRaw(
                         generateUuid(),
                         NectarUtil.getProperty(context, "defaultGitRepositoryName"),
@@ -116,6 +121,7 @@ abstract class NectarDatabase : RoomDatabase() {
                         readOnly = true,
                         lastCheck = 0,
                         frequency = 60 * 60 * 6,
+                        selectiveSynchronization = selective,
                         credentials = null
                     )
                     db.insert("GitRepositoryRaw", OnConflictStrategy.IGNORE, gitRepositoryRawToContentValues(repo))
@@ -143,6 +149,22 @@ abstract class NectarDatabase : RoomDatabase() {
             contentValues.put("readOnly", repo.readOnly)
             contentValues.put("lastCheck", repo.lastCheck)
             contentValues.put("frequency", repo.frequency)
+
+            if(repo.selectiveSynchronization == null) {
+                contentValues.putNull("selective_synchronizationType")
+                contentValues.putNull("selective_level")
+                contentValues.putNull("selective_bookUuid")
+            }
+            else {
+                contentValues.put("selective_synchronizationType", repo.selectiveSynchronization!!.synchronizationType.ordinal)
+
+                if(repo.selectiveSynchronization!!.level == null) contentValues.putNull("selective_level")
+                else contentValues.put("selective_level", repo.selectiveSynchronization!!.level!!.ordinal)
+
+                if(repo.selectiveSynchronization!!.bookUuid == null) contentValues.putNull("selective_bookUuid")
+                else contentValues.put("selective_bookUuid", repo.selectiveSynchronization!!.bookUuid!!)
+            }
+
             if(repo.credentials == null) {
                 contentValues.putNull("credentials_username")
                 contentValues.putNull("credentials_password")
