@@ -1,6 +1,7 @@
 {
     "uuid": "592bfb6a-0519-4ba6-855c-f4e467eb98fc",
     "nameUuid": "592bfb6a-0519-4ba6-855c-f4e467eb98fc",
+    "portions": 2,
     "stars": 2,
     "measures": {
         "592bfb6a-0519-4ba6-855c-f4e467eb98fc": 3
@@ -20,9 +21,9 @@
             "aliments": {
                 "a7a12c60-1604-48ee-9991-0e4baa08006d": 100
             },
-            "receipes": [
-                "a7a12c60-1604-48ee-9991-0e4baa0800df"
-            ]
+            "receipes": {
+                "a7a12c60-1604-48ee-9991-0e4baa0800df": 1.5
+            }
         }
     ]
 }

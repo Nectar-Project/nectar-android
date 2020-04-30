@@ -94,7 +94,8 @@
                 "potassium": 10.0,
                 "selenium": 10.0,
                 "sodium": 10.0,
-                "zinc": 10.0
+                "zinc": 10.0,
+                "pral": 10.0
             }
         }
     }

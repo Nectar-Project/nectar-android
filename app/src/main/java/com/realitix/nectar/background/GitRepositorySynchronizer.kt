@@ -9,6 +9,7 @@ import com.realitix.nectar.util.NectarUtil
 import com.realitix.nectar.util.UuidGenerator
 import com.realitix.nectar.background.synchronizer.*
 import com.realitix.nectar.database.entity.GitRepository
+import com.realitix.nectar.database.entity.GitSelectiveSynchronization
 import java.io.File
 import org.eclipse.jgit.api.errors.TransportException
 
@@ -73,18 +74,32 @@ class GitRepositorySynchronizer(val context: Context) {
         )
     )
 
-    private fun fromGitToDbRepository(gitRepositoryName: String, diff: GitManager.DiffResult) {
+    private fun mustBeSync(gitRepository: GitRepository, entityType: EntityType, uuid: String): Boolean {
+        val s = gitRepository.selectiveSynchronization ?: return true
+
+        return when(s.synchronizationType) {
+            GitSelectiveSynchronization.SynchronizationType.BOOK -> true
+            GitSelectiveSynchronization.SynchronizationType.SELECTIVE -> {
+                entityType in s.getSelectiveMap()[s.level]!!
+            }
+        }
+    }
+
+    private fun fromGitToDbRepository(gitRepository: GitRepository, diff: GitManager.DiffResult) {
         val sortedUpdates = diff.updates.sortedWith(compareBy{it.first.ordinal})
         for((dt, uuid) in sortedUpdates) {
+            if(!mustBeSync(gitRepository, dt, uuid))
+                continue
+
             try {
-                synchronizerMap[dt]?.fromGitToDb(gitRepositoryName, uuid)
+                synchronizerMap[dt]?.fromGitToDb(gitRepository.name, uuid)
             }
             catch(e: Exception) {
-                Log.e("nectar", "fromGitToDb error in repo $gitRepositoryName: ${dt.folderName}/$uuid can't be parsed. Error: $e")
+                Log.e("nectar", "fromGitToDb error in repo ${gitRepository.name}: ${dt.folderName}/$uuid can't be parsed. Error: $e")
             }
         }
 
-        NectarUtil.showNotification(context, "Repository $gitRepositoryName updated")
+        NectarUtil.showNotification(context, "Repository ${gitRepository.name} updated")
     }
 
     @Synchronized
@@ -100,10 +115,10 @@ class GitRepositorySynchronizer(val context: Context) {
         )
 
         if(gitRepository.rescan) {
-            fromGitToDbRepository(gitRepository.name, manager.rescan())
+            fromGitToDbRepository(gitRepository, manager.rescan())
         }
         else if ((currentTimestamp - gitRepository.lastCheck >= gitRepository.frequency) && manager.fetch()) {
-            fromGitToDbRepository(gitRepository.name, manager.diff())
+            fromGitToDbRepository(gitRepository, manager.diff())
             manager.sync()
         }
     }
@@ -123,28 +138,26 @@ class GitRepositorySynchronizer(val context: Context) {
         )
 
         // Sync server to local before local synchronization
-        if(manager.fetch()) {
-            manager.sync()
-        }
+        manager.fetch()
+        manager.sync()
 
         val rDatabaseUpdate = DatabaseUpdateRepository(context)
         val updates = if(gitRepository.rescan) rDatabaseUpdate.rescan() else rDatabaseUpdate.list()
 
         var updated = false
         for(u in updates) {
+            if(!mustBeSync(gitRepository, u.entityType, u.entityUuid))
+                continue
+
             synchronizerMap[u.entityType]?.fromDbToGit(gitRepository.name, u.entityUuid)
             updated = true
         }
 
-        if(updated) {
-            // Check diff with origin
-            val diff = manager.diff()
-            if(diff.updates.isNotEmpty() || diff.deletes.isNotEmpty()) {
-                Log.i("Nectar", "Push updates to ${gitRepository.name}")
-                manager.addAll()
-                manager.commit()
-                manager.push()
-            }
+        if(updated && manager.hasNewDiff()) {
+            Log.i("Nectar", "Push updates to ${gitRepository.name}")
+            manager.addAll()
+            manager.commit()
+            manager.push()
         }
 
         // Clean updates
@@ -171,6 +184,7 @@ class GitRepositorySynchronizer(val context: Context) {
                 synchronizeFromGitToDb(gitRepository, currentTimestamp, baseRepositoryFolder)
                 synchronizeFromDbToGit(gitRepository, baseRepositoryFolder)
             } catch (e: TransportException) {
+                Log.e("Nectar", "Can't connect to repository ${gitRepository.name}")
                 continue
             }
 

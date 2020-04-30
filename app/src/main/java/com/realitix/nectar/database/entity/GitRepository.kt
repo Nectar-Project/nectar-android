@@ -58,4 +58,27 @@ class GitSelectiveSynchronization(
             throw Exception("selectiveLevel invalid")
         }
     }
+
+    private fun expandList(list: List<EntityType>, elem: EntityType): List<EntityType> {
+        val l = list.toMutableList()
+        l.add(elem)
+        return l
+    }
+
+
+    fun getSelectiveMap(): Map<EntityType, List<EntityType>> {
+        val selectiveMap = mutableMapOf<EntityType, List<EntityType>>()
+
+        selectiveMap[EntityType.ALIMENT] = listOf(
+            EntityType.ALIMENT, EntityType.TAG, EntityType.STRING_KEY,
+            EntityType.STATE, EntityType.MEASURE, EntityType.IMAGE,
+            EntityType.UTENSIL
+        )
+
+        selectiveMap[EntityType.RECEIPE] = expandList(selectiveMap[EntityType.ALIMENT]!!, EntityType.RECEIPE)
+        selectiveMap[EntityType.BOOK] = expandList(selectiveMap[EntityType.RECEIPE]!!, EntityType.BOOK)
+        selectiveMap[EntityType.MEAL] = expandList(selectiveMap[EntityType.BOOK]!!, EntityType.MEAL)
+
+        return selectiveMap
+    }
 }

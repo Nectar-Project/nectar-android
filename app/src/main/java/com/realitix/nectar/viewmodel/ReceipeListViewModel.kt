@@ -26,7 +26,7 @@ class ReceipeListViewModel (
             rStringKeyValue.insertSuspend(StringKeyValue(sid, "fr", name))
 
             // create receipe
-            rReceipe.insertSuspend(Receipe(rid, sid, 2))
+            rReceipe.insertSuspend(Receipe(rid, sid, 2, 2))
         }
         return rid
     }

@@ -3,7 +3,8 @@ package com.realitix.nectar.database.entity
 import androidx.room.*
 
 
-class ReceipeStepReceipe(receipeUuid: String, stepUuid: String): ReceipeStepReceipeRaw(receipeUuid, stepUuid) {
+class ReceipeStepReceipe(receipeUuid: String, stepUuid: String, quantity: Float):
+    ReceipeStepReceipeRaw(receipeUuid, stepUuid, quantity) {
     @Relation(parentColumn = "receipeUuid", entityColumn = "uuid", entity = ReceipeRaw::class)
     lateinit var receipe: ReceipeWS
 }
@@ -26,7 +27,11 @@ class ReceipeStepReceipe(receipeUuid: String, stepUuid: String): ReceipeStepRece
         Index(value=["stepUuid"])
     ]
 )
-open class ReceipeStepReceipeRaw(var stepUuid: String, var receipeUuid: String) {
+open class ReceipeStepReceipeRaw(
+    var stepUuid: String,
+    var receipeUuid: String,
+    var quantity: Float // quantity of portion (portion multiplier)
+) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -35,6 +40,7 @@ open class ReceipeStepReceipeRaw(var stepUuid: String, var receipeUuid: String) 
 
         if (receipeUuid != other.receipeUuid) return false
         if (stepUuid != other.stepUuid) return false
+        if (quantity != other.quantity) return false
 
         return true
     }
@@ -42,6 +48,7 @@ open class ReceipeStepReceipeRaw(var stepUuid: String, var receipeUuid: String) 
     override fun hashCode(): Int {
         var result = receipeUuid.hashCode()
         result = 31 * result + stepUuid.hashCode()
+        result = 31 * result + quantity.hashCode()
         return result
     }
 }

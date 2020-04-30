@@ -17,6 +17,8 @@ import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.Aliment
 import com.realitix.nectar.database.entity.Receipe
 import com.realitix.nectar.repository.AlimentRepository
+import com.realitix.nectar.repository.StringKeyRepository
+import com.realitix.nectar.repository.StringKeyValueRepository
 import com.realitix.nectar.util.GenericAdapter
 import com.realitix.nectar.util.RecyclerItemClickListener
 import com.realitix.nectar.util.SingleLineItemViewHolder
@@ -28,7 +30,11 @@ class AlimentsFragment : Fragment() {
     private val viewModel: AlimentsViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                AlimentsViewModel(AlimentRepository(requireContext()))
+                AlimentsViewModel(
+                    AlimentRepository(requireContext()),
+                    StringKeyRepository(requireContext()),
+                    StringKeyValueRepository(requireContext())
+                )
             }
         }
     )
@@ -74,9 +80,15 @@ class AlimentsFragment : Fragment() {
 
 
         fab.setOnClickListener {
-            /*val receipeUuid = viewModel.createReceipe()
-            val action = ReceipesFragmentDirections.actionReceipesToSingle(receipeUuid)
-            findNavController().navigate(action)*/
+            val dialog = NameDialogFragment( object: NameDialogFragment.OnValidateListener {
+                override fun onValidate(dialog: NameDialogFragment) {
+                    val alimentUuid = viewModel.createAliment(dialog.getName())
+                    //val action = ReceipesFragmentDirections.actionReceipesToSingle(receipeUuid)
+                    //findNavController().navigate(action)
+                }
+            })
+
+            dialog.show(parentFragmentManager, "createAliment")
         }
     }
 }

@@ -135,6 +135,7 @@ class SynchronizerUnitTest {
     fun receipeGitToDb() {
         val receipeUuid = "592bfb6a-0519-4ba6-855c-f4e467eb98fc"
         val nameUuid = "592bfb6a-0519-4ba6-855c-f4e467eb98fc"
+        val portions = 2
         val stars = 2
         val measureUuid = "592bfb6a-0519-4ba6-855c-f4e467eb98fc"
         val measureQuantity = 3
@@ -146,6 +147,7 @@ class SynchronizerUnitTest {
         val stepAlimentUuid = "a7a12c60-1604-48ee-9991-0e4baa08006d"
         val stepAlimentQuantity = 100
         val stepReceipeUuid = "a7a12c60-1604-48ee-9991-0e4baa0800df"
+        val stepReceipeQuantity = 1.5f
 
         val rReceipe = mock(ReceipeRepository::class.java)
         val rReceipeMeasure = mock(ReceipeMeasureRepository::class.java)
@@ -161,13 +163,13 @@ class SynchronizerUnitTest {
         s.fromGitToDb(TEST_REPOSITORY_NAME, receipeUuid)
 
         verify(rReceipe).get(receipeUuid)
-        verify(rReceipe).insert(ReceipeRaw(receipeUuid, nameUuid, stars))
+        verify(rReceipe).insert(ReceipeRaw(receipeUuid, nameUuid, portions, stars))
         verify(rReceipeMeasure).insert(ReceipeMeasureRaw(receipeUuid, measureUuid, measureQuantity))
         verify(rReceipeTag).insert(ReceipeTagRaw(receipeUuid, tagUuid))
         verify(rReceipeUtensil).insert(ReceipeUtensilRaw(receipeUuid, utensilUuid))
         verify(rReceipeStep).insert(ReceipeStepRaw(stepUuid, receipeUuid, null, stepDescriptionUuid, stepDuration))
         verify(rReceipeStepAliment).insert(ReceipeStepAlimentRaw(stepUuid, stepAlimentUuid, stepAlimentQuantity))
-        verify(rReceipeStepReceipe).insert(ReceipeStepReceipeRaw(stepUuid, stepReceipeUuid))
+        verify(rReceipeStepReceipe).insert(ReceipeStepReceipeRaw(stepUuid, stepReceipeUuid, stepReceipeQuantity))
     }
 
     @Test
@@ -180,7 +182,7 @@ class SynchronizerUnitTest {
         val stateUuid = "f33a0e6a-0ad6-4398-a803-3edd8e19987a"
         val measureUuid = "a4a3796e-e478-4864-86f7-bf5d17a603e1"
         val n = 10.0F
-        val nutrition = Nutrition(n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n)
+        val nutrition = Nutrition(n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n)
         val measureQuantity = 10
 
         val rAliment = mock(AlimentRepository::class.java)

@@ -33,7 +33,7 @@ class ReceipeAddSearchViewModel (
     }
 
     private fun createReceipeStepReceipe(linkedReceipeUuid: String) {
-        val c = ReceipeStepReceipe(linkedReceipeUuid, objUuid)
+        val c = ReceipeStepReceipe(linkedReceipeUuid, objUuid, 1f)
         GlobalScope.launch {
             rReceipeStepReceipe.insertSuspend(c)
         }

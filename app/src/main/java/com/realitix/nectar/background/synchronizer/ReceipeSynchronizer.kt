@@ -18,6 +18,7 @@ class ReceipeSynchronizer(
     class ParseResult(
         val uuid: String,
         val nameUuid: String,
+        val portions: Int,
         val stars: Int,
         val measures: Map<String, Int>,
         val tags: List<String>,
@@ -31,7 +32,7 @@ class ReceipeSynchronizer(
         val descriptionUuid: String,
         val duration: Int,
         val aliments: Map<String, Int>,
-        val receipes: List<String>
+        val receipes: Map<String, Float>
     )
 
     override fun getEntityType(): EntityType = EntityType.RECEIPE
@@ -40,7 +41,7 @@ class ReceipeSynchronizer(
     override fun updateDb(parseResult: ParseResult) {
         // Create receipe only if not exists
         if(rReceipe.get(parseResult.uuid) == null) {
-            rReceipe.insert(ReceipeRaw(parseResult.uuid, parseResult.nameUuid, parseResult.stars))
+            rReceipe.insert(ReceipeRaw(parseResult.uuid, parseResult.nameUuid, parseResult.portions, parseResult.stars))
         }
 
         // measures
@@ -91,9 +92,9 @@ class ReceipeSynchronizer(
             }
 
             // receipes
-            for (receipeUuid in step.receipes) {
+            for ((receipeUuid, quantity) in step.receipes) {
                 if(rReceipeStepReceipe.get(step.stepUuid, receipeUuid) == null) {
-                    rReceipeStepReceipe.insert(ReceipeStepReceipeRaw(step.stepUuid, receipeUuid))
+                    rReceipeStepReceipe.insert(ReceipeStepReceipeRaw(step.stepUuid, receipeUuid, quantity))
                 }
             }
         }
@@ -124,13 +125,13 @@ class ReceipeSynchronizer(
                 aliments[a.alimentUuid] = a.quantity
             }
 
-            val receipes = mutableListOf<String>()
+            val receipes = mutableMapOf<String, Float>()
             for(r in s.receipes) {
-                receipes.add(r.receipeUuid)
+                receipes[r.receipeUuid] = r.quantity
             }
             steps.add(Step(s.uuid, null, s.descriptionUuid, s.duration, aliments, receipes))
         }
 
-        return ParseResult(receipe.uuid, receipe.nameUuid, receipe.stars, measures, tags, utensils, steps)
+        return ParseResult(receipe.uuid, receipe.nameUuid, receipe.portions, receipe.stars, measures, tags, utensils, steps)
     }
 }

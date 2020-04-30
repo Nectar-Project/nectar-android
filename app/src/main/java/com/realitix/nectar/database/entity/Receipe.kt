@@ -3,13 +3,15 @@ package com.realitix.nectar.database.entity
 import androidx.room.*
 
 
-class Receipe(uuid: String, nameUuid: String, stars: Int): ReceipeWS(uuid, nameUuid, stars) {
+class Receipe(uuid: String, nameUuid: String, portions: Int, stars: Int):
+    ReceipeWS(uuid, nameUuid, portions, stars) {
     @Relation(parentColumn = "uuid", entityColumn = "receipeUuid", entity = ReceipeStepRaw::class)
     lateinit var steps: List<ReceipeStep>
 }
 
 // Receipe without steps to prevent cycle in ReceipeStepReceipe
-open class ReceipeWS(uuid: String, nameUuid: String, stars: Int): ReceipeRaw(uuid, nameUuid, stars) {
+open class ReceipeWS(uuid: String, nameUuid: String, portions: Int, stars: Int):
+    ReceipeRaw(uuid, nameUuid, portions, stars) {
     @Relation(parentColumn = "nameUuid", entityColumn = "uuid", entity = StringKeyRaw::class)
     lateinit var name: StringKey
     @Relation(parentColumn = "uuid", entityColumn = "receipeUuid", entity = ReceipeTagRaw::class)
@@ -41,6 +43,7 @@ open class ReceipeRaw(
     @PrimaryKey
     var uuid: String,
     var nameUuid: String,
+    var portions: Int,
     var stars: Int
 ): UuidInterface {
     override fun getEntityUuid() = uuid
@@ -53,6 +56,7 @@ open class ReceipeRaw(
 
         if (uuid != other.uuid) return false
         if (nameUuid != other.nameUuid) return false
+        if (portions != other.portions) return false
         if (stars != other.stars) return false
 
         return true
@@ -61,6 +65,7 @@ open class ReceipeRaw(
     override fun hashCode(): Int {
         var result = uuid.hashCode()
         result = 31 * result + nameUuid.hashCode()
+        result = 31 * result + portions.hashCode()
         result = 31 * result + stars
         return result
     }

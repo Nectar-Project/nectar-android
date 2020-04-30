@@ -7,23 +7,14 @@ import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.ResetCommand
 import org.eclipse.jgit.diff.DiffEntry
 import org.eclipse.jgit.internal.JGitText
-import org.eclipse.jgit.lib.Config
 import org.eclipse.jgit.lib.Constants
-import org.eclipse.jgit.storage.file.FileBasedConfig
+import org.eclipse.jgit.revwalk.DepthWalk
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
 import org.eclipse.jgit.treewalk.CanonicalTreeParser
-import org.eclipse.jgit.util.FS
-import org.eclipse.jgit.util.StringUtils
-import org.eclipse.jgit.util.SystemReader
 import java.io.File
-import java.io.IOException
-import java.net.InetAddress
-import java.net.UnknownHostException
 import java.nio.file.Files
-import java.nio.file.InvalidPathException
 import java.nio.file.Path
-import java.nio.file.Paths
 import java.util.stream.Stream
 
 
@@ -135,6 +126,10 @@ class GitManager(private val repoDir: File, private val url: String, private val
         }
 
         return DiffResult(updates, deletes)
+    }
+
+    fun hasNewDiff(): Boolean {
+        return git.diff().setShowNameAndStatusOnly(true).call().isNotEmpty()
     }
 
     private fun getBranch(rev: String): CanonicalTreeParser {

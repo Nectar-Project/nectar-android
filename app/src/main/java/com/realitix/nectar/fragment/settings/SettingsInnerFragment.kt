@@ -67,7 +67,7 @@ class SettingsInnerFragment: PreferenceFragmentCompat() {
                 readOnly = true,
                 lastCheck = 0,
                 frequency = 60*60, // One hour
-                selectiveSynchronization = GitSelectiveSynchronization(),
+                selectiveSynchronization = null,
                 credentials = null
             ))
             false

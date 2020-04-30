@@ -83,7 +83,8 @@ class Nutrition(
     var potassium: Float,
     var selenium: Float,
     var sodium: Float,
-    var zinc: Float
+    var zinc: Float,
+    var pral: Float
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -173,6 +174,7 @@ class Nutrition(
         if (selenium != other.selenium) return false
         if (sodium != other.sodium) return false
         if (zinc != other.zinc) return false
+        if (pral != other.pral) return false
 
         return true
     }
@@ -260,6 +262,7 @@ class Nutrition(
         result = 31 * result + selenium.hashCode()
         result = 31 * result + sodium.hashCode()
         result = 31 * result + zinc.hashCode()
+        result = 31 * result + pral.hashCode()
         return result
     }
 }
