@@ -124,5 +124,18 @@
         android:id="@+id/alimentsFragment"
         android:name="com.realitix.nectar.fragment.AlimentsFragment"
         android:label="Liste des aliments"
-        tools:layout="@layout/fragment_aliments" />
+        tools:layout="@layout/fragment_aliments" >
+        <action
+            android:id="@+id/action_alimentsFragment_to_alimentFragment"
+            app:destination="@id/alimentFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/alimentFragment"
+        android:name="com.realitix.nectar.fragment.AlimentFragment"
+        android:label="Aliment"
+        tools:layout="@layout/fragment_aliment" >
+        <argument
+            android:name="alimentUuid"
+            app:argType="string" />
+    </fragment>
 </navigation>

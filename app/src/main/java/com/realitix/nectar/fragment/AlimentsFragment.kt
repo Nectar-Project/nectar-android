@@ -1,6 +1,5 @@
 package com.realitix.nectar.fragment
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,7 +14,6 @@ import androidx.navigation.ui.setupWithNavController
 
 import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.Aliment
-import com.realitix.nectar.database.entity.Receipe
 import com.realitix.nectar.repository.AlimentRepository
 import com.realitix.nectar.repository.StringKeyRepository
 import com.realitix.nectar.repository.StringKeyValueRepository
@@ -83,8 +81,8 @@ class AlimentsFragment : Fragment() {
             val dialog = NameDialogFragment( object: NameDialogFragment.OnValidateListener {
                 override fun onValidate(dialog: NameDialogFragment) {
                     val alimentUuid = viewModel.createAliment(dialog.getName())
-                    //val action = ReceipesFragmentDirections.actionReceipesToSingle(receipeUuid)
-                    //findNavController().navigate(action)
+                    val action = AlimentsFragmentDirections.actionAlimentsFragmentToAlimentFragment(alimentUuid)
+                    findNavController().navigate(action)
                 }
             })
 

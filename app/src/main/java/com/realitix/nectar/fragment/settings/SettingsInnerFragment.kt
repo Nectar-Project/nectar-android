@@ -39,7 +39,6 @@ class SettingsInnerFragment: PreferenceFragmentCompat() {
         gitCategory.key = "git_category"
         gitCategory.title = "Dépôts"
         gitCategory.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_git_icon_black_24dp)
-        gitCategory.icon.setTint(resources.getColor(R.color.colorIconPreferenceCategory))
         screen.addPreference(gitCategory)
 
         preferenceScreen = screen
@@ -53,7 +52,6 @@ class SettingsInnerFragment: PreferenceFragmentCompat() {
         p.dialogMessage = "Donnez un nom à ce nouveau dépôt"
         p.dialogIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_add_black_24dp)
         p.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_add_black_24dp)
-        p.icon.setTint(resources.getColor(R.color.colorIconPreferenceCategory))
         p.negativeButtonText = "Annuler"
         p.positiveButtonText = "Valider"
 
