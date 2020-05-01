@@ -1,8 +1,6 @@
 package com.realitix.nectar.fragment
 
-import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -80,9 +78,9 @@ class ReceipesFragment : Fragment() {
 
 
         fab.setOnClickListener {
-            val dialog = NameDialogFragment( object: NameDialogFragment.OnValidateListener {
-                override fun onValidate(dialog: NameDialogFragment) {
-                    val receipeUuid = viewModel.createReceipe(dialog.getName())
+            val dialog = EditTextDialogFragment("Nom de la recette", object: EditTextDialogFragment.OnValidateListener {
+                override fun onValidate(dialog: EditTextDialogFragment) {
+                    val receipeUuid = viewModel.createReceipe(dialog.getText())
                     val action = ReceipesFragmentDirections.actionReceipesToSingle(receipeUuid)
                     findNavController().navigate(action)
                 }

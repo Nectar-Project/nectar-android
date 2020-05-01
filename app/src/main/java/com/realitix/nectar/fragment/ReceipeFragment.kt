@@ -77,30 +77,53 @@ class ReceipeFragment : Fragment() {
 
         viewModel.receipe.observe(viewLifecycleOwner) {
             name.text = it.getName()
-            nbPeople.text = "TO REMOVE"
+            portions.text = it.portions.toString()
             stars.text = it.stars.toString()
-            nameTextInput.setText(it.getName())
             adapter.setData(it.steps)
         }
 
         name.setOnClickListener {
-            switchReceipeName()
+            EditTextDialogFragment(
+                "Nom de la recette",
+                object: EditTextDialogFragment.OnValidateListener {
+                override fun onValidate(dialog: EditTextDialogFragment) {
+                    viewModel.updateReceipeName(dialog.getText())
+                }
+                }, viewModel.receipe.value!!.getName()
+            ).show(parentFragmentManager, "updateReceipeName")
         }
 
-        nameButton.setOnClickListener {
-            val newName: String = nameTextInput.text.toString()
-            switchReceipeName()
-            viewModel.updateReceipeName(newName)
+        portions.setOnClickListener {
+            EditTextDialogFragment(
+                "Nombre de portions",
+                object: EditTextDialogFragment.OnValidateListener {
+                    override fun onValidate(dialog: EditTextDialogFragment) {
+                        viewModel.updateReceipePortions(dialog.getText().toInt())
+                    }
+                }, viewModel.receipe.value!!.portions.toString()
+            ).show(parentFragmentManager, "updateReceipePortions")
         }
 
-        stepButton.setOnClickListener {
-            val description: String = stepTextInput.text.toString()
-            switchStepAdd()
-            viewModel.createStep(description)
+        stars.setOnClickListener {
+            EditTextDialogFragment(
+                "Nombre d'étoile",
+                object: EditTextDialogFragment.OnValidateListener {
+                    override fun onValidate(dialog: EditTextDialogFragment) {
+                        viewModel.updateReceipeStars(dialog.getText().toInt())
+                    }
+                }, viewModel.receipe.value!!.stars.toString()
+            ).show(parentFragmentManager, "updateReceipeStars")
         }
 
         fab.setOnClickListener {
-            switchStepAdd()
+            EditTextDialogFragment(
+                "Nom de l'étape à créer",
+                object: EditTextDialogFragment.OnValidateListener {
+                    override fun onValidate(dialog: EditTextDialogFragment) {
+                        viewModel.createStep(dialog.getText())
+                    }
+                }
+            ).show(parentFragmentManager, "createStep")
         }
 
         recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
@@ -110,33 +133,5 @@ class ReceipeFragment : Fragment() {
                 findNavController().navigate(action)
             }
         }))
-    }
-
-
-    private fun switchReceipeName() {
-        if(nameContainer.visibility == View.GONE) {
-            name.visibility = View.INVISIBLE
-            nameContainer.visibility = View.VISIBLE
-            nameTextInput.requestFocus()
-            (requireActivity() as MainActivity).toggleKeyboard()
-        }
-        else {
-            name.visibility = View.VISIBLE
-            nameTextInput.clearFocus()
-            nameContainer.visibility = View.GONE
-            (requireActivity() as MainActivity).toggleKeyboard()
-        }
-    }
-
-    private fun switchStepAdd() {
-        if(stepContainer.visibility == View.GONE) {
-            stepContainer.visibility = View.VISIBLE
-            stepTextInput.requestFocus()
-            (requireActivity() as MainActivity).toggleKeyboard()
-        }
-        else {
-            stepContainer.visibility = View.GONE
-            (requireActivity() as MainActivity).toggleKeyboard()
-        }
     }
 }

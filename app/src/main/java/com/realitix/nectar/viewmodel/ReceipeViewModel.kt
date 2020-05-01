@@ -13,7 +13,7 @@ import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
 import kotlinx.coroutines.launch
 
 class ReceipeViewModel (
-    rReceipe: ReceipeRepository,
+    private val rReceipe: ReceipeRepository,
     private val rReceipeStep: ReceipeStepRepository,
     private val rStringKey: StringKeyRepository,
     private val rStringKeyValue: StringKeyValueRepository,
@@ -26,6 +26,22 @@ class ReceipeViewModel (
             val keyValue = rStringKeyValue.getSuspend(receipe.value!!.nameUuid, "fr")!!
             keyValue.value = newName
             rStringKeyValue.updateSuspend(keyValue)
+        }
+    }
+
+    fun updateReceipePortions(newPortions: Int) {
+        viewModelScope.launch {
+            val r = receipe.value!!
+            r.portions = newPortions
+            rReceipe.updateSuspend(r)
+        }
+    }
+
+    fun updateReceipeStars(newStars: Int) {
+        viewModelScope.launch {
+            val r = receipe.value!!
+            r.stars = newStars
+            rReceipe.updateSuspend(r)
         }
     }
 

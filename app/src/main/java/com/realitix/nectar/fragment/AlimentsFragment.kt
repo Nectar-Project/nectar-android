@@ -70,17 +70,17 @@ class AlimentsFragment : Fragment() {
 
         recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
-                val receipe = adapter.getAtPosition(position)
-                val action = ReceipesFragmentDirections.actionReceipesToSingle(receipe.uuid)
+                val aliment = adapter.getAtPosition(position)
+                val action = AlimentsFragmentDirections.actionAlimentsFragmentToAlimentFragment(aliment.uuid)
                 view.findNavController().navigate(action)
             }
         }))
 
 
         fab.setOnClickListener {
-            val dialog = NameDialogFragment( object: NameDialogFragment.OnValidateListener {
-                override fun onValidate(dialog: NameDialogFragment) {
-                    val alimentUuid = viewModel.createAliment(dialog.getName())
+            val dialog = EditTextDialogFragment("Nom de l'aliment", object: EditTextDialogFragment.OnValidateListener {
+                override fun onValidate(dialog: EditTextDialogFragment) {
+                    val alimentUuid = viewModel.createAliment(dialog.getText())
                     val action = AlimentsFragmentDirections.actionAlimentsFragmentToAlimentFragment(alimentUuid)
                     findNavController().navigate(action)
                 }

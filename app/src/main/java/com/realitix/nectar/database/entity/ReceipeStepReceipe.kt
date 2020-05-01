@@ -3,8 +3,8 @@ package com.realitix.nectar.database.entity
 import androidx.room.*
 
 
-class ReceipeStepReceipe(receipeUuid: String, stepUuid: String, quantity: Float):
-    ReceipeStepReceipeRaw(receipeUuid, stepUuid, quantity) {
+class ReceipeStepReceipe(stepUuid: String, receipeUuid: String, quantity: Float):
+    ReceipeStepReceipeRaw(stepUuid, receipeUuid, quantity) {
     @Relation(parentColumn = "receipeUuid", entityColumn = "uuid", entity = ReceipeRaw::class)
     lateinit var receipe: ReceipeWS
 }

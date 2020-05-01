@@ -1,10 +1,7 @@
 package com.realitix.nectar.viewmodel
 
 import androidx.lifecycle.*
-import com.realitix.nectar.database.entity.Aliment
-import com.realitix.nectar.database.entity.MealAliment
-import com.realitix.nectar.database.entity.ReceipeStepAliment
-import com.realitix.nectar.database.entity.ReceipeStepAlimentRaw
+import com.realitix.nectar.database.entity.*
 import com.realitix.nectar.repository.*
 import com.realitix.nectar.util.MealReceipeEnum.Companion.MEAL
 import com.realitix.nectar.util.MealReceipeEnum.Companion.RECEIPE
@@ -29,14 +26,14 @@ class AlimentAddQuantityViewModel (
     }
 
     private fun createReceipeStepAliment(quantity: Int) {
-        val c = ReceipeStepAlimentRaw(alimentUuid, objUuid, quantity)
+        val c = ReceipeStepAlimentRaw(objUuid, alimentUuid, quantity)
         GlobalScope.launch {
             rReceipeStepAliment.insertSuspend(c)
         }
     }
 
     private fun createMealAliment(quantity: Int) {
-        val c = MealAliment(alimentUuid, objUuid, quantity)
+        val c = MealAlimentRaw(alimentUuid, objUuid, quantity)
         GlobalScope.launch {
             rMealAliment.insertSuspend(c)
         }

@@ -37,10 +37,9 @@
         tools:layout_editor_absoluteX="0dp" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/nbPeople"
+        android:id="@+id/portions"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@{String.valueOf(receipe.nb_people)}"
         app:layout_constraintEnd_toStartOf="@+id/stars"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name" />
@@ -51,7 +50,7 @@
         android:layout_height="wrap_content"
         android:text="@{String.valueOf(receipe.stars)}"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/nbPeople"
+        app:layout_constraintStart_toEndOf="@+id/portions"
         app:layout_constraintTop_toBottomOf="@+id/name" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -60,64 +59,5 @@
         android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nbPeople" />
-
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appbar"
-        tools:context=".fragment.ReceipeFragment">
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/stepContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:translationZ="10dp"
-            android:visibility="gone">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/stepTextInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Description de l'étape"
-                android:textSize="24sp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/stepButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:text="Valider" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/nameContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:translationZ="10dp"
-            android:visibility="gone">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/nameTextInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Nom de la recette"
-                android:textSize="24sp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/nameButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:text="Valider" />
-        </com.google.android.material.textfield.TextInputLayout>
-    </FrameLayout>
+        app:layout_constraintTop_toBottomOf="@+id/portions" />
 </androidx.constraintlayout.widget.ConstraintLayout>

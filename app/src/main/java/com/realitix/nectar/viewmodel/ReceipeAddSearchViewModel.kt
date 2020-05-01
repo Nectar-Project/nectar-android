@@ -2,7 +2,9 @@ package com.realitix.nectar.viewmodel
 
 import androidx.lifecycle.*
 import com.realitix.nectar.database.entity.MealReceipe
+import com.realitix.nectar.database.entity.MealReceipeRaw
 import com.realitix.nectar.database.entity.ReceipeStepReceipe
+import com.realitix.nectar.database.entity.ReceipeStepReceipeRaw
 import com.realitix.nectar.repository.MealReceipeRepository
 import com.realitix.nectar.repository.MealRepository
 import com.realitix.nectar.repository.ReceipeRepository
@@ -33,14 +35,14 @@ class ReceipeAddSearchViewModel (
     }
 
     private fun createReceipeStepReceipe(linkedReceipeUuid: String) {
-        val c = ReceipeStepReceipe(linkedReceipeUuid, objUuid, 1f)
+        val c = ReceipeStepReceipeRaw(objUuid,linkedReceipeUuid, 1f)
         GlobalScope.launch {
             rReceipeStepReceipe.insertSuspend(c)
         }
     }
 
     private fun createMealReceipe(linkedReceipeUuid: String) {
-        val c = MealReceipe(linkedReceipeUuid, objUuid)
+        val c = MealReceipeRaw(linkedReceipeUuid, objUuid)
         GlobalScope.launch {
             rMealReceipe.insertSuspend(c)
         }

@@ -2,25 +2,30 @@ package com.realitix.nectar.fragment
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 
 
-class NameDialogFragment(private val listener: OnValidateListener) : DialogFragment() {
+class EditTextDialogFragment(
+    private val hint: String,
+    private val listener: OnValidateListener,
+    private val currentValue: String? = null
+): DialogFragment() {
     private lateinit var editText: EditText
 
     interface OnValidateListener {
-        fun onValidate(dialog: NameDialogFragment)
+        fun onValidate(dialog: EditTextDialogFragment)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         editText = EditText(requireContext())
-        editText.hint = "Nom à donner"
+        editText.hint = hint
+        if(currentValue != null) {
+            editText.setText(currentValue)
+        }
         return activity?.let {
             AlertDialog.Builder(it)
-                .setTitle("Nom")
                 .setView(editText)
                 .setPositiveButton("Valider") { _, _ -> listener.onValidate(this) }
                 .setNegativeButton("Annuler") { _, _ -> }
@@ -28,7 +33,7 @@ class NameDialogFragment(private val listener: OnValidateListener) : DialogFragm
         } ?: throw IllegalStateException("Activity cannot be null")
     }
 
-    fun getName(): String {
+    fun getText(): String {
         return editText.text.toString()
     }
 }
