@@ -19,6 +19,7 @@ import com.realitix.nectar.repository.MealReceipeRepository
 import com.realitix.nectar.repository.MealRepository
 import com.realitix.nectar.repository.ReceipeRepository
 import com.realitix.nectar.repository.ReceipeStepReceipeRepository
+import com.realitix.nectar.util.EntityType
 import com.realitix.nectar.util.GenericAdapter
 import com.realitix.nectar.util.RecyclerItemClickListener
 import com.realitix.nectar.util.SingleLineItemViewHolder
@@ -29,7 +30,7 @@ import kotlinx.android.synthetic.main.fragment_receipe_add_search.*
 
 class ReceipeAddSearchFragment : Fragment() {
     private lateinit var objUuid: String
-    private var enumId: Int = -1
+    private lateinit var entityType: EntityType
 
     private lateinit var adapter: GenericAdapter<SingleLineItemViewHolder, Receipe>
     private val viewModel: ReceipeAddSearchViewModel by viewModels(
@@ -39,7 +40,7 @@ class ReceipeAddSearchFragment : Fragment() {
                     ReceipeRepository(requireContext()),
                     ReceipeStepReceipeRepository(requireContext()),
                     MealReceipeRepository(requireContext()),
-                    objUuid, enumId
+                    objUuid, entityType
                 )
             }
         }
@@ -49,7 +50,7 @@ class ReceipeAddSearchFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             objUuid = it.getString("objUuid")!!
-            enumId = it.getInt("enumId")
+            entityType = EntityType.values()[it.getInt("enumId")]
         }
     }
 
@@ -96,9 +97,15 @@ class ReceipeAddSearchFragment : Fragment() {
         recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val receipe = adapter.getAtPosition(position)
-                viewModel.create(receipe.uuid)
-                (activity!! as MainActivity).toggleKeyboard()
-                findNavController().popBackStack()
+
+                EditTextDialogFragment("Proportion de ${receipe.getName()}", object: EditTextDialogFragment.OnValidateListener {
+                    override fun onValidate(dialog: EditTextDialogFragment) {
+                        val quantity = dialog.getText().toFloat()
+                        viewModel.create(receipe.uuid, quantity)
+                        findNavController().popBackStack()
+                    }
+                }).show(parentFragmentManager, "addAliment")
+
             }
         }))
     }

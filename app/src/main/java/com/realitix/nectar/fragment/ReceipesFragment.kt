@@ -78,15 +78,13 @@ class ReceipesFragment : Fragment() {
 
 
         fab.setOnClickListener {
-            val dialog = EditTextDialogFragment("Nom de la recette", object: EditTextDialogFragment.OnValidateListener {
+            EditTextDialogFragment("Nom de la recette", object: EditTextDialogFragment.OnValidateListener {
                 override fun onValidate(dialog: EditTextDialogFragment) {
                     val receipeUuid = viewModel.createReceipe(dialog.getText())
                     val action = ReceipesFragmentDirections.actionReceipesToSingle(receipeUuid)
                     findNavController().navigate(action)
                 }
-            })
-
-            dialog.show(parentFragmentManager, "create_receipe")
+            }).show(parentFragmentManager, "create_receipe")
         }
     }
 }

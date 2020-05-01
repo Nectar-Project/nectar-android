@@ -9,6 +9,7 @@ import com.realitix.nectar.repository.MealReceipeRepository
 import com.realitix.nectar.repository.MealRepository
 import com.realitix.nectar.repository.ReceipeRepository
 import com.realitix.nectar.repository.ReceipeStepReceipeRepository
+import com.realitix.nectar.util.EntityType
 import com.realitix.nectar.util.MealReceipeEnum
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -18,7 +19,7 @@ class ReceipeAddSearchViewModel (
     private val rReceipeStepReceipe: ReceipeStepReceipeRepository,
     private val rMealReceipe: MealReceipeRepository,
     private val objUuid: String,
-    private val enumId: Int
+    private val entityType: EntityType
 ) : ViewModel() {
     private val receipeSearchTerm: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val receipes = receipeSearchTerm.switchMap { rReceipe.search(it) }
@@ -27,22 +28,23 @@ class ReceipeAddSearchViewModel (
         receipeSearchTerm.value = name
     }
 
-    fun create(linkedReceipeUuid: String) {
-        when (enumId) {
-            MealReceipeEnum.RECEIPE -> createReceipeStepReceipe(linkedReceipeUuid)
-            MealReceipeEnum.MEAL -> createMealReceipe(linkedReceipeUuid)
+    fun create(linkedReceipeUuid: String, quantity: Float) {
+        when(entityType) {
+            EntityType.RECEIPE -> createReceipeStepReceipe(linkedReceipeUuid, quantity)
+            EntityType.MEAL -> createMealReceipe(linkedReceipeUuid, quantity)
+            else -> throw Exception()
         }
     }
 
-    private fun createReceipeStepReceipe(linkedReceipeUuid: String) {
-        val c = ReceipeStepReceipeRaw(objUuid,linkedReceipeUuid, 1f)
+    private fun createReceipeStepReceipe(linkedReceipeUuid: String, quantity: Float) {
+        val c = ReceipeStepReceipeRaw(objUuid, linkedReceipeUuid, quantity)
         GlobalScope.launch {
             rReceipeStepReceipe.insertSuspend(c)
         }
     }
 
-    private fun createMealReceipe(linkedReceipeUuid: String) {
-        val c = MealReceipeRaw(linkedReceipeUuid, objUuid)
+    private fun createMealReceipe(linkedReceipeUuid: String, quantity: Float) {
+        val c = MealReceipeRaw(linkedReceipeUuid, objUuid, quantity)
         GlobalScope.launch {
             rMealReceipe.insertSuspend(c)
         }

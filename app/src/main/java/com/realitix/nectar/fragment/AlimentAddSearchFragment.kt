@@ -12,9 +12,13 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
+import com.realitix.nectar.MainActivity
 import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.Aliment
 import com.realitix.nectar.repository.AlimentRepository
+import com.realitix.nectar.repository.MealAlimentRepository
+import com.realitix.nectar.repository.ReceipeStepAlimentRepository
+import com.realitix.nectar.util.EntityType
 import com.realitix.nectar.util.GenericAdapter
 import com.realitix.nectar.util.RecyclerItemClickListener
 import com.realitix.nectar.util.SingleLineItemViewHolder
@@ -26,13 +30,18 @@ import java.io.File
 
 class AlimentAddSearchFragment : Fragment() {
     private lateinit var objUuid: String
-    private var enumId: Int = -1
+    private lateinit var entityType: EntityType
 
     private lateinit var adapter: GenericAdapter<SingleLineItemViewHolder, Aliment>
     private val viewModel: AlimentAddSearchViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                AlimentAddSearchViewModel(AlimentRepository(requireContext()))
+                AlimentAddSearchViewModel(
+                    AlimentRepository(requireContext()),
+                    ReceipeStepAlimentRepository(requireContext()),
+                    MealAlimentRepository(requireContext()),
+                    objUuid, entityType
+                )
             }
         }
     )
@@ -41,7 +50,7 @@ class AlimentAddSearchFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             objUuid = it.getString("objUuid")!!
-            enumId = it.getInt("enumId")
+            entityType = EntityType.values()[it.getInt("enumId")]
         }
     }
 
@@ -96,8 +105,13 @@ class AlimentAddSearchFragment : Fragment() {
         recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val aliment = adapter.getAtPosition(position)
-                val action = AlimentAddSearchFragmentDirections.actionAlimentAddSearchFragmentToAlimentAddQuantityFragment(aliment.uuid, objUuid, enumId)
-                findNavController().navigate(action)
+                EditTextDialogFragment("Quantité de ${aliment.getName()} en g", object: EditTextDialogFragment.OnValidateListener {
+                    override fun onValidate(dialog: EditTextDialogFragment) {
+                        val quantity = dialog.getText().toInt()
+                        viewModel.create(aliment.uuid, quantity)
+                    }
+                }).show(parentFragmentManager, "addAliment")
+                findNavController().popBackStack()
             }
         }))
     }

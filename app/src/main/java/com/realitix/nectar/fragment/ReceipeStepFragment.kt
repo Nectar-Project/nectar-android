@@ -97,12 +97,12 @@ class ReceipeStepFragment : Fragment() {
         }
 
         fabAliment.setOnClickListener {
-            val action = ReceipeStepFragmentDirections.actionReceipeStepFragmentToAlimentAddSearchFragment(stepUuid, MealReceipeEnum.RECEIPE)
+            val action = ReceipeStepFragmentDirections.actionReceipeStepFragmentToAlimentAddSearchFragment(stepUuid, EntityType.RECEIPE.ordinal)
             findNavController().navigate(action)
         }
 
         fabReceipe.setOnClickListener {
-            val action = ReceipeStepFragmentDirections.actionReceipeStepFragmentToReceipeAddFragment(stepUuid, MealReceipeEnum.RECEIPE)
+            val action = ReceipeStepFragmentDirections.actionReceipeStepFragmentToReceipeAddFragment(stepUuid, EntityType.RECEIPE.ordinal)
             findNavController().navigate(action)
         }
     }

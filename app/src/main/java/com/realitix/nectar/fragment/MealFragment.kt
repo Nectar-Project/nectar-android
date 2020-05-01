@@ -83,12 +83,12 @@ class MealFragment : Fragment() {
         }
 
         fabAliment.setOnClickListener {
-            val action = MealFragmentDirections.actionMealFragmentToAlimentAddSearchFragment(mealUuid, MealReceipeEnum.MEAL)
+            val action = MealFragmentDirections.actionMealFragmentToAlimentAddSearchFragment(mealUuid, EntityType.MEAL.ordinal)
             findNavController().navigate(action)
         }
 
         fabReceipe.setOnClickListener {
-            val action = MealFragmentDirections.actionMealFragmentToReceipeAddFragment(mealUuid, MealReceipeEnum.MEAL)
+            val action = MealFragmentDirections.actionMealFragmentToReceipeAddFragment(mealUuid, EntityType.MEAL.ordinal)
             findNavController().navigate(action)
         }
     }

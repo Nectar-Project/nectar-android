@@ -19,7 +19,7 @@ class MealSynchronizer(
         val timestamp: Long,
         val description: String,
         val aliments: Map<String, Int>,
-        val receipes: List<String>
+        val receipes: Map<String, Float>
     )
 
     override fun getEntityType(): EntityType = EntityType.MEAL
@@ -39,9 +39,9 @@ class MealSynchronizer(
         }
 
         // receipes
-        for (receipeUuid in parseResult.receipes) {
+        for ((receipeUuid, quantity) in parseResult.receipes) {
             if(rMealReceipe.get(parseResult.uuid, receipeUuid) == null) {
-                rMealReceipe.insert(MealReceipeRaw(parseResult.uuid, receipeUuid))
+                rMealReceipe.insert(MealReceipeRaw(parseResult.uuid, receipeUuid, quantity))
             }
         }
     }
@@ -54,9 +54,9 @@ class MealSynchronizer(
             aliments[a.alimentUuid] = a.quantity
         }
 
-        val receipes = mutableListOf<String>()
+        val receipes = mutableMapOf<String, Float>()
         for(r in meal.receipes) {
-            receipes.add(r.receipeUuid)
+            receipes[r.receipeUuid] = r.quantity
         }
 
         return ParseResult(meal.uuid, meal.nbPeople, meal.timestamp, meal.description, aliments, receipes)
