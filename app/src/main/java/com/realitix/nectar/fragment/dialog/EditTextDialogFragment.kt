@@ -1,4 +1,4 @@
-package com.realitix.nectar.fragment
+package com.realitix.nectar.fragment.dialog
 
 import android.app.AlertDialog
 import android.app.Dialog

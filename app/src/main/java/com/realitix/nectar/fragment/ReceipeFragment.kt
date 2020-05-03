@@ -10,10 +10,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.realitix.nectar.MainActivity
 import com.realitix.nectar.R
 import com.realitix.nectar.util.GenericAdapter
 import com.realitix.nectar.database.entity.ReceipeStep
+import com.realitix.nectar.fragment.dialog.EditTextDialogFragment
 import com.realitix.nectar.repository.ReceipeRepository
 import com.realitix.nectar.repository.ReceipeStepRepository
 import com.realitix.nectar.repository.StringKeyRepository
@@ -85,10 +85,11 @@ class ReceipeFragment : Fragment() {
         name.setOnClickListener {
             EditTextDialogFragment(
                 "Nom de la recette",
-                object: EditTextDialogFragment.OnValidateListener {
-                override fun onValidate(dialog: EditTextDialogFragment) {
-                    viewModel.updateReceipeName(dialog.getText())
-                }
+                object :
+                    EditTextDialogFragment.OnValidateListener {
+                    override fun onValidate(dialog: EditTextDialogFragment) {
+                        viewModel.updateReceipeName(dialog.getText())
+                    }
                 }, viewModel.receipe.value!!.getName()
             ).show(parentFragmentManager, "updateReceipeName")
         }
@@ -96,7 +97,8 @@ class ReceipeFragment : Fragment() {
         portions.setOnClickListener {
             EditTextDialogFragment(
                 "Nombre de portions",
-                object: EditTextDialogFragment.OnValidateListener {
+                object :
+                    EditTextDialogFragment.OnValidateListener {
                     override fun onValidate(dialog: EditTextDialogFragment) {
                         viewModel.updateReceipePortions(dialog.getText().toInt())
                     }
@@ -107,7 +109,8 @@ class ReceipeFragment : Fragment() {
         stars.setOnClickListener {
             EditTextDialogFragment(
                 "Nombre d'étoile",
-                object: EditTextDialogFragment.OnValidateListener {
+                object :
+                    EditTextDialogFragment.OnValidateListener {
                     override fun onValidate(dialog: EditTextDialogFragment) {
                         viewModel.updateReceipeStars(dialog.getText().toInt())
                     }
@@ -118,9 +121,10 @@ class ReceipeFragment : Fragment() {
         fab.setOnClickListener {
             EditTextDialogFragment(
                 "Nom de l'étape à créer",
-                object: EditTextDialogFragment.OnValidateListener {
+                object :
+                    EditTextDialogFragment.OnValidateListener {
                     override fun onValidate(dialog: EditTextDialogFragment) {
-                        viewModel.createStep(dialog.getText())
+                        viewModel.insertStep(dialog.getText())
                     }
                 }
             ).show(parentFragmentManager, "createStep")

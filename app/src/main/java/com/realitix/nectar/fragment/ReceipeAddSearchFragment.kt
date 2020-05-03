@@ -12,11 +12,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.realitix.nectar.MainActivity
 import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.Receipe
+import com.realitix.nectar.fragment.dialog.EditTextDialogFragment
 import com.realitix.nectar.repository.MealReceipeRepository
-import com.realitix.nectar.repository.MealRepository
 import com.realitix.nectar.repository.ReceipeRepository
 import com.realitix.nectar.repository.ReceipeStepReceipeRepository
 import com.realitix.nectar.util.EntityType
@@ -98,13 +97,16 @@ class ReceipeAddSearchFragment : Fragment() {
             override fun onItemClick(view: View, position: Int) {
                 val receipe = adapter.getAtPosition(position)
 
-                EditTextDialogFragment("Proportion de ${receipe.getName()}", object: EditTextDialogFragment.OnValidateListener {
-                    override fun onValidate(dialog: EditTextDialogFragment) {
-                        val quantity = dialog.getText().toFloat()
-                        viewModel.create(receipe.uuid, quantity)
-                        findNavController().popBackStack()
-                    }
-                }).show(parentFragmentManager, "addAliment")
+                EditTextDialogFragment(
+                    "Proportion de ${receipe.getName()}",
+                    object :
+                        EditTextDialogFragment.OnValidateListener {
+                        override fun onValidate(dialog: EditTextDialogFragment) {
+                            val quantity = dialog.getText().toFloat()
+                            viewModel.create(receipe.uuid, quantity)
+                            findNavController().popBackStack()
+                        }
+                    }).show(parentFragmentManager, "addAliment")
 
             }
         }))

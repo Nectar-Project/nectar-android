@@ -14,6 +14,7 @@ import androidx.navigation.ui.setupWithNavController
 
 import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.Aliment
+import com.realitix.nectar.fragment.dialog.EditTextDialogFragment
 import com.realitix.nectar.repository.AlimentRepository
 import com.realitix.nectar.repository.StringKeyRepository
 import com.realitix.nectar.repository.StringKeyValueRepository
@@ -78,13 +79,20 @@ class AlimentsFragment : Fragment() {
 
 
         fab.setOnClickListener {
-            val dialog = EditTextDialogFragment("Nom de l'aliment", object: EditTextDialogFragment.OnValidateListener {
-                override fun onValidate(dialog: EditTextDialogFragment) {
-                    val alimentUuid = viewModel.createAliment(dialog.getText())
-                    val action = AlimentsFragmentDirections.actionAlimentsFragmentToAlimentFragment(alimentUuid)
-                    findNavController().navigate(action)
-                }
-            })
+            val dialog =
+                EditTextDialogFragment(
+                    "Nom de l'aliment",
+                    object :
+                        EditTextDialogFragment.OnValidateListener {
+                        override fun onValidate(dialog: EditTextDialogFragment) {
+                            val alimentUuid = viewModel.createAliment(dialog.getText())
+                            val action =
+                                AlimentsFragmentDirections.actionAlimentsFragmentToAlimentFragment(
+                                    alimentUuid
+                                )
+                            findNavController().navigate(action)
+                        }
+                    })
 
             dialog.show(parentFragmentManager, "createAliment")
         }

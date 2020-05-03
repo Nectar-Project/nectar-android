@@ -14,6 +14,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.realitix.nectar.R
 import com.realitix.nectar.util.GenericAdapter
 import com.realitix.nectar.database.entity.Receipe
+import com.realitix.nectar.fragment.dialog.EditTextDialogFragment
 import com.realitix.nectar.repository.ReceipeRepository
 import com.realitix.nectar.repository.StringKeyRepository
 import com.realitix.nectar.repository.StringKeyValueRepository
@@ -78,13 +79,16 @@ class ReceipesFragment : Fragment() {
 
 
         fab.setOnClickListener {
-            EditTextDialogFragment("Nom de la recette", object: EditTextDialogFragment.OnValidateListener {
-                override fun onValidate(dialog: EditTextDialogFragment) {
-                    val receipeUuid = viewModel.createReceipe(dialog.getText())
-                    val action = ReceipesFragmentDirections.actionReceipesToSingle(receipeUuid)
-                    findNavController().navigate(action)
-                }
-            }).show(parentFragmentManager, "create_receipe")
+            EditTextDialogFragment(
+                "Nom de la recette",
+                object :
+                    EditTextDialogFragment.OnValidateListener {
+                    override fun onValidate(dialog: EditTextDialogFragment) {
+                        val receipeUuid = viewModel.createReceipe(dialog.getText())
+                        val action = ReceipesFragmentDirections.actionReceipesToSingle(receipeUuid)
+                        findNavController().navigate(action)
+                    }
+                }).show(parentFragmentManager, "create_receipe")
         }
     }
 }

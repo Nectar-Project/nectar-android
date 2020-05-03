@@ -2,7 +2,6 @@ package com.realitix.nectar.fragment
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -12,9 +11,9 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
-import com.realitix.nectar.MainActivity
 import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.Aliment
+import com.realitix.nectar.fragment.dialog.EditTextDialogFragment
 import com.realitix.nectar.repository.AlimentRepository
 import com.realitix.nectar.repository.MealAlimentRepository
 import com.realitix.nectar.repository.ReceipeStepAlimentRepository
@@ -105,12 +104,15 @@ class AlimentAddSearchFragment : Fragment() {
         recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val aliment = adapter.getAtPosition(position)
-                EditTextDialogFragment("Quantité de ${aliment.getName()} en g", object: EditTextDialogFragment.OnValidateListener {
-                    override fun onValidate(dialog: EditTextDialogFragment) {
-                        val quantity = dialog.getText().toInt()
-                        viewModel.create(aliment.uuid, quantity)
-                    }
-                }).show(parentFragmentManager, "addAliment")
+                EditTextDialogFragment(
+                    "Quantité de ${aliment.getName()} en g",
+                    object :
+                        EditTextDialogFragment.OnValidateListener {
+                        override fun onValidate(dialog: EditTextDialogFragment) {
+                            val quantity = dialog.getText().toInt()
+                            viewModel.create(aliment.uuid, quantity)
+                        }
+                    }).show(parentFragmentManager, "addAliment")
                 findNavController().popBackStack()
             }
         }))

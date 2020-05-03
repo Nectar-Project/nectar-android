@@ -183,7 +183,7 @@ class SynchronizerUnitTest {
         val stateUuid = "f33a0e6a-0ad6-4398-a803-3edd8e19987a"
         val measureUuid = "a4a3796e-e478-4864-86f7-bf5d17a603e1"
         val n = 10.0F
-        val nutrition = Nutrition(n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n)
+        val nutrition = Nutrition.generate(n)
         val measureQuantity = 10
 
         val rAliment = mock(AlimentRepository::class.java)

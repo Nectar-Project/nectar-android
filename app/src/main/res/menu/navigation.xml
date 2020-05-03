@@ -2,22 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/receipesFragment"
-        android:icon="@drawable/ic_add_black_24dp"
+        android:icon="@drawable/ic_restaurant_menu_black_24dp"
         android:title="Recettes" />
 
     <item
         android:id="@+id/alimentsFragment"
-        android:icon="@drawable/ic_add_black_24dp"
+        android:icon="@drawable/ic_local_pizza_black_24dp"
         android:title="Aliments" />
 
     <item
         android:id="@+id/mealsFragment"
-        android:icon="@android:drawable/ic_dialog_email"
-        android:title="Comment" />
+        android:icon="@drawable/ic_event_black_24dp"
+        android:title="Planning" />
 
     <item
         android:id="@+id/settingsFragment"
-        android:icon="@android:drawable/ic_dialog_email"
-        android:title="Comment" />
+        android:icon="@drawable/ic_settings_black_24dp"
+        android:title="Paramètres" />
 
 </menu>

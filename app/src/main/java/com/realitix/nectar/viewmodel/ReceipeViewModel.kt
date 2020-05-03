@@ -45,7 +45,7 @@ class ReceipeViewModel (
         }
     }
 
-    fun createStep(description: String) {
+    fun insertStep(description: String) {
         viewModelScope.launch {
             val sid = generateUuid()
             rStringKey.insertSuspend(StringKeyRaw(sid))
