@@ -51,12 +51,12 @@ class MealSynchronizer(
 
         val aliments = mutableMapOf<String, Int>()
         for(a in meal.aliments) {
-            aliments[a.alimentUuid] = a.quantity
+            aliments[a.alimentUuid] = a.weight
         }
 
         val receipes = mutableMapOf<String, Float>()
         for(r in meal.receipes) {
-            receipes[r.receipeUuid] = r.quantity
+            receipes[r.receipeUuid] = r.portions
         }
 
         return ParseResult(meal.uuid, meal.nbPeople, meal.timestamp, meal.description, aliments, receipes)

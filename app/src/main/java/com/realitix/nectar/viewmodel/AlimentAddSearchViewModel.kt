@@ -40,7 +40,7 @@ class AlimentAddSearchViewModel(
     }
 
     private fun createMealAliment(alimentUuid: String, quantity: Int) {
-        val c = MealAlimentRaw(alimentUuid, objUuid, quantity)
+        val c = MealAlimentRaw(objUuid, alimentUuid, quantity)
         GlobalScope.launch {
             rMealAliment.insertSuspend(c)
         }

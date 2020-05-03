@@ -3,8 +3,8 @@ package com.realitix.nectar.database.entity
 import androidx.room.*
 
 
-class ReceipeStepReceipe(stepUuid: String, receipeUuid: String, quantity: Float):
-    ReceipeStepReceipeRaw(stepUuid, receipeUuid, quantity) {
+class ReceipeStepReceipe(stepUuid: String, receipeUuid: String, portions: Float):
+    ReceipeStepReceipeRaw(stepUuid, receipeUuid, portions) {
     @Relation(parentColumn = "receipeUuid", entityColumn = "uuid", entity = ReceipeRaw::class)
     lateinit var receipe: ReceipeWS
 }
@@ -30,7 +30,7 @@ class ReceipeStepReceipe(stepUuid: String, receipeUuid: String, quantity: Float)
 open class ReceipeStepReceipeRaw(
     var stepUuid: String,
     var receipeUuid: String,
-    var quantity: Float // quantity of portion (portion multiplier)
+    var portions: Float // quantity of portion (portion multiplier)
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -40,7 +40,7 @@ open class ReceipeStepReceipeRaw(
 
         if (receipeUuid != other.receipeUuid) return false
         if (stepUuid != other.stepUuid) return false
-        if (quantity != other.quantity) return false
+        if (portions != other.portions) return false
 
         return true
     }
@@ -48,7 +48,7 @@ open class ReceipeStepReceipeRaw(
     override fun hashCode(): Int {
         var result = receipeUuid.hashCode()
         result = 31 * result + stepUuid.hashCode()
-        result = 31 * result + quantity.hashCode()
+        result = 31 * result + portions.hashCode()
         return result
     }
 }

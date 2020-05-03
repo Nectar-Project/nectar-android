@@ -44,7 +44,7 @@ class ReceipeAddSearchViewModel (
     }
 
     private fun createMealReceipe(linkedReceipeUuid: String, quantity: Float) {
-        val c = MealReceipeRaw(linkedReceipeUuid, objUuid, quantity)
+        val c = MealReceipeRaw(objUuid, linkedReceipeUuid, quantity)
         GlobalScope.launch {
             rMealReceipe.insertSuspend(c)
         }

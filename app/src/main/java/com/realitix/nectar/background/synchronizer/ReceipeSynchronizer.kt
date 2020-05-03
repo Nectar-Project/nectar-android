@@ -122,12 +122,12 @@ class ReceipeSynchronizer(
         for(s in receipe.steps) {
             val aliments = mutableMapOf<String, Int>()
             for(a in s.aliments) {
-                aliments[a.alimentUuid] = a.quantity
+                aliments[a.alimentUuid] = a.weight
             }
 
             val receipes = mutableMapOf<String, Float>()
             for(r in s.receipes) {
-                receipes[r.receipeUuid] = r.quantity
+                receipes[r.receipeUuid] = r.portions
             }
             steps.add(Step(s.uuid, null, s.descriptionUuid, s.duration, aliments, receipes))
         }

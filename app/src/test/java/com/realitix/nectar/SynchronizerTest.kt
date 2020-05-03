@@ -118,6 +118,7 @@ class SynchronizerUnitTest {
         val timestamp: Long = 10
         val description = "test"
         val quantity = 10
+        val portions = 2f
         val rMeal = mock(MealRepository::class.java)
         val rMealAliment = mock(MealAlimentRepository::class.java)
         val rMealReceipe = mock(MealReceipeRepository::class.java)
@@ -128,7 +129,7 @@ class SynchronizerUnitTest {
         verify(rMeal).get(mealUuid)
         verify(rMeal).insert(MealRaw(mealUuid, timestamp, nbPeople, description))
         verify(rMealAliment).insert(MealAlimentRaw(mealUuid, alimentUuid, quantity))
-        verify(rMealReceipe).insert(MealReceipeRaw(mealUuid, receipeUuid))
+        verify(rMealReceipe).insert(MealReceipeRaw(mealUuid, receipeUuid, portions))
     }
 
     @Test

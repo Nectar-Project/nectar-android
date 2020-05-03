@@ -6,7 +6,8 @@ import androidx.room.Index
 import androidx.room.Relation
 
 
-class MealAliment(alimentUuid: String, mealUuid: String, quantity: Int): MealAlimentRaw(alimentUuid, mealUuid, quantity) {
+class MealAliment(mealUuid: String, alimentUuid: String, weight: Int):
+    MealAlimentRaw(mealUuid, alimentUuid, weight) {
     @Relation(parentColumn = "alimentUuid", entityColumn = "uuid",  entity = AlimentRaw::class)
     lateinit var aliment: Aliment
 }
@@ -29,7 +30,7 @@ class MealAliment(alimentUuid: String, mealUuid: String, quantity: Int): MealAli
         Index(value=["mealUuid"])
     ]
 )
-open class MealAlimentRaw(var mealUuid: String, var alimentUuid: String, var quantity: Int) {
+open class MealAlimentRaw(var mealUuid: String, var alimentUuid: String, var weight: Int) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -38,7 +39,7 @@ open class MealAlimentRaw(var mealUuid: String, var alimentUuid: String, var qua
 
         if (alimentUuid != other.alimentUuid) return false
         if (mealUuid != other.mealUuid) return false
-        if (quantity != other.quantity) return false
+        if (weight != other.weight) return false
 
         return true
     }
@@ -46,7 +47,7 @@ open class MealAlimentRaw(var mealUuid: String, var alimentUuid: String, var qua
     override fun hashCode(): Int {
         var result = alimentUuid.hashCode()
         result = 31 * result + mealUuid.hashCode()
-        result = 31 * result + quantity
+        result = 31 * result + weight
         return result
     }
 }

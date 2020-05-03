@@ -15,7 +15,7 @@ class RecyclerViewMerger (var text: String, var secondary: String) {
         ): ArrayList<RecyclerViewMerger> {
             val mergedList = ArrayList<RecyclerViewMerger>(aliments.size + receipes.size)
             for (a in aliments) {
-                mergedList.add(RecyclerViewMerger(a.aliment.getName(), a.quantity.toString()+"g"))
+                mergedList.add(RecyclerViewMerger(a.aliment.getName(), a.weight.toString()+"g"))
             }
             for (r in receipes) {
                 mergedList.add(RecyclerViewMerger(r.receipe.getName(), "test"))
@@ -32,7 +32,7 @@ class RecyclerViewMerger (var text: String, var secondary: String) {
         ): ArrayList<RecyclerViewMerger> {
             val mergedList = ArrayList<RecyclerViewMerger>(aliments.size + receipes.size)
             for (a in aliments) {
-                mergedList.add(RecyclerViewMerger(a.aliment.getName(), a.quantity.toString()+"g"))
+                mergedList.add(RecyclerViewMerger(a.aliment.getName(), a.weight.toString()+"g"))
             }
             for (r in receipes) {
                 mergedList.add(RecyclerViewMerger(r.receipe.getName(), "test"))

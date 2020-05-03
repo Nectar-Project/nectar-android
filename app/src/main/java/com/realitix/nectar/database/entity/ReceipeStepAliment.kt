@@ -3,8 +3,8 @@ package com.realitix.nectar.database.entity
 import androidx.room.*
 
 
-class ReceipeStepAliment(alimentUuid: String, stepUuid: String, quantity: Int):
-    ReceipeStepAlimentRaw(alimentUuid, stepUuid, quantity) {
+class ReceipeStepAliment(alimentUuid: String, stepUuid: String, weight: Int):
+    ReceipeStepAlimentRaw(alimentUuid, stepUuid, weight) {
     @Relation(parentColumn = "alimentUuid", entityColumn = "uuid", entity = AlimentRaw::class)
     lateinit var aliment: Aliment
 }
@@ -30,7 +30,7 @@ class ReceipeStepAliment(alimentUuid: String, stepUuid: String, quantity: Int):
 open class ReceipeStepAlimentRaw(
     var stepUuid: String,
     var alimentUuid: String,
-    var quantity: Int
+    var weight: Int
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -40,7 +40,7 @@ open class ReceipeStepAlimentRaw(
 
         if (alimentUuid != other.alimentUuid) return false
         if (stepUuid != other.stepUuid) return false
-        if (quantity != other.quantity) return false
+        if (weight != other.weight) return false
 
         return true
     }
@@ -48,7 +48,7 @@ open class ReceipeStepAlimentRaw(
     override fun hashCode(): Int {
         var result = alimentUuid.hashCode()
         result = 31 * result + stepUuid.hashCode()
-        result = 31 * result + quantity
+        result = 31 * result + weight
         return result
     }
 }
