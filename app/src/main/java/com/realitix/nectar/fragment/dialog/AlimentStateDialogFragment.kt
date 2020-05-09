@@ -2,25 +2,19 @@ package com.realitix.nectar.fragment.dialog
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.ListAdapter
 import androidx.fragment.app.DialogFragment
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 
-class EntityCrudDialogFragment(
+class AlimentStateDialogFragment(
     private val title: String,
     private val validateTitle: String,
     private val createHint: String,
-    private val listener: OnSelectListener
+    private val listener: Listener
 ): DialogFragment() {
     private lateinit var d: AlertDialog
-    interface OnSelectListener {
+    interface Listener {
         fun onSelect(index: Int)
         fun onCreate(name: String)
         fun getData(): List<String>
@@ -33,6 +27,7 @@ class EntityCrudDialogFragment(
                 EditTextDialogFragment.OnValidateListener {
                 override fun onValidate(dialog: EditTextDialogFragment) {
                     // reload
+                    @Suppress("UNCHECKED_CAST")
                     val adapter: ArrayAdapter<String> = d.listView.adapter as ArrayAdapter<String>
                     listener.onCreate(dialog.getText())
                     adapter.clear()
@@ -40,7 +35,7 @@ class EntityCrudDialogFragment(
                     adapter.notifyDataSetChanged()
                 }
             }
-        ).show(parentFragmentManager, "insertState")
+        ).show(parentFragmentManager, "insert")
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

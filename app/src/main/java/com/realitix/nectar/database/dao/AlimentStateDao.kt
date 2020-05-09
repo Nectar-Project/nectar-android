@@ -27,6 +27,14 @@ abstract class AlimentStateDao: GenericGetJoinDao<AlimentStateRaw, AlimentState>
     abstract fun getUuid(uuid: String): AlimentState?
 
     @Transaction
+    @Query("SELECT * FROM AlimentStateRaw WHERE uuid = :uuid")
+    abstract fun getUuidLive(uuid: String): LiveData<AlimentState>
+
+    @Transaction
+    @Query("SELECT * FROM AlimentStateRaw WHERE uuid = :uuid")
+    abstract suspend fun getUuidSuspend(uuid: String): AlimentState?
+
+    @Transaction
     @Query("SELECT * FROM AlimentStateRaw")
     abstract override fun list(): List<AlimentState>
 

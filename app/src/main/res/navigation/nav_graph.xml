@@ -137,5 +137,17 @@
         <argument
             android:name="alimentUuid"
             app:argType="string" />
+        <action
+            android:id="@+id/action_alimentFragment_to_alimentStateFragment"
+            app:destination="@id/alimentStateFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/alimentStateFragment"
+        android:name="com.realitix.nectar.fragment.AlimentStateFragment"
+        android:label="Etate de l'aliment"
+        tools:layout="@layout/fragment_aliment_state" >
+        <argument
+            android:name="alimentStateUuid"
+            app:argType="string" />
     </fragment>
 </navigation>

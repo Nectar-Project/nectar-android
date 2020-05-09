@@ -2,7 +2,11 @@ package com.realitix.nectar.database.entity
 
 import androidx.room.*
 
-class AlimentStateMeasure(alimentStateUuid: String, measureUuid: String, quantity: Int): AlimentStateMeasureRaw(alimentStateUuid, measureUuid, quantity)
+class AlimentStateMeasure(alimentStateUuid: String, measureUuid: String, quantity: Int):
+    AlimentStateMeasureRaw(alimentStateUuid, measureUuid, quantity) {
+    @Relation(parentColumn = "measureUuid", entityColumn = "uuid", entity = MeasureRaw::class)
+    lateinit var measure: Measure
+}
 
 @Entity(
     primaryKeys = ["alimentStateUuid", "measureUuid"],

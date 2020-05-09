@@ -9,51 +9,50 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
-
 import androidx.lifecycle.observe
 
 import com.realitix.nectar.R
-import com.realitix.nectar.database.entity.AlimentState
+import com.realitix.nectar.database.entity.AlimentStateMeasure
+import com.realitix.nectar.database.entity.Measure
 import com.realitix.nectar.fragment.dialog.AlimentStateDialogFragment
+import com.realitix.nectar.fragment.dialog.AlimentStateMeasureDialogFragment
 import com.realitix.nectar.repository.*
 import com.realitix.nectar.util.GenericAdapter
-import com.realitix.nectar.util.RecyclerItemClickListener
 import com.realitix.nectar.util.SingleLineItemViewHolder
-import com.realitix.nectar.viewmodel.AlimentViewModel
+import com.realitix.nectar.viewmodel.AlimentStateViewModel
 import com.realitix.nectar.viewmodel.RepositoryViewModelFactory
-import kotlinx.android.synthetic.main.fragment_aliment.*
+import kotlinx.android.synthetic.main.fragment_aliment_state.*
 
 
-class AlimentFragment : Fragment() {
-    private lateinit var alimentUuid: String
-    private val viewModel: AlimentViewModel by viewModels(
+class AlimentStateFragment: Fragment() {
+    private lateinit var alimentStateUuid: String
+    private val viewModel: AlimentStateViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                AlimentViewModel(
-                    AlimentRepository(requireContext()),
-                    StateRepository(requireContext()),
+                AlimentStateViewModel(
                     AlimentStateRepository(requireContext()),
+                    AlimentStateMeasureRepository(requireContext()),
+                    MeasureRepository(requireContext()),
                     StringKeyRepository(requireContext()),
                     StringKeyValueRepository(requireContext()),
-                    alimentUuid
+                    alimentStateUuid
                 )
             }
         }
     )
-
-    private lateinit var adapter: GenericAdapter<SingleLineItemViewHolder, AlimentState>
+    private lateinit var adapter: GenericAdapter<SingleLineItemViewHolder, AlimentStateMeasure>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            alimentUuid = it.getString("alimentUuid")!!
+            alimentStateUuid = it.getString("alimentStateUuid")!!
         }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_aliment, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_aliment_state, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -62,8 +61,8 @@ class AlimentFragment : Fragment() {
         // Set RecyclerView
         adapter = GenericAdapter(
             { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
-            { holder, alimentState ->
-                holder.text.text = alimentState.state.getName()
+            { holder, alimentStateMeasure ->
+                holder.text.text = alimentStateMeasure.measure.getName() + ":" + alimentStateMeasure.quantity+"g"
                 holder.icon.setImageDrawable(
                     ContextCompat.getDrawable(
                         requireContext(),
@@ -75,29 +74,18 @@ class AlimentFragment : Fragment() {
         recyclerView.hasFixedSize()
         recyclerView.adapter = adapter
 
-        viewModel.aliment.observe(viewLifecycleOwner) {
-            name.text = it.getName()
-            adapter.setData(it.states)
+        viewModel.alimentState.observe(viewLifecycleOwner) {
+            adapter.setData(it.measures)
         }
 
-        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
-            override fun onItemClick(view: View, position: Int) {
-                val alimentState = adapter.getAtPosition(position)
-                val action = AlimentFragmentDirections.actionAlimentFragmentToAlimentStateFragment(alimentState.uuid)
-                findNavController().navigate(action)
-            }
-        }))
-
         fab.setOnClickListener {
-            AlimentStateDialogFragment(
-                "Sélectionner un état à ajouter",
-                "Ajouter un état",
-                "Etat à créer",
+            AlimentStateMeasureDialogFragment(
                 object:
-                    AlimentStateDialogFragment.Listener {
-                    override fun onSelect(index: Int) = viewModel.insertAlimentState(viewModel.getAllStates()[index].uuid)
-                    override fun onCreate(name: String) = viewModel.insertState(name)
-                    override fun getData(): List<String> = viewModel.getAllStates().map { it.getName() }
+                    AlimentStateMeasureDialogFragment.Listener {
+                    override fun getMeasureOnSelect(index: Int) = viewModel.getAllMeasures()[index]
+                    override fun onCreate(name: String) = viewModel.insertMeasure(name)
+                    override fun onAddMeasure(measureUuid: String, quantity: Int) = viewModel.insertAlimentStateMeasure(measureUuid, quantity)
+                    override fun getData(): List<String> = viewModel.getAllMeasures().map { it.getName() }
                 }
             ).show(parentFragmentManager, "addAlimentState")
         }
