@@ -15,7 +15,7 @@ import androidx.lifecycle.observe
 import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.AlimentState
 import com.realitix.nectar.fragment.dialog.EditTextDialogFragment
-import com.realitix.nectar.fragment.dialog.ItemsDialogFragment
+import com.realitix.nectar.fragment.dialog.EntityCrudDialogFragment
 import com.realitix.nectar.repository.*
 import com.realitix.nectar.util.GenericAdapter
 import com.realitix.nectar.util.SingleLineItemViewHolder
@@ -80,41 +80,17 @@ class AlimentFragment : Fragment() {
             adapter.setData(it.states)
         }
 
-        val test = EditTextDialogFragment(
-            "Nom de l'état à créer",
-            object :
-                EditTextDialogFragment.OnValidateListener {
-                override fun onValidate(dialog: EditTextDialogFragment) {
-                    viewModel.insertState(dialog.getText())
-                }
-            }
-        )
-
         fab.setOnClickListener {
-            val states = viewModel.getAllStates()
-            ItemsDialogFragment(
+            EntityCrudDialogFragment(
                 "Sélectionner un état à ajouter",
-                states.map { it.getName() },
+                "Ajouter un état",
+                "Etat à créer",
                 object:
-                    ItemsDialogFragment.OnSelectListener {
-                    override fun onSelect(index: Int) {
-                        val state = states[index]
-                        viewModel.insertAlimentState(state.uuid)
-                    }
-
-                    override fun onValidate() {
-                        EditTextDialogFragment(
-                            "Nom de l'état à créer",
-                            object :
-                                EditTextDialogFragment.OnValidateListener {
-                                override fun onValidate(dialog: EditTextDialogFragment) {
-                                    viewModel.insertState(dialog.getText())
-                                }
-                            }
-                        ).show(parentFragmentManager, "insertState")
-                    }
-                },
-                "Ajouter un état"
+                    EntityCrudDialogFragment.OnSelectListener {
+                    override fun onSelect(index: Int) = viewModel.insertAlimentState(viewModel.getAllStates()[index].uuid)
+                    override fun onCreate(name: String) = viewModel.insertState(name)
+                    override fun getData(): List<String> = viewModel.getAllStates().map { it.getName() }
+                }
             ).show(parentFragmentManager, "addAlimentState")
         }
     }

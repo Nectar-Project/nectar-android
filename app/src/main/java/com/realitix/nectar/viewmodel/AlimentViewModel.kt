@@ -36,7 +36,7 @@ class AlimentViewModel(
     }
 
     fun insertState(name: String) {
-        viewModelScope.launch {
+        runBlocking {
             val sid = generateUuid()
             rStringKey.insertSuspend(StringKeyRaw(sid))
             rStringKeyValue.insertSuspend(StringKeyValueRaw(sid, "fr", name))
