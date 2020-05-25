@@ -4,13 +4,16 @@ package com.realitix.nectar.database.entity
 import androidx.room.*
 
 
-class Aliment(uuid: String, nameUuid: String): AlimentRaw(uuid, nameUuid) {
+class Aliment(uuid: String, nameUuid: String): AlimentWS(uuid, nameUuid) {
+    @Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentStateRaw::class)
+    lateinit var states: List<AlimentState>
+}
+
+open class AlimentWS(uuid: String, nameUuid: String): AlimentRaw(uuid, nameUuid) {
     @Relation(parentColumn = "nameUuid", entityColumn = "uuid", entity = StringKeyRaw::class)
     lateinit var name: StringKey
     @Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentTagRaw::class)
     lateinit var tags: List<AlimentTag>
-    @Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentStateRaw::class)
-    lateinit var states: List<AlimentState>
     @Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentImageRaw::class)
     lateinit var images: List<AlimentImage>
 

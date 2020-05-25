@@ -2,7 +2,6 @@ package com.realitix.nectar.database
 
 import android.content.ContentValues
 import android.content.Context
-import android.util.Log
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.realitix.nectar.database.dao.*
@@ -36,7 +35,7 @@ import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
         ReceipeImageRaw::class,
         ReceipeMeasureRaw::class,
         ReceipeStepRaw::class,
-        ReceipeStepAlimentRaw::class,
+        ReceipeStepAlimentStateRaw::class,
         ReceipeStepReceipeRaw::class,
         ReceipeTagRaw::class,
         ReceipeUtensilRaw::class,
@@ -45,7 +44,7 @@ import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
         UtensilRaw::class
     ],
     exportSchema = false,
-    version = 1
+    version = 2
 )
 @TypeConverters(Converter::class)
 abstract class NectarDatabase : RoomDatabase() {
@@ -68,7 +67,7 @@ abstract class NectarDatabase : RoomDatabase() {
     abstract fun receipeMeasureDao(): ReceipeMeasureDao
     abstract fun receipeTagDao(): ReceipeTagDao
     abstract fun receipeUtensilDao(): ReceipeUtensilDao
-    abstract fun receipeStepAlimentDao(): ReceipeStepAlimentDao
+    abstract fun receipeStepAlimentDao(): ReceipeStepAlimentStateDao
     abstract fun receipeStepDao(): ReceipeStepDao
     abstract fun receipeStepReceipeDao(): ReceipeStepReceipeDao
     abstract fun stateDao(): StateDao

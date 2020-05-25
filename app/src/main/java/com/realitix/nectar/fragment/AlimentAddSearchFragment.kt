@@ -15,10 +15,9 @@ import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.Aliment
 import com.realitix.nectar.database.entity.AlimentState
 import com.realitix.nectar.fragment.dialog.AlimentAddDialogFragment
-import com.realitix.nectar.fragment.dialog.EditTextDialogFragment
 import com.realitix.nectar.repository.AlimentRepository
 import com.realitix.nectar.repository.MealAlimentRepository
-import com.realitix.nectar.repository.ReceipeStepAlimentRepository
+import com.realitix.nectar.repository.ReceipeStepAlimentStateRepository
 import com.realitix.nectar.util.EntityType
 import com.realitix.nectar.util.GenericAdapter
 import com.realitix.nectar.util.RecyclerItemClickListener
@@ -39,7 +38,7 @@ class AlimentAddSearchFragment : Fragment() {
             RepositoryViewModelFactory {
                 AlimentAddSearchViewModel(
                     AlimentRepository(requireContext()),
-                    ReceipeStepAlimentRepository(requireContext()),
+                    ReceipeStepAlimentStateRepository(requireContext()),
                     MealAlimentRepository(requireContext()),
                     objUuid, entityType
                 )
@@ -108,7 +107,7 @@ class AlimentAddSearchFragment : Fragment() {
                 val aliment = adapter.getAtPosition(position)
                 val listener = object: AlimentAddDialogFragment.Listener {
                     override fun onClick(alimentState: AlimentState, quantity: Int) {
-                        viewModel.create(alimentState.alimentUuid, quantity)
+                        viewModel.create(alimentState.uuid, quantity)
                         findNavController().popBackStack()
                     }
                 }

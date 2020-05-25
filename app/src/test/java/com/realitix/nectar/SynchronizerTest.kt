@@ -66,7 +66,7 @@ class SynchronizerUnitTest {
                 ReceipeTagRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
                 ReceipeUtensilRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
                 ReceipeStepRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
-                ReceipeStepAlimentRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+                ReceipeStepAlimentStateRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
                 ReceipeStepReceipeRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
                 getRepositoryFolder()
             ),
@@ -155,7 +155,7 @@ class SynchronizerUnitTest {
         val rReceipeTag = mock(ReceipeTagRepository::class.java)
         val rReceipeUtensil = mock(ReceipeUtensilRepository::class.java)
         val rReceipeStep = mock(ReceipeStepRepository::class.java)
-        val rReceipeStepAliment = mock(ReceipeStepAlimentRepository::class.java)
+        val rReceipeStepAliment = mock(ReceipeStepAlimentStateRepository::class.java)
         val rReceipeStepReceipe = mock(ReceipeStepReceipeRepository::class.java)
 
         val s = ReceipeSynchronizer(rReceipe, rReceipeMeasure, rReceipeTag, rReceipeUtensil,
@@ -169,7 +169,7 @@ class SynchronizerUnitTest {
         verify(rReceipeTag).insert(ReceipeTagRaw(receipeUuid, tagUuid))
         verify(rReceipeUtensil).insert(ReceipeUtensilRaw(receipeUuid, utensilUuid))
         verify(rReceipeStep).insert(ReceipeStepRaw(stepUuid, receipeUuid, null, stepDescriptionUuid, stepDuration))
-        verify(rReceipeStepAliment).insert(ReceipeStepAlimentRaw(stepUuid, stepAlimentUuid, stepAlimentQuantity))
+        verify(rReceipeStepAliment).insert(ReceipeStepAlimentStateRaw(stepUuid, stepAlimentUuid, stepAlimentQuantity))
         verify(rReceipeStepReceipe).insert(ReceipeStepReceipeRaw(stepUuid, stepReceipeUuid, stepReceipeQuantity))
     }
 

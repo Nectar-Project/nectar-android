@@ -3,18 +3,18 @@ package com.realitix.nectar.database.entity
 import androidx.room.*
 
 
-class ReceipeStepAliment(alimentUuid: String, stepUuid: String, weight: Int):
-    ReceipeStepAlimentRaw(alimentUuid, stepUuid, weight) {
-    @Relation(parentColumn = "alimentUuid", entityColumn = "uuid", entity = AlimentRaw::class)
-    lateinit var aliment: Aliment
+class ReceipeStepAlimentState(stepUuid: String, alimentStateUuid: String, weight: Int):
+    ReceipeStepAlimentStateRaw(stepUuid, alimentStateUuid, weight) {
+    @Relation(parentColumn = "alimentStateUuid", entityColumn = "uuid", entity = AlimentStateRaw::class)
+    lateinit var alimentState: AlimentState
 }
 
 @Entity(
-    primaryKeys = ["stepUuid", "alimentUuid"],
+    primaryKeys = ["stepUuid", "alimentStateUuid"],
     foreignKeys = [ForeignKey(
-        entity = AlimentRaw::class,
+        entity = AlimentStateRaw::class,
         parentColumns = ["uuid"],
-        childColumns = ["alimentUuid"],
+        childColumns = ["alimentStateUuid"],
         onDelete = ForeignKey.CASCADE
     ), ForeignKey(
         entity = ReceipeStepRaw::class,
@@ -23,22 +23,22 @@ class ReceipeStepAliment(alimentUuid: String, stepUuid: String, weight: Int):
         onDelete = ForeignKey.CASCADE
     )],
     indices = [
-        Index(value=["alimentUuid"]),
+        Index(value=["alimentStateUuid"]),
         Index(value=["stepUuid"])
     ]
 )
-open class ReceipeStepAlimentRaw(
+open class ReceipeStepAlimentStateRaw(
     var stepUuid: String,
-    var alimentUuid: String,
+    var alimentStateUuid: String,
     var weight: Int
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as ReceipeStepAlimentRaw
+        other as ReceipeStepAlimentStateRaw
 
-        if (alimentUuid != other.alimentUuid) return false
+        if (alimentStateUuid != other.alimentStateUuid) return false
         if (stepUuid != other.stepUuid) return false
         if (weight != other.weight) return false
 
@@ -46,7 +46,7 @@ open class ReceipeStepAlimentRaw(
     }
 
     override fun hashCode(): Int {
-        var result = alimentUuid.hashCode()
+        var result = alimentStateUuid.hashCode()
         result = 31 * result + stepUuid.hashCode()
         result = 31 * result + weight
         return result

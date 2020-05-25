@@ -3,11 +3,14 @@ package com.realitix.nectar.database.entity
 import androidx.room.*
 
 
-class AlimentState(uuid: String, alimentUuid: String, stateUuid: String, nutrition: Nutrition): AlimentStateRaw(uuid, alimentUuid, stateUuid, nutrition) {
+class AlimentState(uuid: String, alimentUuid: String, stateUuid: String, nutrition: Nutrition):
+    AlimentStateRaw(uuid, alimentUuid, stateUuid, nutrition) {
     @Relation(parentColumn = "uuid", entityColumn = "alimentStateUuid", entity = AlimentStateMeasureRaw::class)
     lateinit var measures: List<AlimentStateMeasure>
     @Relation(parentColumn = "stateUuid", entityColumn = "uuid", entity = StateRaw::class)
     lateinit var state: State
+    @Relation(parentColumn = "alimentUuid", entityColumn = "uuid", entity = AlimentRaw::class)
+    lateinit var aliment: AlimentWS
 }
 
 @Entity(

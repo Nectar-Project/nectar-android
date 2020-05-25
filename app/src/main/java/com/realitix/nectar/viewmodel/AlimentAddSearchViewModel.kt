@@ -2,17 +2,17 @@ package com.realitix.nectar.viewmodel
 
 import androidx.lifecycle.*
 import com.realitix.nectar.database.entity.MealAlimentRaw
-import com.realitix.nectar.database.entity.ReceipeStepAlimentRaw
+import com.realitix.nectar.database.entity.ReceipeStepAlimentStateRaw
 import com.realitix.nectar.repository.AlimentRepository
 import com.realitix.nectar.repository.MealAlimentRepository
-import com.realitix.nectar.repository.ReceipeStepAlimentRepository
+import com.realitix.nectar.repository.ReceipeStepAlimentStateRepository
 import com.realitix.nectar.util.EntityType
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class AlimentAddSearchViewModel(
     private val rAliment: AlimentRepository,
-    private val rReceipeStepAliment: ReceipeStepAlimentRepository,
+    private val rReceipeStepAlimentState: ReceipeStepAlimentStateRepository,
     private val rMealAliment: MealAlimentRepository,
     private val objUuid: String,
     private val entityType: EntityType
@@ -32,10 +32,10 @@ class AlimentAddSearchViewModel(
         }
     }
 
-    private fun createReceipeStepAliment(alimentUuid: String, quantity: Int) {
-        val c = ReceipeStepAlimentRaw(objUuid, alimentUuid, quantity)
+    private fun createReceipeStepAliment(alimentStateUuid: String, quantity: Int) {
+        val c = ReceipeStepAlimentStateRaw(objUuid, alimentStateUuid, quantity)
         GlobalScope.launch {
-            rReceipeStepAliment.insertSuspend(c)
+            rReceipeStepAlimentState.insertSuspend(c)
         }
     }
 

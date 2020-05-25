@@ -46,7 +46,7 @@ class GitRepositorySynchronizer(val context: Context) {
             ReceipeTagRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
             ReceipeUtensilRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
             ReceipeStepRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
-            ReceipeStepAlimentRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            ReceipeStepAlimentStateRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
             ReceipeStepReceipeRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
             NectarUtil.getRepositoryFolder(context)
         ),

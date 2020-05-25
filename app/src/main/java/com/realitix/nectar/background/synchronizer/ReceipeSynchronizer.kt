@@ -11,7 +11,7 @@ class ReceipeSynchronizer(
     private val rReceipeTag: ReceipeTagRepository,
     private val rReceipeUtensil: ReceipeUtensilRepository,
     private val rReceipeStep: ReceipeStepRepository,
-    private val rReceipeStepAliment: ReceipeStepAlimentRepository,
+    private val rReceipeStepAlimentState: ReceipeStepAlimentStateRepository,
     private val rReceipeStepReceipe: ReceipeStepReceipeRepository,
     baseRepositoryFolder: File
 ): BaseSynchronizer<ReceipeSynchronizer.ParseResult>(baseRepositoryFolder) {
@@ -31,7 +31,7 @@ class ReceipeSynchronizer(
         val previousStepUuid: String? = null,
         val descriptionUuid: String,
         val duration: Int,
-        val aliments: Map<String, Int>,
+        val alimentStates: Map<String, Int>,
         val receipes: Map<String, Float>
     )
 
@@ -79,12 +79,12 @@ class ReceipeSynchronizer(
                 )
             }
             // aliments
-            for ((alimentUuid, quantity) in step.aliments) {
-                if(rReceipeStepAliment.get(step.stepUuid, alimentUuid) == null) {
-                    rReceipeStepAliment.insert(
-                        ReceipeStepAlimentRaw(
+            for ((alimentStateUuid, quantity) in step.alimentStates) {
+                if(rReceipeStepAlimentState.get(step.stepUuid, alimentStateUuid) == null) {
+                    rReceipeStepAlimentState.insert(
+                        ReceipeStepAlimentStateRaw(
                             step.stepUuid,
-                            alimentUuid,
+                            alimentStateUuid,
                             quantity
                         )
                     )
@@ -120,16 +120,16 @@ class ReceipeSynchronizer(
 
         val steps = mutableListOf<Step>()
         for(s in receipe.steps) {
-            val aliments = mutableMapOf<String, Int>()
+            val alimentStates = mutableMapOf<String, Int>()
             for(a in s.aliments) {
-                aliments[a.alimentUuid] = a.weight
+                alimentStates[a.alimentStateUuid] = a.weight
             }
 
             val receipes = mutableMapOf<String, Float>()
             for(r in s.receipes) {
                 receipes[r.receipeUuid] = r.portions
             }
-            steps.add(Step(s.uuid, null, s.descriptionUuid, s.duration, aliments, receipes))
+            steps.add(Step(s.uuid, null, s.descriptionUuid, s.duration, alimentStates, receipes))
         }
 
         return ParseResult(receipe.uuid, receipe.nameUuid, receipe.portions, receipe.stars, measures, tags, utensils, steps)
