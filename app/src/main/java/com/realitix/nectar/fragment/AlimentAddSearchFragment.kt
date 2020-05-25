@@ -13,6 +13,8 @@ import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.Aliment
+import com.realitix.nectar.database.entity.AlimentState
+import com.realitix.nectar.fragment.dialog.AlimentAddDialogFragment
 import com.realitix.nectar.fragment.dialog.EditTextDialogFragment
 import com.realitix.nectar.repository.AlimentRepository
 import com.realitix.nectar.repository.MealAlimentRepository
@@ -104,16 +106,17 @@ class AlimentAddSearchFragment : Fragment() {
         recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val aliment = adapter.getAtPosition(position)
-                EditTextDialogFragment(
-                    "Quantité de ${aliment.getName()} en g",
-                    object :
-                        EditTextDialogFragment.OnValidateListener {
-                        override fun onValidate(dialog: EditTextDialogFragment) {
-                            val quantity = dialog.getText().toInt()
-                            viewModel.create(aliment.uuid, quantity)
-                        }
-                    }).show(parentFragmentManager, "addAliment")
-                findNavController().popBackStack()
+                val listener = object: AlimentAddDialogFragment.Listener {
+                    override fun onClick(alimentState: AlimentState, quantity: Int) {
+                        viewModel.create(alimentState.alimentUuid, quantity)
+                        findNavController().popBackStack()
+                    }
+                }
+
+                AlimentAddDialogFragment(
+                    aliment,
+                    listener
+                ).show(parentFragmentManager, "addAliment")
             }
         }))
     }
