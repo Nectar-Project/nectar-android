@@ -4,32 +4,32 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import com.realitix.nectar.database.entity.MealAliment
-import com.realitix.nectar.database.entity.MealAlimentRaw
+import com.realitix.nectar.database.entity.MealAlimentState
+import com.realitix.nectar.database.entity.MealAlimentStateRaw
 
 @Dao
-abstract class MealAlimentDao: GenericGetJoinDao<MealAlimentRaw, MealAliment>() {
+abstract class MealAlimentDao: GenericGetJoinDao<MealAlimentStateRaw, MealAlimentState>() {
     @Transaction
-    @Query("SELECT * FROM MealAlimentRaw WHERE mealUuid = :uuid1 AND alimentUuid = :uuid2")
-    abstract override fun getLive(uuid1: String, uuid2: String): LiveData<MealAliment>
+    @Query("SELECT * FROM MealAlimentStateRaw WHERE mealUuid = :uuid1 AND alimentStateUuid = :uuid2")
+    abstract override fun getLive(uuid1: String, uuid2: String): LiveData<MealAlimentState>
 
     @Transaction
-    @Query("SELECT * FROM MealAlimentRaw WHERE mealUuid = :uuid1 AND alimentUuid = :uuid2")
-    abstract override fun get(uuid1: String, uuid2: String): MealAliment?
+    @Query("SELECT * FROM MealAlimentStateRaw WHERE mealUuid = :uuid1 AND alimentStateUuid = :uuid2")
+    abstract override fun get(uuid1: String, uuid2: String): MealAlimentState?
 
     @Transaction
-    @Query("SELECT * FROM MealAlimentRaw WHERE mealUuid = :uuid1 AND alimentUuid = :uuid2")
-    abstract override suspend fun getSuspend(uuid1: String, uuid2: String): MealAliment?
+    @Query("SELECT * FROM MealAlimentStateRaw WHERE mealUuid = :uuid1 AND alimentStateUuid = :uuid2")
+    abstract override suspend fun getSuspend(uuid1: String, uuid2: String): MealAlimentState?
 
     @Transaction
-    @Query("SELECT * FROM MealAlimentRaw")
-    abstract override fun list(): List<MealAliment>
+    @Query("SELECT * FROM MealAlimentStateRaw")
+    abstract override fun list(): List<MealAlimentState>
 
     @Transaction
-    @Query("SELECT * FROM MealAlimentRaw")
-    abstract override fun listLive(): LiveData<List<MealAliment>>
+    @Query("SELECT * FROM MealAlimentStateRaw")
+    abstract override fun listLive(): LiveData<List<MealAlimentState>>
 
     @Transaction
-    @Query("SELECT * FROM MealAlimentRaw")
-    abstract override suspend fun listSuspend(): List<MealAliment>
+    @Query("SELECT * FROM MealAlimentStateRaw")
+    abstract override suspend fun listSuspend(): List<MealAlimentState>
 }

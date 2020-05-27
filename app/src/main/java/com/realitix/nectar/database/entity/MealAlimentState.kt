@@ -6,18 +6,18 @@ import androidx.room.Index
 import androidx.room.Relation
 
 
-class MealAliment(mealUuid: String, alimentUuid: String, weight: Int):
-    MealAlimentRaw(mealUuid, alimentUuid, weight) {
-    @Relation(parentColumn = "alimentUuid", entityColumn = "uuid",  entity = AlimentRaw::class)
-    lateinit var aliment: Aliment
+class MealAlimentState(mealUuid: String, alimentStateUuid: String, weight: Int):
+    MealAlimentStateRaw(mealUuid, alimentStateUuid, weight) {
+    @Relation(parentColumn = "alimentStateUuid", entityColumn = "uuid",  entity = AlimentStateRaw::class)
+    lateinit var alimentState: AlimentState
 }
 
 @Entity(
-    primaryKeys = ["alimentUuid", "mealUuid"],
+    primaryKeys = ["alimentStateUuid", "mealUuid"],
     foreignKeys = [ForeignKey(
-        entity = AlimentRaw::class,
+        entity = AlimentStateRaw::class,
         parentColumns = ["uuid"],
-        childColumns = ["alimentUuid"],
+        childColumns = ["alimentStateUuid"],
         onDelete = ForeignKey.CASCADE
     ), ForeignKey(
         entity = MealRaw::class,
@@ -26,18 +26,18 @@ class MealAliment(mealUuid: String, alimentUuid: String, weight: Int):
         onDelete = ForeignKey.CASCADE
     )],
     indices = [
-        Index(value=["alimentUuid"]),
+        Index(value=["alimentStateUuid"]),
         Index(value=["mealUuid"])
     ]
 )
-open class MealAlimentRaw(var mealUuid: String, var alimentUuid: String, var weight: Int) {
+open class MealAlimentStateRaw(var mealUuid: String, var alimentStateUuid: String, var weight: Int) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as MealAlimentRaw
+        other as MealAlimentStateRaw
 
-        if (alimentUuid != other.alimentUuid) return false
+        if (alimentStateUuid != other.alimentStateUuid) return false
         if (mealUuid != other.mealUuid) return false
         if (weight != other.weight) return false
 
@@ -45,7 +45,7 @@ open class MealAlimentRaw(var mealUuid: String, var alimentUuid: String, var wei
     }
 
     override fun hashCode(): Int {
-        var result = alimentUuid.hashCode()
+        var result = alimentStateUuid.hashCode()
         result = 31 * result + mealUuid.hashCode()
         result = 31 * result + weight
         return result

@@ -128,7 +128,7 @@ class SynchronizerUnitTest {
 
         verify(rMeal).get(mealUuid)
         verify(rMeal).insert(MealRaw(mealUuid, timestamp, nbPeople, description))
-        verify(rMealAliment).insert(MealAlimentRaw(mealUuid, alimentUuid, quantity))
+        verify(rMealAliment).insert(MealAlimentStateRaw(mealUuid, alimentUuid, quantity))
         verify(rMealReceipe).insert(MealReceipeRaw(mealUuid, receipeUuid, portions))
     }
 

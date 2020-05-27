@@ -6,12 +6,12 @@ import com.realitix.nectar.database.entity.*
 import com.realitix.nectar.util.EntityType
 import com.realitix.nectar.util.NectarUtil
 
-class MealAlimentRepository(val context: Context, updater: EntityUpdaterInterface<MealAlimentRaw> = Updater(context)):
-    GenericGetJoinRepository<MealAlimentRaw, MealAliment>(updater) {
+class MealAlimentRepository(val context: Context, updater: EntityUpdaterInterface<MealAlimentStateRaw> = Updater(context)):
+    GenericGetJoinRepository<MealAlimentStateRaw, MealAlimentState>(updater) {
     override fun getDao() = NectarDatabase.getInstance(context).mealAlimentDao()
 
-    class Updater(context: Context): GenericEntityUpdater<MealAlimentRaw>(context) {
-        override fun newDatabaseUpdate(entity: MealAlimentRaw) = DatabaseUpdateRaw(
+    class Updater(context: Context): GenericEntityUpdater<MealAlimentStateRaw>(context) {
+        override fun newDatabaseUpdate(entity: MealAlimentStateRaw) = DatabaseUpdateRaw(
             entity.mealUuid, EntityType.MEAL, NectarUtil.timestamp())
     }
 }

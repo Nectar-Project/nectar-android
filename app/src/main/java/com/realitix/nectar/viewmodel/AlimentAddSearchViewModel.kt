@@ -1,7 +1,7 @@
 package com.realitix.nectar.viewmodel
 
 import androidx.lifecycle.*
-import com.realitix.nectar.database.entity.MealAlimentRaw
+import com.realitix.nectar.database.entity.MealAlimentStateRaw
 import com.realitix.nectar.database.entity.ReceipeStepAlimentStateRaw
 import com.realitix.nectar.repository.AlimentRepository
 import com.realitix.nectar.repository.MealAlimentRepository
@@ -39,8 +39,8 @@ class AlimentAddSearchViewModel(
         }
     }
 
-    private fun createMealAliment(alimentUuid: String, quantity: Int) {
-        val c = MealAlimentRaw(objUuid, alimentUuid, quantity)
+    private fun createMealAliment(alimentStateUuid: String, quantity: Int) {
+        val c = MealAlimentStateRaw(objUuid, alimentStateUuid, quantity)
         GlobalScope.launch {
             rMealAliment.insertSuspend(c)
         }

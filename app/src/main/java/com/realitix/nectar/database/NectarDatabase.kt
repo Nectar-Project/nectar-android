@@ -25,7 +25,7 @@ import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
         GitRepositoryRaw::class,
         ImageRaw::class,
         MealRaw::class,
-        MealAlimentRaw::class,
+        MealAlimentStateRaw::class,
         MealReceipeRaw::class,
         MeasureRaw::class,
         StringKeyRaw::class,

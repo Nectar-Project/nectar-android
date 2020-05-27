@@ -34,7 +34,7 @@ class MealSynchronizer(
         // aliments
         for ((alimentUuid, quantity) in parseResult.aliments) {
             if(rMealAliment.get(parseResult.uuid, alimentUuid) == null) {
-                rMealAliment.insert(MealAlimentRaw(parseResult.uuid, alimentUuid, quantity))
+                rMealAliment.insert(MealAlimentStateRaw(parseResult.uuid, alimentUuid, quantity))
             }
         }
 
@@ -51,7 +51,7 @@ class MealSynchronizer(
 
         val aliments = mutableMapOf<String, Int>()
         for(a in meal.aliments) {
-            aliments[a.alimentUuid] = a.weight
+            aliments[a.alimentStateUuid] = a.weight
         }
 
         val receipes = mutableMapOf<String, Float>()
