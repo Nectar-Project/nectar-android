@@ -20,7 +20,7 @@ class ReceipeSynchronizer(
         val nameUuid: String,
         val portions: Int,
         val stars: Int,
-        val measures: Map<String, Int>,
+        val measures: Map<String, Float>,
         val tags: List<String>,
         val utensils: List<String>,
         val steps: List<Step>
@@ -45,9 +45,9 @@ class ReceipeSynchronizer(
         }
 
         // measures
-        for((measureUuid, quantity) in parseResult.measures) {
+        for((measureUuid, portions) in parseResult.measures) {
             if(rReceipeMeasure.get(parseResult.uuid, measureUuid) == null) {
-                rReceipeMeasure.insert(ReceipeMeasureRaw(parseResult.uuid, measureUuid, quantity))
+                rReceipeMeasure.insert(ReceipeMeasureRaw(parseResult.uuid, measureUuid, portions))
             }
         }
 
@@ -103,9 +103,9 @@ class ReceipeSynchronizer(
     override fun populateParseResult(uuid: String): ParseResult {
         val receipe = rReceipe.get(uuid)!!
 
-        val measures = mutableMapOf<String, Int>()
+        val measures = mutableMapOf<String, Float>()
         for(a in receipe.measures) {
-            measures[a.measureUuid] = a.quantity
+            measures[a.measureUuid] = a.portions
         }
 
         val tags = mutableListOf<String>()

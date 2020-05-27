@@ -3,8 +3,11 @@ package com.realitix.nectar.database.entity
 import androidx.room.*
 
 
-class ReceipeMeasure(receipeUuid: String, measureUuid: String, quantity: Int):
-    ReceipeMeasureRaw(receipeUuid, measureUuid, quantity)
+class ReceipeMeasure(receipeUuid: String, measureUuid: String, portions: Float):
+    ReceipeMeasureRaw(receipeUuid, measureUuid, portions) {
+    @Relation(parentColumn = "measureUuid", entityColumn = "uuid", entity = MeasureRaw::class)
+    lateinit var measure: Measure
+}
 
 @Entity(
     primaryKeys = ["receipeUuid", "measureUuid"],
@@ -27,7 +30,7 @@ class ReceipeMeasure(receipeUuid: String, measureUuid: String, quantity: Int):
 open class ReceipeMeasureRaw (
     var receipeUuid: String,
     var measureUuid: String,
-    var quantity: Int
+    var portions: Float
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -37,7 +40,7 @@ open class ReceipeMeasureRaw (
 
         if (receipeUuid != other.receipeUuid) return false
         if (measureUuid != other.measureUuid) return false
-        if (quantity != other.quantity) return false
+        if (portions != other.portions) return false
 
         return true
     }
@@ -45,7 +48,7 @@ open class ReceipeMeasureRaw (
     override fun hashCode(): Int {
         var result = receipeUuid.hashCode()
         result = 31 * result + measureUuid.hashCode()
-        result = 31 * result + quantity
+        result = 31 * result + portions.hashCode()
         return result
     }
 

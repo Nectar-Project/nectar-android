@@ -28,23 +28,23 @@ class ReceipeAddSearchViewModel (
         receipeSearchTerm.value = name
     }
 
-    fun create(linkedReceipeUuid: String, quantity: Float) {
+    fun create(linkedReceipeUuid: String, portions: Float) {
         when(entityType) {
-            EntityType.RECEIPE -> createReceipeStepReceipe(linkedReceipeUuid, quantity)
-            EntityType.MEAL -> createMealReceipe(linkedReceipeUuid, quantity)
+            EntityType.RECEIPE -> createReceipeStepReceipe(linkedReceipeUuid, portions)
+            EntityType.MEAL -> createMealReceipe(linkedReceipeUuid, portions)
             else -> throw Exception()
         }
     }
 
-    private fun createReceipeStepReceipe(linkedReceipeUuid: String, quantity: Float) {
-        val c = ReceipeStepReceipeRaw(objUuid, linkedReceipeUuid, quantity)
+    private fun createReceipeStepReceipe(linkedReceipeUuid: String, portions: Float) {
+        val c = ReceipeStepReceipeRaw(objUuid, linkedReceipeUuid, portions)
         GlobalScope.launch {
             rReceipeStepReceipe.insertSuspend(c)
         }
     }
 
-    private fun createMealReceipe(linkedReceipeUuid: String, quantity: Float) {
-        val c = MealReceipeRaw(objUuid, linkedReceipeUuid, quantity)
+    private fun createMealReceipe(linkedReceipeUuid: String, portions: Float) {
+        val c = MealReceipeRaw(objUuid, linkedReceipeUuid, portions)
         GlobalScope.launch {
             rMealReceipe.insertSuspend(c)
         }
