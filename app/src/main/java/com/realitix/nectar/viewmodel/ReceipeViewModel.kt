@@ -1,25 +1,45 @@
 package com.realitix.nectar.viewmodel
 
 import androidx.lifecycle.*
-import com.realitix.nectar.database.entity.Receipe
-import com.realitix.nectar.database.entity.ReceipeStep
-import com.realitix.nectar.database.entity.StringKeyRaw
-import com.realitix.nectar.database.entity.StringKeyValueRaw
-import com.realitix.nectar.repository.ReceipeRepository
-import com.realitix.nectar.repository.ReceipeStepRepository
-import com.realitix.nectar.repository.StringKeyRepository
-import com.realitix.nectar.repository.StringKeyValueRepository
+import com.realitix.nectar.database.entity.*
+import com.realitix.nectar.repository.*
 import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class ReceipeViewModel (
     private val rReceipe: ReceipeRepository,
     private val rReceipeStep: ReceipeStepRepository,
+    private val rReceipeMeasure: ReceipeMeasureRepository,
     private val rStringKey: StringKeyRepository,
     private val rStringKeyValue: StringKeyValueRepository,
-    receipeUuid: String
+    private val rMeasure: MeasureRepository,
+    private val receipeUuid: String
 ) : ViewModel() {
     val receipe: LiveData<Receipe> = rReceipe.getLive(receipeUuid)
+
+    fun getAllMeasures(): List<Measure> {
+        return runBlocking {
+            rMeasure.listSuspend()
+        }
+    }
+
+    fun insertMeasure(name: String) {
+        runBlocking {
+            val sid = generateUuid()
+            rStringKey.insertSuspend(StringKeyRaw(sid))
+            rStringKeyValue.insertSuspend(StringKeyValueRaw(sid, "fr", name))
+            rMeasure.insertSuspend(MeasureRaw(generateUuid(), sid))
+        }
+    }
+
+    fun insertReceipeMeasure(measureUuid: String, quantity: Float) {
+        viewModelScope.launch {
+            rReceipeMeasure.insertSuspend(ReceipeMeasureRaw(
+                receipeUuid, measureUuid, quantity
+            ))
+        }
+    }
 
     fun updateReceipeName(newName: String) {
         viewModelScope.launch {

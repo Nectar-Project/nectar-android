@@ -13,11 +13,9 @@ import androidx.navigation.ui.setupWithNavController
 import com.realitix.nectar.R
 import com.realitix.nectar.util.GenericAdapter
 import com.realitix.nectar.database.entity.ReceipeStep
+import com.realitix.nectar.fragment.dialog.AlimentStateMeasureDialogFragment
 import com.realitix.nectar.fragment.dialog.EditTextDialogFragment
-import com.realitix.nectar.repository.ReceipeRepository
-import com.realitix.nectar.repository.ReceipeStepRepository
-import com.realitix.nectar.repository.StringKeyRepository
-import com.realitix.nectar.repository.StringKeyValueRepository
+import com.realitix.nectar.repository.*
 import com.realitix.nectar.util.RecyclerItemClickListener
 import com.realitix.nectar.util.SingleLineItemViewHolder
 import com.realitix.nectar.viewmodel.ReceipeViewModel
@@ -33,8 +31,10 @@ class ReceipeFragment : Fragment() {
                 ReceipeViewModel(
                     ReceipeRepository(requireContext()),
                     ReceipeStepRepository(requireContext()),
+                    ReceipeMeasureRepository(requireContext()),
                     StringKeyRepository(requireContext()),
                     StringKeyValueRepository(requireContext()),
+                    MeasureRepository(requireContext()),
                     receipeUuid
                 )
             }
@@ -118,6 +118,14 @@ class ReceipeFragment : Fragment() {
             ).show(parentFragmentManager, "updateReceipeStars")
         }
 
+        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
+            override fun onItemClick(view: View, position: Int) {
+                val step = adapter.getAtPosition(position)
+                val action = ReceipeFragmentDirections.actionReceipeFragmentToReceipeStepFragment(step.uuid, receipeUuid)
+                findNavController().navigate(action)
+            }
+        }))
+
         fab.setCallbackFirst {
             EditTextDialogFragment(
                 "Nom de l'étape à créer",
@@ -130,12 +138,18 @@ class ReceipeFragment : Fragment() {
             ).show(parentFragmentManager, "createStep")
         }
 
-        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
-            override fun onItemClick(view: View, position: Int) {
-                val step = adapter.getAtPosition(position)
-                val action = ReceipeFragmentDirections.actionReceipeFragmentToReceipeStepFragment(step.uuid, receipeUuid)
-                findNavController().navigate(action)
-            }
-        }))
+        fab.setCallbackSecond {
+            AlimentStateMeasureDialogFragment(
+                object:
+                    AlimentStateMeasureDialogFragment.Listener {
+                    override fun getMeasureOnSelect(index: Int) = viewModel.getAllMeasures()[index]
+                    override fun onCreate(name: String) = viewModel.insertMeasure(name)
+                    override fun onAddMeasure(measureUuid: String, quantity: Int) = viewModel.insertReceipeMeasure(measureUuid, quantity.toFloat())
+                    override fun getData(): List<String> = viewModel.getAllMeasures().map { it.getName() }
+                }
+            ).show(parentFragmentManager, "addReceipeMeasure")
+        }
+
+
     }
 }
