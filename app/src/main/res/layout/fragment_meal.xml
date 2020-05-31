@@ -33,75 +33,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/datetime" />
 
-    <LinearLayout
+    <com.realitix.nectar.fragment.view.MealMultiFab
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <LinearLayout
-            android:id="@+id/containerFabAliment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:visibility="invisible"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_gravity="center_vertical"
-                android:text="Ajouter un aliment"/>
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fabAliment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="7dp"
-                android:layout_marginTop="7dp"
-                android:src="@drawable/ic_add_black_24dp"
-                app:fabSize="mini" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/containerFabReceipe"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:visibility="invisible"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_gravity="center_vertical"
-                android:text="Ajouter une recette"/>
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fabReceipe"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="7dp"
-                android:layout_marginTop="7dp"
-                android:src="@drawable/ic_add_black_24dp"
-                app:fabSize="mini" />
-        </LinearLayout>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_gravity="end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_add_black_24dp"
-            android:tint="@android:color/white"
-            />
-
-    </LinearLayout>
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,10 +21,8 @@ import kotlinx.android.synthetic.main.fragment_receipe_step.*
 
 
 class ReceipeStepFragment : Fragment() {
-
     private lateinit var stepUuid: String
     private lateinit var receipeUuid: String
-    private var isFabRotated: Boolean = false
 
     private val viewModel: ReceipeStepViewModel by viewModels(
         factoryProducer = {
@@ -84,26 +82,14 @@ class ReceipeStepFragment : Fragment() {
             adapter.setData(RecyclerViewMerger.from(it.aliments, it.receipes))
         }
 
-        fab.setOnClickListener {
-            isFabRotated = FabAnimation.rotate(it, !isFabRotated)
-            if(isFabRotated) {
-                FabAnimation.show(containerFabAliment)
-                FabAnimation.show(containerFabReceipe)
-            }
-            else {
-                FabAnimation.hide(containerFabAliment)
-                FabAnimation.hide(containerFabReceipe)
-            }
-        }
-
-        fabAliment.setOnClickListener {
+        fab.setCallbackFirst {
             val action = ReceipeStepFragmentDirections.actionReceipeStepFragmentToAlimentAddSearchFragment(stepUuid, EntityType.RECEIPE.ordinal)
             findNavController().navigate(action)
         }
-
-        fabReceipe.setOnClickListener {
+        fab.setCallbackSecond {
             val action = ReceipeStepFragmentDirections.actionReceipeStepFragmentToReceipeAddFragment(stepUuid, EntityType.RECEIPE.ordinal)
             findNavController().navigate(action)
         }
+
     }
 }

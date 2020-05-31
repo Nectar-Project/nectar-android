@@ -21,7 +21,6 @@ import kotlinx.android.synthetic.main.fragment_meal.*
 
 class MealFragment : Fragment() {
     private lateinit var mealUuid: String
-    private var isFabRotated: Boolean = false
     private val viewModel: MealViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
@@ -70,24 +69,12 @@ class MealFragment : Fragment() {
             datetime.text = NectarUtil.dayMonthYearFromTimestamp(it.timestamp)
         }
 
-        fab.setOnClickListener {
-            isFabRotated = FabAnimation.rotate(it, !isFabRotated)
-            if(isFabRotated) {
-                FabAnimation.show(containerFabAliment)
-                FabAnimation.show(containerFabReceipe)
-            }
-            else {
-                FabAnimation.hide(containerFabAliment)
-                FabAnimation.hide(containerFabReceipe)
-            }
-        }
-
-        fabAliment.setOnClickListener {
+        fab.setCallbackFirst {
             val action = MealFragmentDirections.actionMealFragmentToAlimentAddSearchFragment(mealUuid, EntityType.MEAL.ordinal)
             findNavController().navigate(action)
         }
 
-        fabReceipe.setOnClickListener {
+        fab.setCallbackSecond {
             val action = MealFragmentDirections.actionMealFragmentToReceipeAddFragment(mealUuid, EntityType.MEAL.ordinal)
             findNavController().navigate(action)
         }

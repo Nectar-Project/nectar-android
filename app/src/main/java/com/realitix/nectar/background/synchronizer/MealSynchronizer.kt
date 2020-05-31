@@ -32,16 +32,16 @@ class MealSynchronizer(
         }
 
         // aliments
-        for ((alimentUuid, quantity) in parseResult.aliments) {
+        for ((alimentUuid, weight) in parseResult.aliments) {
             if(rMealAliment.get(parseResult.uuid, alimentUuid) == null) {
-                rMealAliment.insert(MealAlimentStateRaw(parseResult.uuid, alimentUuid, quantity))
+                rMealAliment.insert(MealAlimentStateRaw(parseResult.uuid, alimentUuid, weight))
             }
         }
 
         // receipes
-        for ((receipeUuid, quantity) in parseResult.receipes) {
+        for ((receipeUuid, proportion) in parseResult.receipes) {
             if(rMealReceipe.get(parseResult.uuid, receipeUuid) == null) {
-                rMealReceipe.insert(MealReceipeRaw(parseResult.uuid, receipeUuid, quantity))
+                rMealReceipe.insert(MealReceipeRaw(parseResult.uuid, receipeUuid, proportion))
             }
         }
     }
@@ -56,7 +56,7 @@ class MealSynchronizer(
 
         val receipes = mutableMapOf<String, Float>()
         for(r in meal.receipes) {
-            receipes[r.receipeUuid] = r.portions
+            receipes[r.receipeUuid] = r.proportion
         }
 
         return ParseResult(meal.uuid, meal.nbPeople, meal.timestamp, meal.description, aliments, receipes)

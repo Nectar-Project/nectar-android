@@ -29,14 +29,14 @@ class ReceipeAddDialogFragment(
 
         // spinner
         val spinnerChoices = receipe.measures.map { it.measure.getName() }.toMutableList()
-        spinnerChoices.add("portions")
-        val spinnerChoicesQuantity = receipe.measures.map { it.portions }.toMutableList()
+        spinnerChoices.add("proportion")
+        val spinnerChoicesQuantity = receipe.measures.map { it.quantity }.toMutableList()
         spinnerChoicesQuantity.add(1f)
         val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerChoices)
         spinner.adapter = spinnerAdapter
 
         button.setOnClickListener {
-            val computedQuantity = spinnerChoicesQuantity[spinner.selectedItemPosition]*quantity.text.toString().toFloat()
+            val computedQuantity = quantity.text.toString().toFloat() / spinnerChoicesQuantity[spinner.selectedItemPosition]
             listener.onClick(computedQuantity)
             d.dismiss()
         }

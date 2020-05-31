@@ -118,7 +118,7 @@ class ReceipeFragment : Fragment() {
             ).show(parentFragmentManager, "updateReceipeStars")
         }
 
-        fab.setOnClickListener {
+        fab.setCallbackFirst {
             EditTextDialogFragment(
                 "Nom de l'étape à créer",
                 object :

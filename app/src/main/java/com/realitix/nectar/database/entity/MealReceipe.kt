@@ -6,8 +6,8 @@ import androidx.room.Index
 import androidx.room.Relation
 
 
-class MealReceipe(receipeUuid: String, mealUuid: String, portions: Float):
-    MealReceipeRaw(receipeUuid, mealUuid, portions) {
+class MealReceipe(receipeUuid: String, mealUuid: String, proportion: Float):
+    MealReceipeRaw(receipeUuid, mealUuid, proportion) {
     @Relation(parentColumn = "receipeUuid", entityColumn = "uuid", entity = ReceipeRaw::class)
     lateinit var receipe: Receipe
 }
@@ -33,7 +33,7 @@ class MealReceipe(receipeUuid: String, mealUuid: String, portions: Float):
 open class MealReceipeRaw(
     var mealUuid: String,
     var receipeUuid: String,
-    var portions: Float
+    var proportion: Float
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -43,7 +43,7 @@ open class MealReceipeRaw(
 
         if (receipeUuid != other.receipeUuid) return false
         if (mealUuid != other.mealUuid) return false
-        if (portions != other.portions) return false
+        if (proportion != other.proportion) return false
 
         return true
     }
@@ -51,7 +51,7 @@ open class MealReceipeRaw(
     override fun hashCode(): Int {
         var result = receipeUuid.hashCode()
         result = 31 * result + mealUuid.hashCode()
-        result = 31 * result + portions.hashCode()
+        result = 31 * result + proportion.hashCode()
         return result
     }
 }
