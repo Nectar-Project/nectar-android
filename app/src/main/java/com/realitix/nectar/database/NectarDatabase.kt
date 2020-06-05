@@ -15,6 +15,7 @@ import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
     entities = [
         AlimentRaw::class,
         AlimentImageRaw::class,
+        AlimentPriceRaw::class,
         AlimentStateRaw::class,
         AlimentStateMeasureRaw::class,
         AlimentTagRaw::class,
@@ -50,6 +51,7 @@ import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
 abstract class NectarDatabase : RoomDatabase() {
     abstract fun alimentDao(): AlimentDao
     abstract fun alimentImageDao(): AlimentImageDao
+    abstract fun alimentPriceDao(): AlimentPriceDao
     abstract fun alimentStateDao(): AlimentStateDao
     abstract fun alimentStateMeasureDao(): AlimentStateMeasureDao
     abstract fun alimentTagDao(): AlimentTagDao
