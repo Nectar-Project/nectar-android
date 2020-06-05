@@ -121,6 +121,8 @@ class GitRepositorySynchronizer(val context: Context) {
             fromGitToDbRepository(gitRepository, manager.diff())
             manager.sync()
         }
+
+        manager.close()
     }
 
     @Synchronized
@@ -160,6 +162,8 @@ class GitRepositorySynchronizer(val context: Context) {
             manager.push()
         }
 
+        manager.close()
+
         // Clean updates
         for(u in updates) {
             rDatabaseUpdate.delete(u)
@@ -168,6 +172,9 @@ class GitRepositorySynchronizer(val context: Context) {
 
     @Synchronized
     fun exec(gitRepositoryUuid: String? = null) {
+        if(!NectarUtil.isNetworkAvailable(context))
+            return
+
         val currentTimestamp: Long = System.currentTimeMillis() / 1000
         val baseRepositoryFolder = NectarUtil.getRepositoryFolder(context)
         val rGitRepository = GitRepoRepository(context)
@@ -185,6 +192,7 @@ class GitRepositorySynchronizer(val context: Context) {
                 synchronizeFromDbToGit(gitRepository, baseRepositoryFolder)
             } catch (e: TransportException) {
                 Log.e("Nectar", "Can't connect to repository ${gitRepository.name}")
+                Log.e("Nectar", NectarUtil.exceptionToStacktrace(e))
                 continue
             }
 

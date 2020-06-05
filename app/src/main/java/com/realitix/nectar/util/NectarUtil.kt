@@ -1,13 +1,17 @@
 package com.realitix.nectar.util
 
 import android.content.Context
+import android.net.ConnectivityManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat.getSystemService
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.Parser
 import com.realitix.nectar.R
 import java.io.File
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.floor
@@ -92,6 +96,18 @@ class NectarUtil {
             with(NotificationManagerCompat.from(context)) {
                 notify(10, builder.build())
             }
+        }
+
+        fun isNetworkAvailable(context: Context): Boolean {
+            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val activeNetworkInfo = connectivityManager.activeNetworkInfo
+            return activeNetworkInfo?.isConnected == true
+        }
+
+        fun exceptionToStacktrace(e: Exception): String {
+            val sw = StringWriter()
+            e.printStackTrace(PrintWriter(sw))
+            return sw.toString()
         }
     }
 }

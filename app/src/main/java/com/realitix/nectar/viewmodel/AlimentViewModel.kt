@@ -43,4 +43,12 @@ class AlimentViewModel(
             rState.insertSuspend(StateRaw(generateUuid(), sid))
         }
     }
+
+    fun updateAlimentName(newName: String) {
+        viewModelScope.launch {
+            val keyValue = rStringKeyValue.getSuspend(aliment.value!!.nameUuid, "fr")!!
+            keyValue.value = newName
+            rStringKeyValue.updateSuspend(keyValue)
+        }
+    }
 }

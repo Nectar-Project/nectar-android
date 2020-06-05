@@ -15,6 +15,7 @@ import androidx.lifecycle.observe
 import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.AlimentState
 import com.realitix.nectar.fragment.dialog.AlimentStateDialogFragment
+import com.realitix.nectar.fragment.dialog.EditTextDialogFragment
 import com.realitix.nectar.repository.*
 import com.realitix.nectar.util.GenericAdapter
 import com.realitix.nectar.util.RecyclerItemClickListener
@@ -87,6 +88,18 @@ class AlimentFragment : Fragment() {
                 findNavController().navigate(action)
             }
         }))
+
+        name.setOnClickListener {
+            EditTextDialogFragment(
+                "Nom de l'aliment'",
+                object :
+                    EditTextDialogFragment.OnValidateListener {
+                    override fun onValidate(dialog: EditTextDialogFragment) {
+                        viewModel.updateAlimentName(dialog.getText())
+                    }
+                }, viewModel.aliment.value!!.getName()
+            ).show(parentFragmentManager, "updateAlimentName")
+        }
 
         fab.setOnClickListener {
             AlimentStateDialogFragment(

@@ -60,8 +60,9 @@ class GitManager(private val repoDir: File, private val url: String, private val
 
     private val git: Git = initGitRepository()
 
-    // Return true if remote has new commits
-    fun fetch(): Boolean = !git.fetch().call().trackingRefUpdates.isEmpty()
+    fun close() {
+        git.close()
+    }
 
     // Sync master and origin/master
     fun sync() {
@@ -148,6 +149,16 @@ class GitManager(private val repoDir: File, private val url: String, private val
 
     fun commit() {
         git.commit().setMessage("Commit all changes").call()
+    }
+
+    // Return true if remote has new commits
+    fun fetch(): Boolean {
+        val fetcher = git.fetch()
+        if(credentials != null) {
+            fetcher.setCredentialsProvider(UsernamePasswordCredentialsProvider(credentials.username, credentials.password))
+        }
+
+        return fetcher.call().trackingRefUpdates.isEmpty()
     }
 
     fun push(): Boolean {
