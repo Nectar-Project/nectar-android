@@ -7,7 +7,7 @@ import com.realitix.nectar.util.EntityType
 import com.realitix.nectar.util.NectarUtil
 
 class AlimentPriceRepository(val context: Context, updater: EntityUpdaterInterface<AlimentPriceRaw> = Updater(context)):
-    GenericGetJoinRepository<AlimentPriceRaw, AlimentPrice>(updater) {
+    GenericGetUuidRepository<AlimentPriceRaw, AlimentPrice>(updater) {
     override fun getDao() = NectarDatabase.getInstance(context).alimentPriceDao()
 
     class Updater(context: Context): GenericEntityUpdater<AlimentPriceRaw>(context) {

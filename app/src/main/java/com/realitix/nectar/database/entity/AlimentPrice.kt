@@ -21,7 +21,9 @@ open class AlimentPriceRaw (
     var alimentUuid: String,
     var price: Float,
     var description: String
-) {
+): UuidInterface {
+    override fun getEntityUuid() = alimentUuid
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

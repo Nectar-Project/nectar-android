@@ -11,6 +11,7 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.realitix.nectar.R
+import com.realitix.nectar.database.entity.ReceipeMeasure
 import com.realitix.nectar.util.GenericAdapter
 import com.realitix.nectar.database.entity.ReceipeStep
 import com.realitix.nectar.fragment.dialog.AlimentStateMeasureDialogFragment
@@ -41,7 +42,8 @@ class ReceipeFragment : Fragment() {
         }
     )
 
-    private lateinit var adapter: GenericAdapter<SingleLineItemViewHolder, ReceipeStep>
+    private lateinit var adapterSteps: GenericAdapter<SingleLineItemViewHolder, ReceipeStep>
+    private lateinit var adapterMeasures: GenericAdapter<SingleLineItemViewHolder, ReceipeMeasure>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,8 +61,8 @@ class ReceipeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         toolbar.setupWithNavController(findNavController())
 
-        // Set RecyclerView
-        adapter = GenericAdapter(
+        // Set RecyclerView for Steps
+        adapterSteps = GenericAdapter(
             { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
             { holder, step ->
                 holder.text.text = step.getDescription()
@@ -72,14 +74,31 @@ class ReceipeFragment : Fragment() {
                 )
             }
         )
-        recyclerView.hasFixedSize()
-        recyclerView.adapter = adapter
+        recyclerViewSteps.hasFixedSize()
+        recyclerViewSteps.adapter = adapterSteps
+
+        // Set RecyclerView for Measures
+        adapterMeasures = GenericAdapter(
+            { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
+            { holder, measure ->
+                holder.text.text = "${measure.quantity} ${measure.measure.getName()}"
+                holder.icon.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_receipt_black_24dp
+                    )
+                )
+            }
+        )
+        recyclerViewMeasures.hasFixedSize()
+        recyclerViewMeasures.adapter = adapterMeasures
 
         viewModel.receipe.observe(viewLifecycleOwner) {
             name.text = it.getName()
             portions.text = it.portions.toString()
             stars.text = it.stars.toString()
-            adapter.setData(it.steps)
+            adapterSteps.setData(it.steps)
+            adapterMeasures.setData(it.measures)
         }
 
         name.setOnClickListener {
@@ -118,9 +137,9 @@ class ReceipeFragment : Fragment() {
             ).show(parentFragmentManager, "updateReceipeStars")
         }
 
-        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
+        recyclerViewSteps.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerViewSteps, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
-                val step = adapter.getAtPosition(position)
+                val step = adapterSteps.getAtPosition(position)
                 val action = ReceipeFragmentDirections.actionReceipeFragmentToReceipeStepFragment(step.uuid, receipeUuid)
                 findNavController().navigate(action)
             }
