@@ -1,17 +1,14 @@
 package com.realitix.nectar.fragment.view
 
-import android.annotation.TargetApi
 import android.content.Context
-import android.os.Build
 import android.util.AttributeSet
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.realitix.nectar.R
 import com.realitix.nectar.util.FabAnimation
-import kotlinx.android.synthetic.main.view_fab_multi.view.*
+import kotlinx.android.synthetic.main.view_fab2.view.*
 
 
-abstract class BaseMultiFab: LinearLayout {
+abstract class BaseFab2: LinearLayout {
     constructor(context: Context): this(context, null)
     constructor(context: Context, attrs: AttributeSet?): this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int): this(context, attrs, defStyleAttr, 0)
@@ -25,7 +22,7 @@ abstract class BaseMultiFab: LinearLayout {
 
     private fun init() {
         this.orientation = VERTICAL
-        inflate(context, R.layout.view_fab_multi,this)
+        inflate(context, R.layout.view_fab2,this)
         postInit()
 
         fabMain.setOnClickListener {

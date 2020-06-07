@@ -8,16 +8,16 @@ import androidx.fragment.app.DialogFragment
 import com.realitix.nectar.database.entity.Measure
 
 
-class AlimentStateMeasureDialogFragment(
+class MeasureAddDialogFragment(
     private val listener: Listener
 ): DialogFragment() {
     private lateinit var d: AlertDialog
     private lateinit var measure: Measure
 
     interface Listener {
-        fun getMeasureOnSelect(index: Int): Measure
+        fun getOnSelect(index: Int): Measure
         fun onCreate(name: String)
-        fun onAddMeasure(measureUuid: String, quantity: Int)
+        fun onAdd(measureUuid: String, quantity: Int)
         fun getData(): List<String>
     }
 
@@ -40,13 +40,13 @@ class AlimentStateMeasureDialogFragment(
     }
 
     private fun onSelect(index: Int) {
-        measure = listener.getMeasureOnSelect(index)
+        measure = listener.getOnSelect(index)
         EditTextDialogFragment(
             "Quantité de la mesure " + measure.getName(),
             object :
                 EditTextDialogFragment.OnValidateListener {
                 override fun onValidate(dialog: EditTextDialogFragment) {
-                    listener.onAddMeasure(measure.uuid, dialog.getText().toInt())
+                    listener.onAdd(measure.uuid, dialog.getText().toInt())
                 }
             }
         ).show(parentFragmentManager, "insert")

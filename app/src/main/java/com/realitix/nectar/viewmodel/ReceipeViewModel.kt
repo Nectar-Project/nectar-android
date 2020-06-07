@@ -11,9 +11,11 @@ class ReceipeViewModel (
     private val rReceipe: ReceipeRepository,
     private val rReceipeStep: ReceipeStepRepository,
     private val rReceipeMeasure: ReceipeMeasureRepository,
+    private val rReceipeTag: ReceipeTagRepository,
     private val rStringKey: StringKeyRepository,
     private val rStringKeyValue: StringKeyValueRepository,
     private val rMeasure: MeasureRepository,
+    private val rTag: TagRepository,
     private val receipeUuid: String
 ) : ViewModel() {
     val receipe: LiveData<Receipe> = rReceipe.getLive(receipeUuid)
@@ -37,6 +39,29 @@ class ReceipeViewModel (
         viewModelScope.launch {
             rReceipeMeasure.insertSuspend(ReceipeMeasureRaw(
                 receipeUuid, measureUuid, quantity
+            ))
+        }
+    }
+
+    fun getAllTags(): List<Tag> {
+        return runBlocking {
+            rTag.listSuspend()
+        }
+    }
+
+    fun insertTag(name: String) {
+        runBlocking {
+            val sid = generateUuid()
+            rStringKey.insertSuspend(StringKeyRaw(sid))
+            rStringKeyValue.insertSuspend(StringKeyValueRaw(sid, "fr", name))
+            rTag.insertSuspend(TagRaw(generateUuid(), sid))
+        }
+    }
+
+    fun insertReceipeTag(tagUuid: String) {
+        viewModelScope.launch {
+            rReceipeTag.insertSuspend(ReceipeTagRaw(
+                receipeUuid, tagUuid
             ))
         }
     }

@@ -13,9 +13,7 @@ import androidx.lifecycle.observe
 
 import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.AlimentStateMeasure
-import com.realitix.nectar.database.entity.Measure
-import com.realitix.nectar.fragment.dialog.AlimentStateDialogFragment
-import com.realitix.nectar.fragment.dialog.AlimentStateMeasureDialogFragment
+import com.realitix.nectar.fragment.dialog.MeasureAddDialogFragment
 import com.realitix.nectar.repository.*
 import com.realitix.nectar.util.GenericAdapter
 import com.realitix.nectar.util.SingleLineItemViewHolder
@@ -79,12 +77,12 @@ class AlimentStateFragment: Fragment() {
         }
 
         fab.setOnClickListener {
-            AlimentStateMeasureDialogFragment(
+            MeasureAddDialogFragment(
                 object:
-                    AlimentStateMeasureDialogFragment.Listener {
-                    override fun getMeasureOnSelect(index: Int) = viewModel.getAllMeasures()[index]
+                    MeasureAddDialogFragment.Listener {
+                    override fun getOnSelect(index: Int) = viewModel.getAllMeasures()[index]
                     override fun onCreate(name: String) = viewModel.insertMeasure(name)
-                    override fun onAddMeasure(measureUuid: String, quantity: Int) = viewModel.insertAlimentStateMeasure(measureUuid, quantity)
+                    override fun onAdd(measureUuid: String, quantity: Int) = viewModel.insertAlimentStateMeasure(measureUuid, quantity)
                     override fun getData(): List<String> = viewModel.getAllMeasures().map { it.getName() }
                 }
             ).show(parentFragmentManager, "addAlimentState")

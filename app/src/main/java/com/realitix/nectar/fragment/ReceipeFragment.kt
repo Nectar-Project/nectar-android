@@ -14,8 +14,10 @@ import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.ReceipeMeasure
 import com.realitix.nectar.util.GenericAdapter
 import com.realitix.nectar.database.entity.ReceipeStep
-import com.realitix.nectar.fragment.dialog.AlimentStateMeasureDialogFragment
+import com.realitix.nectar.database.entity.ReceipeTag
+import com.realitix.nectar.fragment.dialog.MeasureAddDialogFragment
 import com.realitix.nectar.fragment.dialog.EditTextDialogFragment
+import com.realitix.nectar.fragment.dialog.TagAddDialogFragment
 import com.realitix.nectar.repository.*
 import com.realitix.nectar.util.RecyclerItemClickListener
 import com.realitix.nectar.util.SingleLineItemViewHolder
@@ -33,9 +35,11 @@ class ReceipeFragment : Fragment() {
                     ReceipeRepository(requireContext()),
                     ReceipeStepRepository(requireContext()),
                     ReceipeMeasureRepository(requireContext()),
+                    ReceipeTagRepository(requireContext()),
                     StringKeyRepository(requireContext()),
                     StringKeyValueRepository(requireContext()),
                     MeasureRepository(requireContext()),
+                    TagRepository(requireContext()),
                     receipeUuid
                 )
             }
@@ -44,6 +48,7 @@ class ReceipeFragment : Fragment() {
 
     private lateinit var adapterSteps: GenericAdapter<SingleLineItemViewHolder, ReceipeStep>
     private lateinit var adapterMeasures: GenericAdapter<SingleLineItemViewHolder, ReceipeMeasure>
+    private lateinit var adapterTags: GenericAdapter<SingleLineItemViewHolder, ReceipeTag>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,12 +98,29 @@ class ReceipeFragment : Fragment() {
         recyclerViewMeasures.hasFixedSize()
         recyclerViewMeasures.adapter = adapterMeasures
 
+        // Set RecyclerView for Tags
+        adapterTags = GenericAdapter(
+            { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
+            { holder, tag ->
+                holder.text.text = tag.tag.getName()
+                holder.icon.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_receipt_black_24dp
+                    )
+                )
+            }
+        )
+        recyclerViewTags.hasFixedSize()
+        recyclerViewTags.adapter = adapterTags
+
         viewModel.receipe.observe(viewLifecycleOwner) {
             name.text = it.getName()
             portions.text = it.portions.toString()
             stars.text = it.stars.toString()
             adapterSteps.setData(it.steps)
             adapterMeasures.setData(it.measures)
+            adapterTags.setData(it.tags)
         }
 
         name.setOnClickListener {
@@ -158,17 +180,27 @@ class ReceipeFragment : Fragment() {
         }
 
         fab.setCallbackSecond {
-            AlimentStateMeasureDialogFragment(
+            MeasureAddDialogFragment(
                 object:
-                    AlimentStateMeasureDialogFragment.Listener {
-                    override fun getMeasureOnSelect(index: Int) = viewModel.getAllMeasures()[index]
+                    MeasureAddDialogFragment.Listener {
+                    override fun getOnSelect(index: Int) = viewModel.getAllMeasures()[index]
                     override fun onCreate(name: String) = viewModel.insertMeasure(name)
-                    override fun onAddMeasure(measureUuid: String, quantity: Int) = viewModel.insertReceipeMeasure(measureUuid, quantity.toFloat())
+                    override fun onAdd(measureUuid: String, quantity: Int) = viewModel.insertReceipeMeasure(measureUuid, quantity.toFloat())
                     override fun getData(): List<String> = viewModel.getAllMeasures().map { it.getName() }
                 }
             ).show(parentFragmentManager, "addReceipeMeasure")
         }
 
-
+        fab.setCallbackThird {
+            TagAddDialogFragment(
+                object:
+                    TagAddDialogFragment.Listener {
+                    override fun getOnSelect(index: Int) = viewModel.getAllTags()[index]
+                    override fun onCreate(name: String) = viewModel.insertTag(name)
+                    override fun onAdd(tagUuid: String) = viewModel.insertReceipeTag(tagUuid)
+                    override fun getData(): List<String> = viewModel.getAllTags().map { it.getName() }
+                }
+            ).show(parentFragmentManager, "addReceipeMeasure")
+        }
     }
 }

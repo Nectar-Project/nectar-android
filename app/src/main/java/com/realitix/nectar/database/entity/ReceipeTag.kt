@@ -3,9 +3,14 @@ package com.realitix.nectar.database.entity
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
+import androidx.room.Relation
 
 
-class ReceipeTag(receipeUuid: String, tagUuid: String): ReceipeTagRaw(receipeUuid, tagUuid)
+class ReceipeTag(receipeUuid: String, tagUuid: String):
+    ReceipeTagRaw(receipeUuid, tagUuid) {
+    @Relation(parentColumn = "tagUuid", entityColumn = "uuid", entity = TagRaw::class)
+    lateinit var tag: Tag
+}
 
 @Entity(
     primaryKeys = ["receipeUuid", "tagUuid"],

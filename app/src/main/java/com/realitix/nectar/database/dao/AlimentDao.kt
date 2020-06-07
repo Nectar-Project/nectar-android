@@ -35,14 +35,19 @@ abstract class AlimentDao: GenericGetUuidDao<AlimentRaw, Aliment>() {
     abstract override suspend fun getSuspend(uuid: String): Aliment?
 
     @Transaction
-    @Query("SELECT * FROM AlimentRaw ")
+    @Query("SELECT * FROM AlimentRaw")
     abstract override fun list(): List<Aliment>
 
     @Transaction
-    @Query("SELECT * FROM AlimentRaw ")
+    @Query("""
+        SELECT * FROM AlimentRaw
+        INNER JOIN StringKeyRaw ON StringKeyRaw.uuid = AlimentRaw.nameUuid
+        INNER JOIN StringKeyValueRaw ON StringKeyValueRaw.stringKeyUuid = StringKeyRaw.uuid
+        ORDER BY StringKeyValueRaw.value
+    """)
     abstract override fun listLive(): LiveData<List<Aliment>>
 
     @Transaction
-    @Query("SELECT * FROM AlimentRaw ")
+    @Query("SELECT * FROM AlimentRaw")
     abstract override suspend fun listSuspend(): List<Aliment>
 }

@@ -19,45 +19,131 @@
             android:layout_height="?attr/actionBarSize" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/name"
+    <LinearLayout
+        android:id="@+id/containerName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/appbar"
-        tools:layout_editor_absoluteX="0dp" />
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/appbar">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/portions"
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nom de la recette: "/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/containerPortions"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@+id/stars"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/containerStars"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name" />
+        app:layout_constraintTop_toBottomOf="@+id/containerName">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/stars"
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Portions: "/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/portions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/containerStars"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@{String.valueOf(receipe.stars)}"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/portions"
-        app:layout_constraintTop_toBottomOf="@+id/name" />
+        app:layout_constraintStart_toEndOf="@+id/containerPortions"
+        app:layout_constraintTop_toBottomOf="@+id/containerName"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Note: "/>
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/stars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/dividerMeasure"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintTop_toBottomOf="@+id/containerStars"
+        android:background="?android:attr/listDivider" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/titleMeasure"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/dividerMeasure"
+        android:text="Mesures" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMeasures"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/portions" />
+        app:layout_constraintTop_toBottomOf="@+id/titleMeasure" />
+
+    <View
+        android:id="@+id/dividerStep"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewMeasures"
+        android:background="?android:attr/listDivider" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/titleStep"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/dividerStep"
+        android:text="Etapes" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewSteps"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@+id/titleStep" />
+
+    <View
+        android:id="@+id/dividerTag"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewSteps"
+        android:background="?android:attr/listDivider" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/titleTag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/dividerTag"
+        android:text="Tags" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewTags"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerViewMeasures" />
+        app:layout_constraintTop_toBottomOf="@+id/titleTag" />
 
     <com.realitix.nectar.fragment.view.ReceipeMultiFab
         android:id="@+id/fab"

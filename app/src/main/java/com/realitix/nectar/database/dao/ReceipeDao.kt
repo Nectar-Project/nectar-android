@@ -35,7 +35,12 @@ abstract class ReceipeDao: GenericGetUuidDao<ReceipeRaw, Receipe>() {
     abstract override fun list(): List<Receipe>
 
     @Transaction
-    @Query("SELECT * FROM ReceipeRaw")
+    @Query("""
+        SELECT * FROM ReceipeRaw
+        INNER JOIN StringKeyRaw ON StringKeyRaw.uuid = ReceipeRaw.nameUuid
+        INNER JOIN StringKeyValueRaw ON StringKeyValueRaw.stringKeyUuid = StringKeyRaw.uuid
+        ORDER BY StringKeyValueRaw.value
+    """)
     abstract override fun listLive(): LiveData<List<Receipe>>
 
     @Transaction
