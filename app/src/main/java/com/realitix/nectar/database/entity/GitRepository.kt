@@ -74,9 +74,9 @@ class GitSelectiveSynchronization(
             EntityType.STATE, EntityType.MEASURE, EntityType.IMAGE,
             EntityType.UTENSIL
         )
-
         selectiveMap[EntityType.RECEIPE] = expandList(selectiveMap[EntityType.ALIMENT]!!, EntityType.RECEIPE)
         selectiveMap[EntityType.BOOK] = expandList(selectiveMap[EntityType.RECEIPE]!!, EntityType.BOOK)
+        selectiveMap[EntityType.ALIMENT_PRICE] = expandList(selectiveMap[EntityType.BOOK]!!, EntityType.ALIMENT_PRICE)
         selectiveMap[EntityType.MEAL] = expandList(selectiveMap[EntityType.BOOK]!!, EntityType.MEAL)
 
         return selectiveMap

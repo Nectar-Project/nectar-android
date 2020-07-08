@@ -40,7 +40,7 @@ abstract class AlimentDao: GenericGetUuidDao<AlimentRaw, Aliment>() {
 
     @Transaction
     @Query("""
-        SELECT * FROM AlimentRaw
+        SELECT AlimentRaw.* FROM AlimentRaw
         INNER JOIN StringKeyRaw ON StringKeyRaw.uuid = AlimentRaw.nameUuid
         INNER JOIN StringKeyValueRaw ON StringKeyValueRaw.stringKeyUuid = StringKeyRaw.uuid
         ORDER BY StringKeyValueRaw.value

@@ -36,7 +36,7 @@ abstract class ReceipeDao: GenericGetUuidDao<ReceipeRaw, Receipe>() {
 
     @Transaction
     @Query("""
-        SELECT * FROM ReceipeRaw
+        SELECT ReceipeRaw.* FROM ReceipeRaw
         INNER JOIN StringKeyRaw ON StringKeyRaw.uuid = ReceipeRaw.nameUuid
         INNER JOIN StringKeyValueRaw ON StringKeyValueRaw.stringKeyUuid = StringKeyRaw.uuid
         ORDER BY StringKeyValueRaw.value

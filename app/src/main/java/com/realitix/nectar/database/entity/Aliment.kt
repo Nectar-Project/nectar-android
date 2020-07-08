@@ -16,6 +16,8 @@ open class AlimentWS(uuid: String, nameUuid: String): AlimentRaw(uuid, nameUuid)
     lateinit var tags: List<AlimentTag>
     @Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentImageRaw::class)
     lateinit var images: List<AlimentImage>
+    @Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentPriceRaw::class)
+    lateinit var price: AlimentPrice
 
     fun getName(): String {
         return name.getValue()

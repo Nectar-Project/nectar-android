@@ -48,11 +48,6 @@
         android:name="com.realitix.nectar.fragment.AlimentAddSearchFragment"
         android:label="Recherche d'un aliment"
         tools:layout="@layout/fragment_aliment_add_search" >
-        <action
-            android:id="@+id/action_alimentAddSearchFragment_to_alimentAddQuantityFragment"
-            app:destination="@id/alimentAddQuantityFragment"
-            app:popUpTo="@+id/alimentAddSearchFragment"
-            app:popUpToInclusive="true" />
         <argument
             android:name="objUuid"
             app:argType="string" />
@@ -60,21 +55,7 @@
             android:name="enumId"
             app:argType="integer" />
     </fragment>
-    <fragment
-        android:id="@+id/alimentAddQuantityFragment"
-        android:name="com.realitix.nectar.fragment.AlimentAddQuantityFragment"
-        android:label="Quantité de l'aliment"
-        tools:layout="@layout/fragment_aliment_add_quantity" >
-        <argument
-            android:name="alimentUuid"
-            app:argType="string" />
-        <argument
-            android:name="objUuid"
-            app:argType="string" />
-        <argument
-            android:name="enumId"
-            app:argType="integer" />
-    </fragment>
+
     <fragment
         android:id="@+id/receipeAddFragment"
         android:name="com.realitix.nectar.fragment.ReceipeAddSearchFragment"
@@ -138,8 +119,32 @@
             android:name="alimentUuid"
             app:argType="string" />
         <action
-            android:id="@+id/action_alimentFragment_to_alimentStateFragment"
+            android:id="@+id/action_alimentFragment_to_alimentDetailFragment"
+            app:destination="@id/alimentDetailFragment" />
+        <action
+            android:id="@+id/action_alimentFragment_to_alimentNutritionFragment"
+            app:destination="@id/alimentNutritionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/alimentDetailFragment"
+        android:name="com.realitix.nectar.fragment.AlimentDetailFragment"
+        android:label="Détail de l'aliment"
+        tools:layout="@layout/fragment_aliment_detail" >
+        <argument
+            android:name="alimentUuid"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_alimentDetailFragment_to_alimentStateFragment"
             app:destination="@id/alimentStateFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/alimentNutritionFragment"
+        android:name="com.realitix.nectar.fragment.AlimentNutritionFragment"
+        android:label="Nutrition sur l'aliment"
+        tools:layout="@layout/fragment_aliment_nutrition" >
+        <argument
+            android:name="alimentUuid"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/alimentStateFragment"

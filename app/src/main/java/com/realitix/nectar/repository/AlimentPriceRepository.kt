@@ -12,6 +12,6 @@ class AlimentPriceRepository(val context: Context, updater: EntityUpdaterInterfa
 
     class Updater(context: Context): GenericEntityUpdater<AlimentPriceRaw>(context) {
         override fun newDatabaseUpdate(entity: AlimentPriceRaw) = DatabaseUpdateRaw(
-            entity.alimentUuid, EntityType.ALIMENT, NectarUtil.timestamp())
+            entity.uuid, EntityType.ALIMENT_PRICE, NectarUtil.timestamp())
     }
 }

@@ -74,7 +74,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation "androidx.activity:activity-ktx:1.1.0"
-    implementation "androidx.fragment:fragment-ktx:1.2.4"
+    implementation "androidx.fragment:fragment-ktx:1.2.5"
     implementation 'com.google.android.material:material:1.3.0-alpha01'
     implementation 'org.tukaani:xz:1.8'
     implementation 'com.beust:klaxon:3.0.4'
@@ -82,7 +82,7 @@ dependencies {
     implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
     implementation 'androidx.preference:preference:1.1.1'
 
-    def nav_version = "2.2.2"
+    def nav_version = "2.3.0"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
@@ -111,6 +111,8 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$glide_version"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
 
+    implementation 'com.github.salehyarahmadi:DataTable:v1.0.0'
+
     // TEST PART
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:3.3.3'
@@ -126,9 +128,8 @@ dependencies {
     androidTestImplementation "androidx.test:rules:$test_version"
 
     // Assertions
-    def test_ext_version = "1.1.0"
-    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
-    androidTestImplementation "androidx.test.ext:truth:$test_ext_version"
+    androidTestImplementation "androidx.test.ext:junit:1.1.1"
+    androidTestImplementation "androidx.test.ext:truth:1.2.0"
     androidTestImplementation "com.google.truth:truth:0.42"
 
     // Espresso dependencies

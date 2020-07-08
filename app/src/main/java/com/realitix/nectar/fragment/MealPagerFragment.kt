@@ -95,7 +95,6 @@ class MealPagerFragment : Fragment() {
         }))
     }
 
-
     companion object {
         @JvmStatic
         fun newInstance(timestamp: Long) =

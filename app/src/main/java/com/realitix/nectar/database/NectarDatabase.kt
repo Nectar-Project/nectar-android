@@ -45,7 +45,7 @@ import com.realitix.nectar.util.NectarUtil.Companion.generateUuid
         UtensilRaw::class
     ],
     exportSchema = false,
-    version = 2
+    version = 3
 )
 @TypeConverters(Converter::class)
 abstract class NectarDatabase : RoomDatabase() {
@@ -133,10 +133,11 @@ abstract class NectarDatabase : RoomDatabase() {
                     init(db)
                 }
 
-                override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
-                    super.onDestructiveMigration(db)
+                /*override fun onOpen(db: SupportSQLiteDatabase) {
+                    super.onOpen(db)
+                    // Check if not exist and create it
                     init(db)
-                }
+                }*/
             }
         }
 

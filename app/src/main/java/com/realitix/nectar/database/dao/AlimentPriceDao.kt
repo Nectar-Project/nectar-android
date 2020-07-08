@@ -12,15 +12,15 @@ import com.realitix.nectar.database.entity.AlimentTagRaw
 @Dao
 abstract class AlimentPriceDao: GenericGetUuidDao<AlimentPriceRaw, AlimentPrice>() {
     @Transaction
-    @Query("SELECT * FROM AlimentPriceRaw WHERE alimentUuid = :uuid")
+    @Query("SELECT * FROM AlimentPriceRaw WHERE uuid = :uuid")
     abstract override fun getLive(uuid: String): LiveData<AlimentPrice>
 
     @Transaction
-    @Query("SELECT * FROM AlimentPriceRaw WHERE alimentUuid = :uuid")
+    @Query("SELECT * FROM AlimentPriceRaw WHERE uuid = :uuid")
     abstract override fun get(uuid: String): AlimentPrice?
 
     @Transaction
-    @Query("SELECT * FROM AlimentPriceRaw WHERE alimentUuid = :uuid")
+    @Query("SELECT * FROM AlimentPriceRaw WHERE uuid = :uuid")
     abstract override suspend fun getSuspend(uuid: String): AlimentPrice?
 
     @Transaction
