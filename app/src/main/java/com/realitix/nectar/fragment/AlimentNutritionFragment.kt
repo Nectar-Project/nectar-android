@@ -10,12 +10,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 
 import com.realitix.nectar.R
+import com.realitix.nectar.database.entity.Nutrition
 import com.realitix.nectar.repository.*
 import com.realitix.nectar.viewmodel.AlimentViewModel
 import com.realitix.nectar.viewmodel.RepositoryViewModelFactory
 import ir.androidexception.datatable.model.DataTableHeader
 import ir.androidexception.datatable.model.DataTableRow
 import kotlinx.android.synthetic.main.fragment_aliment_nutrition.dataTable
+import kotlin.reflect.full.memberProperties
 
 
 class AlimentNutritionFragment : Fragment() {
@@ -51,22 +53,25 @@ class AlimentNutritionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val header = DataTableHeader.Builder()
-            .item("Nom", 1)
-            .item("Valeur", 1)
-            .build()
-        val rows = arrayListOf(
-            DataTableRow.Builder().value("Test").value("Toto").build(),
-            DataTableRow.Builder().value("Test").value("Toto").build(),
-            DataTableRow.Builder().value("Test").value("Toto").build()
-        )
-
-        dataTable.header = header
-        dataTable.rows = rows
-        dataTable.inflate(requireContext())
-
         viewModel.aliment.observe(viewLifecycleOwner) {
-            //name.text = it.getName()
+            if(it.states.isNotEmpty()) {
+                val header = DataTableHeader.Builder()
+                    .item("Propriété", 1)
+                    .item("Valeur", 1)
+                    .build()
+                val rows: ArrayList<DataTableRow> = arrayListOf()
+                for (p in Nutrition::class.memberProperties) {
+                    val n = it.states[0].nutrition
+                    rows.add(
+                        DataTableRow.Builder().value(p.name).value((p.get(n) as Float).toString())
+                            .build()
+                    )
+                }
+
+                dataTable.header = header
+                dataTable.rows = rows
+                dataTable.inflate(requireContext())
+            }
         }
     }
 
