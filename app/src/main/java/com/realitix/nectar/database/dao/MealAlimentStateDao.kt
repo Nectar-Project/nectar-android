@@ -8,7 +8,7 @@ import com.realitix.nectar.database.entity.MealAlimentState
 import com.realitix.nectar.database.entity.MealAlimentStateRaw
 
 @Dao
-abstract class MealAlimentDao: GenericGetJoinDao<MealAlimentStateRaw, MealAlimentState>() {
+abstract class MealAlimentStateDao: GenericGetJoinDao<MealAlimentStateRaw, MealAlimentState>() {
     @Transaction
     @Query("SELECT * FROM MealAlimentStateRaw WHERE mealUuid = :uuid1 AND alimentStateUuid = :uuid2")
     abstract override fun getLive(uuid1: String, uuid2: String): LiveData<MealAlimentState>

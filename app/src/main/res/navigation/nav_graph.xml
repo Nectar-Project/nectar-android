@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav"
-    app:startDestination="@id/receipesFragment">
+    app:startDestination="@id/dashboardFragment">
 
     <fragment
         android:id="@+id/receipeFragment"
@@ -149,10 +149,15 @@
     <fragment
         android:id="@+id/alimentStateFragment"
         android:name="com.realitix.nectar.fragment.AlimentStateFragment"
-        android:label="Etate de l'aliment"
+        android:label="Etat de l'aliment"
         tools:layout="@layout/fragment_aliment_state" >
         <argument
             android:name="alimentStateUuid"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="com.realitix.nectar.fragment.DashboardFragment"
+        android:label="Dashboard"
+        tools:layout="@layout/fragment_dashboard" />
 </navigation>

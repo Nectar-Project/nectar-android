@@ -61,7 +61,7 @@ abstract class NectarDatabase : RoomDatabase() {
     abstract fun databaseUpdateDao(): DatabaseUpdateDao
     abstract fun gitRepositoryDao(): GitRepositoryDao
     abstract fun imageDao(): ImageDao
-    abstract fun mealAlimentDao(): MealAlimentDao
+    abstract fun mealAlimentDao(): MealAlimentStateDao
     abstract fun mealDao(): MealDao
     abstract fun mealReceipeDao(): MealReceipeDao
     abstract fun measureDao(): MeasureDao
