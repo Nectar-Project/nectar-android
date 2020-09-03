@@ -10,6 +10,20 @@ class Meal(uuid: String, timestamp: Long, nbPeople: Int, description: String): M
     lateinit var aliments: List<MealAlimentState>
     @Relation(parentColumn = "uuid", entityColumn = "mealUuid", entity = MealReceipeRaw::class)
     lateinit var receipes: List<MealReceipe>
+
+    fun listAliments(): List<Pair<AlimentWS, Int>> {
+        val res = mutableListOf<Pair<AlimentWS, Int>>()
+
+        for(aliment in aliments) {
+            res.add(aliment.alimentState.aliment to aliment.weight)
+        }
+
+        for(receipe in receipes) {
+            
+        }
+
+        return res
+    }
 }
 
 @Entity

@@ -8,12 +8,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.realitix.nectar.R
+import com.realitix.nectar.fragment.dialog.EditTextDialogFragment
 import com.realitix.nectar.repository.MealRepository
 import com.realitix.nectar.util.NectarUtil
 import com.realitix.nectar.viewmodel.DashboardViewModel
 import com.realitix.nectar.viewmodel.RepositoryViewModelFactory
 import kotlinx.android.synthetic.main.fragment_dashboard.*
+import kotlinx.android.synthetic.main.fragment_dashboard.toolbar
+import kotlinx.android.synthetic.main.fragment_meals.*
 
 
 class DashboardFragment : Fragment() {
@@ -38,6 +42,14 @@ class DashboardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         toolbar.setupWithNavController(findNavController())
 
-
+        val builder = MaterialDatePicker.Builder.dateRangePicker()
+        val picker = builder.build()
+        picker.addOnPositiveButtonClickListener {
+            val beginTimestamp = it.first!!
+            val endTimestamp = it.second!!
+        }
+        buttonAddShopping.setOnClickListener {
+            picker.show(requireActivity().supportFragmentManager, picker.toString())
+        }
     }
 }

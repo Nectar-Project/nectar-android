@@ -7,6 +7,14 @@ class Receipe(uuid: String, nameUuid: String, portions: Int, stars: Int):
     ReceipeWS(uuid, nameUuid, portions, stars) {
     @Relation(parentColumn = "uuid", entityColumn = "receipeUuid", entity = ReceipeStepRaw::class)
     lateinit var steps: List<ReceipeStep>
+
+    fun listAliments(): Pair<AlimentWS, Int> {
+        val res = mutableListOf<Pair<AlimentWS, Int>>()
+
+        for(step in steps) {
+            step.aliments
+        }
+    }
 }
 
 // Receipe without steps to prevent cycle in ReceipeStepReceipe
