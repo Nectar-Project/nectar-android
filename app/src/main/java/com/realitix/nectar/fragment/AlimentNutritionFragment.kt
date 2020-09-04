@@ -53,15 +53,17 @@ class AlimentNutritionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val rAlimentState = AlimentStateRepository(requireContext())
         viewModel.aliment.observe(viewLifecycleOwner) {
-            if(it.states.isNotEmpty()) {
+            val states = it.getStates(rAlimentState)
+            if(states.isNotEmpty()) {
                 val header = DataTableHeader.Builder()
                     .item("Propriété", 1)
                     .item("Valeur", 1)
                     .build()
                 val rows: ArrayList<DataTableRow> = arrayListOf()
                 for (p in Nutrition::class.memberProperties) {
-                    val n = it.states[0].nutrition
+                    val n = states[0].nutrition
                     rows.add(
                         DataTableRow.Builder().value(p.name).value((p.get(n) as Float).toString())
                             .build()

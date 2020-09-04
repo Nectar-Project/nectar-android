@@ -82,7 +82,7 @@ class AlimentSynchronizer(
         }
 
         val states = mutableMapOf<String, State>()
-        for(state in aliment.states) {
+        for(state in aliment.getStates(rAlimentState)) {
             val measures = mutableMapOf<String, Int>()
             for(m in state.measures) {
                 measures[m.measureUuid] = m.quantity

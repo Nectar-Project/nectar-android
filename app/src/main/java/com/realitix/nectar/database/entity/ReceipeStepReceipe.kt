@@ -6,7 +6,7 @@ import androidx.room.*
 class ReceipeStepReceipe(stepUuid: String, receipeUuid: String, proportion: Float):
     ReceipeStepReceipeRaw(stepUuid, receipeUuid, proportion) {
     @Relation(parentColumn = "receipeUuid", entityColumn = "uuid", entity = ReceipeRaw::class)
-    lateinit var receipe: ReceipeWS
+    lateinit var receipe: Receipe
 }
 
 @Entity(

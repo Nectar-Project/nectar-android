@@ -119,7 +119,7 @@ class ReceipeSynchronizer(
         }
 
         val steps = mutableListOf<Step>()
-        for(s in receipe.steps) {
+        for(s in receipe.getSteps(rReceipeStep)) {
             val alimentStates = mutableMapOf<String, Int>()
             for(a in s.aliments) {
                 alimentStates[a.alimentStateUuid] = a.weight

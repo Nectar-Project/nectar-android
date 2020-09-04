@@ -2,14 +2,11 @@ package com.realitix.nectar.database.entity
 
 
 import androidx.room.*
+import com.realitix.nectar.repository.AlimentStateRepository
+import com.realitix.nectar.repository.ReceipeStepRepository
 
 
-class Aliment(uuid: String, nameUuid: String): AlimentWS(uuid, nameUuid) {
-    @Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentStateRaw::class)
-    lateinit var states: List<AlimentState>
-}
-
-open class AlimentWS(uuid: String, nameUuid: String): AlimentRaw(uuid, nameUuid) {
+class Aliment(uuid: String, nameUuid: String): AlimentRaw(uuid, nameUuid) {
     @Relation(parentColumn = "nameUuid", entityColumn = "uuid", entity = StringKeyRaw::class)
     lateinit var name: StringKey
     @Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentTagRaw::class)
@@ -19,9 +16,10 @@ open class AlimentWS(uuid: String, nameUuid: String): AlimentRaw(uuid, nameUuid)
     @Relation(parentColumn = "uuid", entityColumn = "alimentUuid", entity = AlimentPriceRaw::class)
     lateinit var price: AlimentPrice
 
-    fun getName(): String {
-        return name.getValue()
-    }
+    fun getName(): String = name.getValue()
+
+    // Bug with room preventing nested relation
+    fun getStates(rAlimentState: AlimentStateRepository): List<AlimentState> = rAlimentState.listByReceipe(uuid)
 }
 
 @Entity(

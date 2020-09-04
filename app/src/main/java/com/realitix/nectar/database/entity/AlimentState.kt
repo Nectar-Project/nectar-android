@@ -10,7 +10,7 @@ class AlimentState(uuid: String, alimentUuid: String, stateUuid: String, nutriti
     @Relation(parentColumn = "stateUuid", entityColumn = "uuid", entity = StateRaw::class)
     lateinit var state: State
     @Relation(parentColumn = "alimentUuid", entityColumn = "uuid", entity = AlimentRaw::class)
-    lateinit var aliment: AlimentWS
+    lateinit var aliment: Aliment
 }
 
 @Entity(

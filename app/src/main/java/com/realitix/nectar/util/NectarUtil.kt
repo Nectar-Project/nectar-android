@@ -4,11 +4,11 @@ import android.content.Context
 import android.net.ConnectivityManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat.getSystemService
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.Parser
 import com.realitix.nectar.R
+import com.realitix.nectar.database.entity.Aliment
 import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -108,6 +108,20 @@ class NectarUtil {
             val sw = StringWriter()
             e.printStackTrace(PrintWriter(sw))
             return sw.toString()
+        }
+
+        fun addAlimentToList(out: MutableList<Pair<Aliment, Int>>, aliment: Aliment, weight: Int) {
+            var exist = false
+            for(i in 0..out.size) {
+                if(out[i].first.equals(aliment)) {
+                    out[i] = aliment to out[i].second + weight
+                    exist = true
+                }
+            }
+
+            if(!exist) {
+                out.add(aliment to weight)
+            }
         }
     }
 }

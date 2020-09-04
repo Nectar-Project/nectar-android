@@ -114,11 +114,13 @@ class ReceipeFragment : Fragment() {
         recyclerViewTags.hasFixedSize()
         recyclerViewTags.adapter = adapterTags
 
+        val rReceipeStep = ReceipeStepRepository(requireContext())
+
         viewModel.receipe.observe(viewLifecycleOwner) {
             name.text = it.getName()
             portions.text = it.portions.toString()
             stars.text = it.stars.toString()
-            adapterSteps.setData(it.steps)
+            adapterSteps.setData(it.getSteps(rReceipeStep))
             adapterMeasures.setData(it.measures)
             adapterTags.setData(it.tags)
         }

@@ -14,4 +14,8 @@ class ReceipeStepRepository(val context: Context, updater: EntityUpdaterInterfac
         override fun newDatabaseUpdate(entity: ReceipeStepRaw) = DatabaseUpdateRaw(
             entity.receipeUuid, EntityType.RECEIPE, NectarUtil.timestamp())
     }
+
+    fun listByReceipe(uuid: String): List<ReceipeStep> {
+        return getDao().listByReceipe(uuid)
+    }
 }

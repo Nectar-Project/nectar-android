@@ -1,24 +1,13 @@
 package com.realitix.nectar.database.entity
 
+import android.content.Context
 import androidx.room.*
+import com.realitix.nectar.repository.ReceipeStepRepository
+import com.realitix.nectar.util.NectarUtil
 
-
-class Receipe(uuid: String, nameUuid: String, portions: Int, stars: Int):
-    ReceipeWS(uuid, nameUuid, portions, stars) {
-    @Relation(parentColumn = "uuid", entityColumn = "receipeUuid", entity = ReceipeStepRaw::class)
-    lateinit var steps: List<ReceipeStep>
-
-    fun listAliments(): Pair<AlimentWS, Int> {
-        val res = mutableListOf<Pair<AlimentWS, Int>>()
-
-        for(step in steps) {
-            step.aliments
-        }
-    }
-}
 
 // Receipe without steps to prevent cycle in ReceipeStepReceipe
-open class ReceipeWS(uuid: String, nameUuid: String, portions: Int, stars: Int):
+class Receipe(uuid: String, nameUuid: String, portions: Int, stars: Int):
     ReceipeRaw(uuid, nameUuid, portions, stars) {
     @Relation(parentColumn = "nameUuid", entityColumn = "uuid", entity = StringKeyRaw::class)
     lateinit var name: StringKey
@@ -31,9 +20,27 @@ open class ReceipeWS(uuid: String, nameUuid: String, portions: Int, stars: Int):
     @Relation(parentColumn = "uuid", entityColumn = "receipeUuid", entity = ReceipeMeasureRaw::class)
     lateinit var measures: List<ReceipeMeasure>
 
-    fun getName(): String {
-        return name.getValue()
-    }
+    // Bug with room preventing nested relation
+    fun getSteps(rReceipeStep: ReceipeStepRepository): List<ReceipeStep> = rReceipeStep.listByReceipe(uuid)
+    fun getName(): String = name.getValue()
+
+    /*fun listAliments(): List<Pair<AlimentWS, Int>> {
+        val out = mutableListOf<Pair<AlimentWS, Int>>()
+
+        for(step in steps) {
+            for(aliment in step.aliments) {
+                NectarUtil.addAlimentToList(out, aliment.alimentState.aliment, aliment.weight)
+            }
+
+            for(receipe in step.receipes) {
+                // for(a in receipe.rece .listAliments()) {
+
+                //}
+            }
+        }
+
+        return out
+    }*/
 }
 
 @Entity(

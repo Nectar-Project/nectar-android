@@ -29,4 +29,8 @@ abstract class ReceipeStepDao: GenericGetUuidDao<ReceipeStepRaw, ReceipeStep>() 
     @Transaction
     @Query("SELECT * FROM ReceipeStepRaw")
     abstract override suspend fun listSuspend(): List<ReceipeStep>
+
+    @Transaction
+    @Query("SELECT * FROM ReceipeStepRaw WHERE receipeUuid = :uuid")
+    abstract fun listByReceipe(uuid: String): List<ReceipeStep>
 }

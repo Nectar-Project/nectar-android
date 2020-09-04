@@ -6,6 +6,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.realitix.nectar.database.entity.AlimentState
 import com.realitix.nectar.database.entity.AlimentStateRaw
+import com.realitix.nectar.database.entity.ReceipeStep
 
 
 @Dao
@@ -45,4 +46,8 @@ abstract class AlimentStateDao: GenericGetJoinDao<AlimentStateRaw, AlimentState>
     @Transaction
     @Query("SELECT * FROM AlimentStateRaw")
     abstract override suspend fun listSuspend(): List<AlimentState>
+
+    @Transaction
+    @Query("SELECT * FROM AlimentStateRaw WHERE alimentUuid = :uuid")
+    abstract fun listByAliment(uuid: String): List<AlimentState>
 }

@@ -76,9 +76,10 @@ class AlimentDetailFragment : Fragment() {
         recyclerView.hasFixedSize()
         recyclerView.adapter = adapter
 
+        val rAlimentState = AlimentStateRepository(requireContext())
         viewModel.aliment.observe(viewLifecycleOwner) {
             name.text = it.getName()
-            adapter.setData(it.states)
+            adapter.setData(it.getStates(rAlimentState))
         }
 
         recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {

@@ -15,6 +15,10 @@ class AlimentStateRepository(val context: Context, updater: EntityUpdaterInterfa
     fun getUuidLive(uuid: String): LiveData<AlimentState> = getDao().getUuidLive(uuid)
     suspend fun getUuidSuspend(uuid: String): AlimentState? = getDao().getUuidSuspend(uuid)
 
+    fun listByReceipe(uuid: String): List<AlimentState> {
+        return getDao().listByAliment(uuid)
+    }
+
     class Updater(context: Context): GenericEntityUpdater<AlimentStateRaw>(context) {
         override fun newDatabaseUpdate(entity: AlimentStateRaw) = DatabaseUpdateRaw(
             entity.alimentUuid, EntityType.ALIMENT, NectarUtil.timestamp())

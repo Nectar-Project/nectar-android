@@ -9,7 +9,7 @@ class DashboardViewModel(
     val rMeal: MealRepository,
     timestamp: Long
 ): ViewModel() {
-    fun computeShoppingList(val begin: Long, val end: Long) {
+    fun computeShoppingList(begin: Long, end: Long) {
         runBlocking {
             val meals = rMeal.listRange(begin, end).value!!
             for(meal in meals) {

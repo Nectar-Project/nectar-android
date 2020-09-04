@@ -15,6 +15,7 @@ import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.Aliment
 import com.realitix.nectar.database.entity.AlimentState
 import com.realitix.nectar.database.entity.AlimentStateMeasure
+import com.realitix.nectar.repository.AlimentStateRepository
 import com.realitix.nectar.util.GenericAdapter
 import com.realitix.nectar.util.RecyclerItemClickListener
 import com.realitix.nectar.util.SingleLineItemViewHolder
@@ -52,8 +53,10 @@ class AlimentAddDialogFragment(
                 )
             }
         )
+        val rAlimentState = AlimentStateRepository(requireContext())
+
         recyclerView.adapter = adapter
-        adapter.setData(aliment.states)
+        adapter.setData(aliment.getStates(rAlimentState))
         recyclerView.hasFixedSize()
 
         recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {

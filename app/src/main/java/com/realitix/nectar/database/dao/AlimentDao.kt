@@ -6,6 +6,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.realitix.nectar.database.entity.Aliment
 import com.realitix.nectar.database.entity.AlimentRaw
+import com.realitix.nectar.database.entity.ReceipeStep
 
 @Dao
 abstract class AlimentDao: GenericGetUuidDao<AlimentRaw, Aliment>() {
