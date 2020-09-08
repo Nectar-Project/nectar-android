@@ -15,7 +15,7 @@ class ReceipeStepRepository(val context: Context, updater: EntityUpdaterInterfac
             entity.receipeUuid, EntityType.RECEIPE, NectarUtil.timestamp())
     }
 
-    fun listByReceipe(uuid: String): List<ReceipeStep> {
-        return getDao().listByReceipe(uuid)
+    suspend fun listByReceipeSuspend(uuid: String): List<ReceipeStep> {
+        return getDao().listByReceipeSuspend(uuid)
     }
 }

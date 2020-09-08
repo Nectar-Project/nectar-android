@@ -1,9 +1,9 @@
 package com.realitix.nectar.database.entity
 
-import android.content.Context
 import androidx.room.*
 import com.realitix.nectar.repository.ReceipeStepRepository
 import com.realitix.nectar.util.NectarUtil
+import kotlinx.coroutines.runBlocking
 
 
 // Receipe without steps to prevent cycle in ReceipeStepReceipe
@@ -21,26 +21,32 @@ class Receipe(uuid: String, nameUuid: String, portions: Int, stars: Int):
     lateinit var measures: List<ReceipeMeasure>
 
     // Bug with room preventing nested relation
-    fun getSteps(rReceipeStep: ReceipeStepRepository): List<ReceipeStep> = rReceipeStep.listByReceipe(uuid)
+    fun getSteps(rReceipeStep: ReceipeStepRepository): List<ReceipeStep> {
+        var res = listOf<ReceipeStep>()
+        runBlocking {
+            res = rReceipeStep.listByReceipeSuspend(uuid)
+        }
+
+        return res
+    }
+
     fun getName(): String = name.getValue()
 
-    /*fun listAliments(): List<Pair<AlimentWS, Int>> {
-        val out = mutableListOf<Pair<AlimentWS, Int>>()
+    fun listAliments(receipeStepRepository: ReceipeStepRepository): List<Pair<Aliment, Int>> {
+        val out = mutableListOf<Pair<Aliment, Int>>()
 
-        for(step in steps) {
+        for(step in getSteps(receipeStepRepository)) {
             for(aliment in step.aliments) {
                 NectarUtil.addAlimentToList(out, aliment.alimentState.aliment, aliment.weight)
             }
 
             for(receipe in step.receipes) {
-                // for(a in receipe.rece .listAliments()) {
-
-                //}
+                NectarUtil.addAlimentListToList(out, receipe.receipe.listAliments(receipeStepRepository))
             }
         }
 
         return out
-    }*/
+    }
 }
 
 @Entity(

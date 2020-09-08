@@ -3,6 +3,8 @@ package com.realitix.nectar.database.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import com.realitix.nectar.repository.ReceipeStepRepository
+import com.realitix.nectar.util.NectarUtil
 
 
 class Meal(uuid: String, timestamp: Long, nbPeople: Int, description: String): MealRaw(uuid, timestamp, nbPeople, description) {
@@ -11,15 +13,15 @@ class Meal(uuid: String, timestamp: Long, nbPeople: Int, description: String): M
     @Relation(parentColumn = "uuid", entityColumn = "mealUuid", entity = MealReceipeRaw::class)
     lateinit var receipes: List<MealReceipe>
 
-    fun listAliments(): List<Pair<Aliment, Int>> {
+    fun listAliments(receipeStepRepository: ReceipeStepRepository): List<Pair<Aliment, Int>> {
         val res = mutableListOf<Pair<Aliment, Int>>()
 
         for(aliment in aliments) {
-            res.add(aliment.alimentState.aliment to aliment.weight)
+            NectarUtil.addAlimentToList(res, aliment.alimentState.aliment, aliment.weight)
         }
 
         for(receipe in receipes) {
-            
+            NectarUtil.addAlimentListToList(res, receipe.receipe.listAliments(receipeStepRepository))
         }
 
         return res

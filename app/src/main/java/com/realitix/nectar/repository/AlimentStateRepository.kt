@@ -15,8 +15,8 @@ class AlimentStateRepository(val context: Context, updater: EntityUpdaterInterfa
     fun getUuidLive(uuid: String): LiveData<AlimentState> = getDao().getUuidLive(uuid)
     suspend fun getUuidSuspend(uuid: String): AlimentState? = getDao().getUuidSuspend(uuid)
 
-    fun listByReceipe(uuid: String): List<AlimentState> {
-        return getDao().listByAliment(uuid)
+    suspend fun listByAlimentSuspend(uuid: String): List<AlimentState> {
+        return getDao().listByAlimentSuspend(uuid)
     }
 
     class Updater(context: Context): GenericEntityUpdater<AlimentStateRaw>(context) {

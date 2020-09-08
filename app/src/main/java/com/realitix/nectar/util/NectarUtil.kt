@@ -112,8 +112,8 @@ class NectarUtil {
 
         fun addAlimentToList(out: MutableList<Pair<Aliment, Int>>, aliment: Aliment, weight: Int) {
             var exist = false
-            for(i in 0..out.size) {
-                if(out[i].first.equals(aliment)) {
+            for(i in 0 until out.size) {
+                if(out[i].first == aliment) {
                     out[i] = aliment to out[i].second + weight
                     exist = true
                 }
@@ -121,6 +121,12 @@ class NectarUtil {
 
             if(!exist) {
                 out.add(aliment to weight)
+            }
+        }
+
+        fun addAlimentListToList(out: MutableList<Pair<Aliment, Int>>, aliments: List<Pair<Aliment, Int>>) {
+            for(a in aliments) {
+                addAlimentToList(out, a.first, a.second)
             }
         }
     }

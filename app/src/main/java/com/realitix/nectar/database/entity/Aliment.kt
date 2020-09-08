@@ -3,7 +3,7 @@ package com.realitix.nectar.database.entity
 
 import androidx.room.*
 import com.realitix.nectar.repository.AlimentStateRepository
-import com.realitix.nectar.repository.ReceipeStepRepository
+import kotlinx.coroutines.runBlocking
 
 
 class Aliment(uuid: String, nameUuid: String): AlimentRaw(uuid, nameUuid) {
@@ -19,7 +19,14 @@ class Aliment(uuid: String, nameUuid: String): AlimentRaw(uuid, nameUuid) {
     fun getName(): String = name.getValue()
 
     // Bug with room preventing nested relation
-    fun getStates(rAlimentState: AlimentStateRepository): List<AlimentState> = rAlimentState.listByReceipe(uuid)
+    fun getStates(rAlimentState: AlimentStateRepository): List<AlimentState> {
+        var res = listOf<AlimentState>()
+        runBlocking {
+            res = rAlimentState.listByAlimentSuspend(uuid)
+        }
+
+        return res
+    }
 }
 
 @Entity(

@@ -49,5 +49,5 @@ abstract class AlimentStateDao: GenericGetJoinDao<AlimentStateRaw, AlimentState>
 
     @Transaction
     @Query("SELECT * FROM AlimentStateRaw WHERE alimentUuid = :uuid")
-    abstract fun listByAliment(uuid: String): List<AlimentState>
+    abstract suspend fun listByAlimentSuspend(uuid: String): List<AlimentState>
 }

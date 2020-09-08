@@ -9,7 +9,11 @@ import com.realitix.nectar.database.entity.MealRaw
 abstract class MealDao: GenericGetUuidDao<MealRaw, Meal>() {
     @Transaction
     @Query("SELECT * FROM MealRaw WHERE timestamp BETWEEN :begin AND :end ORDER BY timestamp")
-    abstract fun search(begin: Long, end: Long): LiveData<List<Meal>>
+    abstract fun searchLive(begin: Long, end: Long): LiveData<List<Meal>>
+
+    @Transaction
+    @Query("SELECT * FROM MealRaw WHERE timestamp BETWEEN :begin AND :end ORDER BY timestamp")
+    abstract suspend fun searchSuspend(begin: Long, end: Long): List<Meal>
 
     @Transaction
     @Query("SELECT * FROM MealRaw WHERE uuid = :uuid")

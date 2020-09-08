@@ -11,11 +11,11 @@ class MealRepository(val context: Context, updater: EntityUpdaterInterface<MealR
     GenericGetUuidRepository<MealRaw, Meal>(updater) {
     override fun getDao() = NectarDatabase.getInstance(context).mealDao()
 
-    fun listDay(timestamp: Long): LiveData<List<Meal>> = getDao().search(
+    fun listDayLive(timestamp: Long): LiveData<List<Meal>> = getDao().searchLive(
         NectarUtil.beginDayTimestamp(timestamp),
         NectarUtil.endDayTimestamp(timestamp))
 
-    fun listRange(begin: Long, end: Long): LiveData<List<Meal>> = getDao().search(begin, end)
+    suspend fun listRangeSuspend(begin: Long, end: Long): List<Meal> = getDao().searchSuspend(begin, end)
 
     class Updater(context: Context): GenericEntityUpdater<MealRaw>(context) {
         override fun newDatabaseUpdate(entity: MealRaw) = DatabaseUpdateRaw(
