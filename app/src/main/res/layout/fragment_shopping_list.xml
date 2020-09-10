@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.DashboardFragment">
+    tools:context=".fragment.ShoppingListFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -20,24 +20,16 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/titleShopping"
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Liste de courses"
         app:layout_constraintTop_toBottomOf="@+id/appbar" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewShopping"
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@+id/titleShopping"/>
+        app:layout_constraintTop_toBottomOf="@+id/title"/>
 
-    <Button
-        android:id="@+id/buttonAddShopping"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Créer une liste de course"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerViewShopping" />
 </androidx.constraintlayout.widget.ConstraintLayout>

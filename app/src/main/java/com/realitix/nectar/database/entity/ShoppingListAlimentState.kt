@@ -4,8 +4,10 @@ package com.realitix.nectar.database.entity
 import androidx.room.*
 
 
-class ShoppingListAlimentState(shoppingListUuid: String, alimentStateUuid: String, weight: Int):
-    ShoppingListAlimentStateRaw(shoppingListUuid, alimentStateUuid, weight) {
+class ShoppingListAlimentState(shoppingListUuid: String, alimentStateUuid: String, weight: Int, checked: Boolean):
+    ShoppingListAlimentStateRaw(shoppingListUuid, alimentStateUuid, weight, checked) {
+    @Relation(parentColumn = "alimentStateUuid", entityColumn = "uuid", entity = AlimentStateRaw::class)
+    lateinit var alimentState: AlimentState
 }
 
 @Entity(
@@ -29,7 +31,8 @@ class ShoppingListAlimentState(shoppingListUuid: String, alimentStateUuid: Strin
 open class ShoppingListAlimentStateRaw (
     var shoppingListUuid: String,
     var alimentStateUuid: String,
-    var weight: Int
+    var weight: Int,
+    var checked: Boolean
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -40,6 +43,7 @@ open class ShoppingListAlimentStateRaw (
         if (shoppingListUuid != other.shoppingListUuid) return false
         if (alimentStateUuid != other.alimentStateUuid) return false
         if (weight != other.weight) return false
+        if (checked != other.checked) return false
 
         return true
     }
@@ -48,6 +52,7 @@ open class ShoppingListAlimentStateRaw (
         var result = shoppingListUuid.hashCode()
         result = 31 * result + alimentStateUuid.hashCode()
         result = 31 * result + weight
+        result = 31 * result + checked.hashCode()
         return result
     }
 

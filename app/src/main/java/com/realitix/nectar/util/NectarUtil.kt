@@ -9,6 +9,7 @@ import com.beust.klaxon.Klaxon
 import com.beust.klaxon.Parser
 import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.Aliment
+import com.realitix.nectar.database.entity.AlimentState
 import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -110,7 +111,7 @@ class NectarUtil {
             return sw.toString()
         }
 
-        fun addAlimentToList(out: MutableList<Pair<Aliment, Int>>, aliment: Aliment, weight: Int) {
+        fun addAlimentStateToList(out: MutableList<Pair<AlimentState, Int>>, aliment: AlimentState, weight: Int) {
             var exist = false
             for(i in 0 until out.size) {
                 if(out[i].first == aliment) {
@@ -124,9 +125,9 @@ class NectarUtil {
             }
         }
 
-        fun addAlimentListToList(out: MutableList<Pair<Aliment, Int>>, aliments: List<Pair<Aliment, Int>>) {
+        fun addAlimentStateListToList(out: MutableList<Pair<AlimentState, Int>>, aliments: List<Pair<AlimentState, Int>>) {
             for(a in aliments) {
-                addAlimentToList(out, a.first, a.second)
+                addAlimentStateToList(out, a.first, a.second)
             }
         }
     }

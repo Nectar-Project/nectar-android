@@ -159,5 +159,18 @@
         android:id="@+id/dashboardFragment"
         android:name="com.realitix.nectar.fragment.DashboardFragment"
         android:label="Dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_dashboard" >
+        <action
+            android:id="@+id/action_dashboardFragment_to_shoppingListFragment"
+            app:destination="@id/shoppingListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/shoppingListFragment"
+        android:name="com.realitix.nectar.fragment.ShoppingListFragment"
+        android:label="Liste de course"
+        tools:layout="@layout/fragment_shopping_list" >
+        <argument
+            android:name="shoppingListUuid"
+            app:argType="string" />
+    </fragment>
 </navigation>

@@ -32,16 +32,16 @@ class Receipe(uuid: String, nameUuid: String, portions: Int, stars: Int):
 
     fun getName(): String = name.getValue()
 
-    fun listAliments(receipeStepRepository: ReceipeStepRepository): List<Pair<Aliment, Int>> {
-        val out = mutableListOf<Pair<Aliment, Int>>()
+    fun listAliments(receipeStepRepository: ReceipeStepRepository): List<Pair<AlimentState, Int>> {
+        val out = mutableListOf<Pair<AlimentState, Int>>()
 
         for(step in getSteps(receipeStepRepository)) {
             for(aliment in step.aliments) {
-                NectarUtil.addAlimentToList(out, aliment.alimentState.aliment, aliment.weight)
+                NectarUtil.addAlimentStateToList(out, aliment.alimentState, aliment.weight)
             }
 
             for(receipe in step.receipes) {
-                NectarUtil.addAlimentListToList(out, receipe.receipe.listAliments(receipeStepRepository))
+                NectarUtil.addAlimentStateListToList(out, receipe.receipe.listAliments(receipeStepRepository))
             }
         }
 
