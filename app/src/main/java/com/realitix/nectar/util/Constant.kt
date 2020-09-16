@@ -13,5 +13,6 @@ enum class EntityType(val folderName: String) {
     ALIMENT_PRICE("prices"),
     RECEIPE("receipes"),
     BOOK("books"),
-    MEAL("meals")
+    MEAL("meals"),
+    SHOPPING_LIST("shoppings")
 }

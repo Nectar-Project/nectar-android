@@ -6,7 +6,12 @@ import com.realitix.nectar.database.entity.*
 import com.realitix.nectar.util.EntityType
 import com.realitix.nectar.util.NectarUtil
 
-class ShoppingListRepository(val context: Context):
-    GenericGetUuidRepository<ShoppingListRaw, ShoppingList>(NoTrackEntityUpdater()) {
+class ShoppingListRepository(val context: Context, updater: EntityUpdaterInterface<ShoppingListRaw> = Updater(context)):
+    GenericGetUuidRepository<ShoppingListRaw, ShoppingList>(updater) {
     override fun getDao() = NectarDatabase.getInstance(context).shoppingListDao()
+
+    class Updater(context: Context): GenericEntityUpdater<ShoppingListRaw>(context) {
+        override fun newDatabaseUpdate(entity: ShoppingListRaw) = DatabaseUpdateRaw(
+            entity.uuid, EntityType.SHOPPING_LIST, NectarUtil.timestamp())
+    }
 }

@@ -71,6 +71,11 @@ class GitRepositorySynchronizer(val context: Context) {
             StringKeyRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
             StringKeyValueRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
             NectarUtil.getRepositoryFolder(context)
+        ),
+        EntityType.SHOPPING_LIST to ShoppingListSynchronizer(
+            ShoppingListRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            ShoppingListAlimentStateRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
+            NectarUtil.getRepositoryFolder(context)
         )
     )
 
