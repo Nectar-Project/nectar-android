@@ -50,14 +50,15 @@ class NectarActivityTestRule: ActivityTestRule<MainActivity>(
             fun init(db: SupportSQLiteDatabase) {
                 // Create DB Entry for default repository
                 val repo = GitRepositoryRaw(
-                    generateUuid(),
-                    NectarUtil.getProperty(testContext, "defaultGitRepositoryName"),
-                    NectarUtil.getProperty(testContext, "defaultGitRepositoryUrl"),
+                    uuid = generateUuid(),
+                    name = NectarUtil.getProperty(testContext, "defaultGitRepositoryName"),
+                    url = NectarUtil.getProperty(testContext, "defaultGitRepositoryUrl"),
                     enabled = true,
                     rescan = true,
                     readOnly = false,
                     lastCheck = 0,
                     frequency = 60,
+                    selectiveSynchronization = null,
                     credentials = GitCredentials(username, password)
                 )
                 db.insert("GitRepositoryRaw", OnConflictStrategy.IGNORE,

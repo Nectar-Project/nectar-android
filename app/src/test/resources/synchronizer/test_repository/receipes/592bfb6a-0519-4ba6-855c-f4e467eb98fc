@@ -18,7 +18,7 @@
             "previousStepUuid": null,
             "descriptionUuid": "60d1b1a1-f4ab-4d8a-8b8b-dbb248b90318",
             "duration": 10,
-            "aliments": {
+            "alimentStates": {
                 "a7a12c60-1604-48ee-9991-0e4baa08006d": 100
             },
             "receipes": {

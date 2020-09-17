@@ -90,12 +90,16 @@ class SynchronizerUnitTest {
         )
 
         try {
-            for (entityType in EntityType.values()) {
-                Files.list(File(repositoryFile, entityType.folderName).toPath()).forEach {
-                    val uuid = it.toFile().name
-                    println("Parse path: $it")
-                    if(synchronizerMap[entityType] != null) {
-                        (synchronizerMap[entityType] ?: error("")).getParseResult(repositoryName, uuid)
+            for (entityType in synchronizerMap.keys) {
+                val folder = File(repositoryFile, entityType.folderName)
+                if(folder.exists()) {
+                    Files.list(folder.toPath()).forEach {
+                        val uuid = it.toFile().name
+                        println("Parse path: $it")
+                        if (synchronizerMap[entityType] != null) {
+                            (synchronizerMap[entityType]
+                                ?: error("")).getParseResult(repositoryName, uuid)
+                        }
                     }
                 }
             }
@@ -139,7 +143,7 @@ class SynchronizerUnitTest {
         val portions = 2
         val stars = 2
         val measureUuid = "592bfb6a-0519-4ba6-855c-f4e467eb98fc"
-        val measureQuantity = 3
+        val measureQuantity = 3f
         val tagUuid = "1f0ce536-a01d-4c7c-9412-d696920ea051"
         val utensilUuid = "a70ac073-cee8-4e45-b88e-eaeecf186150"
         val stepUuid = "60d1b1a1-f4ab-4d8a-8b8b-dbb248b90318"
