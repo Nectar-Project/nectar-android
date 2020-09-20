@@ -1,5 +1,6 @@
 package com.realitix.nectar.util
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +15,11 @@ open class SingleLineItemViewHolder(view: View) :
     RecyclerView.ViewHolder(view) {
     val icon: ImageView = itemView.findViewById(R.id.mtrl_list_item_icon)
     val text: TextView = itemView.findViewById(R.id.mtrl_list_item_text)
-    val layout: LinearLayout = text.parent as LinearLayout
+
+    fun setBackgroundColor(color: Int) {
+        (text.parent as LinearLayout).setBackgroundColor(color)
+    }
+
 
     companion object {
         fun create(parent: ViewGroup): SingleLineItemViewHolder {

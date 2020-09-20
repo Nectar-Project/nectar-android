@@ -1,5 +1,7 @@
 package com.realitix.nectar.background.synchronizer
 
+import com.realitix.nectar.background.DummyNotifier
+import com.realitix.nectar.background.NotifierInterface
 import com.realitix.nectar.database.entity.*
 import com.realitix.nectar.repository.ImageRepository
 import com.realitix.nectar.util.EntityType

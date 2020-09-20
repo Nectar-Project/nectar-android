@@ -1,0 +1,11 @@
+{
+    "uuid": "e9ccbaf4-6744-4c20-a5a2-97c525ddd94a",
+    "beginTimestamp": "10",
+    "endTimestamp": "20",
+    "alimentStates": {
+        "e56f15a5-29f5-4ba7-8c9a-f750a31198ce": {
+            "weight": "30",
+            "checked": false
+        }
+     }
+}

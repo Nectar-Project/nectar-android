@@ -300,4 +300,23 @@ class SynchronizerUnitTest {
         verify(rBookImage).insert(BookImageRaw(uuid, imageUuid))
         verify(rBookReceipe).insert(BookReceipeRaw(uuid, receipeUuid))
     }
+
+    @Test
+    fun shoppingListGitToDb() {
+        val uuid = "e9ccbaf4-6744-4c20-a5a2-97c525ddd94a"
+        val beginTimestamp = 10L
+        val endTimestamp = 20L
+        val alimentStateUuid = "e56f15a5-29f5-4ba7-8c9a-f750a31198ce"
+        val weight = 30
+        val checked = false
+
+        val rShoppingList = mock(ShoppingListRepository::class.java)
+        val rShoppingListAlimentState = mock(ShoppingListAlimentStateRepository::class.java)
+        val s = ShoppingListSynchronizer(rShoppingList, rShoppingListAlimentState, getRepositoryFolder())
+        s.fromGitToDb(TEST_REPOSITORY_NAME, uuid)
+
+        verify(rShoppingList).get(uuid)
+        verify(rShoppingList).insert(ShoppingListRaw(uuid, beginTimestamp, endTimestamp))
+        verify(rShoppingListAlimentState).insert(ShoppingListAlimentStateRaw(uuid, alimentStateUuid, weight, checked))
+    }
 }

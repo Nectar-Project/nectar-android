@@ -15,6 +15,8 @@ import org.eclipse.jgit.api.errors.TransportException
 
 class GitRepositorySynchronizer(val context: Context) {
 
+    private val notifier = DefaultNotifier()
+
     private val synchronizerMap = mapOf(
         EntityType.STATE to StateSynchronizer(
             StateRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
@@ -34,7 +36,8 @@ class GitRepositorySynchronizer(val context: Context) {
             AlimentTagRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
             AlimentStateRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
             AlimentStateMeasureRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
-            NectarUtil.getRepositoryFolder(context), UuidGenerator()
+            NectarUtil.getRepositoryFolder(context), UuidGenerator(),
+            notifier
         ),
         EntityType.UTENSIL to UtensilSynchronizer(
             UtensilRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
@@ -48,13 +51,15 @@ class GitRepositorySynchronizer(val context: Context) {
             ReceipeStepRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
             ReceipeStepAlimentStateRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
             ReceipeStepReceipeRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
-            NectarUtil.getRepositoryFolder(context)
+            NectarUtil.getRepositoryFolder(context),
+            notifier
         ),
         EntityType.MEAL to MealSynchronizer(
             MealRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
             MealAlimentRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
             MealReceipeRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
-            NectarUtil.getRepositoryFolder(context)
+            NectarUtil.getRepositoryFolder(context),
+            notifier
         ),
         EntityType.IMAGE to ImageSynchronizer(
             ImageRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
@@ -65,7 +70,8 @@ class GitRepositorySynchronizer(val context: Context) {
             BookRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
             BookImageRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
             BookReceipeRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
-            NectarUtil.getRepositoryFolder(context)
+            NectarUtil.getRepositoryFolder(context),
+            notifier
         ),
         EntityType.STRING_KEY to StringKeySynchronizer(
             StringKeyRepository(context, GenericCrudRepository.NoTrackEntityUpdater()),
@@ -103,8 +109,6 @@ class GitRepositorySynchronizer(val context: Context) {
                 Log.e("nectar", "fromGitToDb error in repo ${gitRepository.name}: ${dt.folderName}/$uuid can't be parsed. Error: $e")
             }
         }
-
-        NectarUtil.showNotification(context, "Repository ${gitRepository.name} updated")
     }
 
     @Synchronized
@@ -191,6 +195,7 @@ class GitRepositorySynchronizer(val context: Context) {
             listOf(g)
         }
 
+        notifier.prepare()
         for(gitRepository in gitRepositories) {
             try {
                 synchronizeFromGitToDb(gitRepository, currentTimestamp, baseRepositoryFolder)
@@ -205,5 +210,6 @@ class GitRepositorySynchronizer(val context: Context) {
             gitRepository.rescan = false
             rGitRepository.update(gitRepository)
         }
+        notifier.notify(context)
     }
 }

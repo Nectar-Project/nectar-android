@@ -12,9 +12,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class ShoppingListViewModel(
-    rShoppingList: ShoppingListRepository,
+    private val rShoppingList: ShoppingListRepository,
     private val rShoppingListAlimentState: ShoppingListAlimentStateRepository,
-    shoppingListUuid: String
+    private val shoppingListUuid: String
 ): ViewModel() {
     val shoppingList: LiveData<ShoppingList> = rShoppingList.getLive(shoppingListUuid)
 
@@ -22,6 +22,12 @@ class ShoppingListViewModel(
         GlobalScope.launch {
             a.checked = a.checked.not()
             rShoppingListAlimentState.updateSuspend(a)
+        }
+    }
+
+    fun deleteShoppingList() {
+        GlobalScope.launch {
+            rShoppingList.deleteSuspend(rShoppingList.getSuspend(shoppingListUuid)!!)
         }
     }
 }

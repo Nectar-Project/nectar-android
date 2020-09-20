@@ -1,5 +1,7 @@
 package com.realitix.nectar.background.synchronizer
 
+import com.realitix.nectar.background.DummyNotifier
+import com.realitix.nectar.background.NotifierInterface
 import com.realitix.nectar.database.entity.*
 import com.realitix.nectar.repository.MealAlimentRepository
 import com.realitix.nectar.repository.MealReceipeRepository
@@ -11,7 +13,8 @@ class MealSynchronizer(
     private val rMeal: MealRepository,
     private val rMealAliment: MealAlimentRepository,
     private val rMealReceipe: MealReceipeRepository,
-    baseRepositoryFolder: File
+    baseRepositoryFolder: File,
+    private val notifier: NotifierInterface = DummyNotifier()
 ): BaseSynchronizer<MealSynchronizer.ParseResult>(baseRepositoryFolder) {
     data class ParseResult(
         val uuid: String,

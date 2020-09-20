@@ -76,8 +76,8 @@ class ShoppingListFragment : Fragment() {
                     )
                 )
                 when(shoppingListAlimentState.checked) {
-                    false -> holder.layout.setBackgroundColor(Color.RED)
-                    true -> holder.layout.setBackgroundColor(Color.GREEN)
+                    false -> holder.setBackgroundColor(Color.RED)
+                    true -> holder.setBackgroundColor(Color.GREEN)
                 }
 
             }
@@ -108,6 +108,11 @@ class ShoppingListFragment : Fragment() {
                 }
             }
         }))
+
+        buttonDelete.setOnClickListener {
+            viewModel.deleteShoppingList()
+            findNavController().popBackStack()
+        }
     }
 
 }

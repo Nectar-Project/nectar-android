@@ -1,5 +1,7 @@
 package com.realitix.nectar.background.synchronizer
 
+import com.realitix.nectar.background.DummyNotifier
+import com.realitix.nectar.background.NotifierInterface
 import com.realitix.nectar.database.entity.*
 import com.realitix.nectar.repository.*
 import com.realitix.nectar.util.EntityType
@@ -13,7 +15,8 @@ class ReceipeSynchronizer(
     private val rReceipeStep: ReceipeStepRepository,
     private val rReceipeStepAlimentState: ReceipeStepAlimentStateRepository,
     private val rReceipeStepReceipe: ReceipeStepReceipeRepository,
-    baseRepositoryFolder: File
+    baseRepositoryFolder: File,
+    private val notifier: NotifierInterface = DummyNotifier()
 ): BaseSynchronizer<ReceipeSynchronizer.ParseResult>(baseRepositoryFolder) {
     class ParseResult(
         val uuid: String,
@@ -42,6 +45,7 @@ class ReceipeSynchronizer(
         // Create receipe only if not exists
         if(rReceipe.get(parseResult.uuid) == null) {
             rReceipe.insert(ReceipeRaw(parseResult.uuid, parseResult.nameUuid, parseResult.portions, parseResult.stars))
+            notifier.addNotification("Ajout d'une recette")
         }
 
         // measures

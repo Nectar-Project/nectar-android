@@ -1,5 +1,7 @@
 package com.realitix.nectar.background.synchronizer
 
+import com.realitix.nectar.background.DummyNotifier
+import com.realitix.nectar.background.NotifierInterface
 import com.realitix.nectar.database.entity.*
 import com.realitix.nectar.repository.BookImageRepository
 import com.realitix.nectar.repository.BookReceipeRepository
@@ -11,7 +13,8 @@ class BookSynchronizer(
     private val rBook: BookRepository,
     private val rBookImage: BookImageRepository,
     private val rBookReceipe: BookReceipeRepository,
-    baseRepositoryFolder: File
+    baseRepositoryFolder: File,
+    private val notifier: NotifierInterface = DummyNotifier()
 ): BaseSynchronizer<BookSynchronizer.ParseResult>(baseRepositoryFolder) {
     class ParseResult(
         val uuid: String,

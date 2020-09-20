@@ -1,5 +1,7 @@
 package com.realitix.nectar.background.synchronizer
 
+import com.realitix.nectar.background.DummyNotifier
+import com.realitix.nectar.background.NotifierInterface
 import com.realitix.nectar.database.entity.*
 import com.realitix.nectar.repository.*
 import com.realitix.nectar.util.EntityType
@@ -13,7 +15,8 @@ class AlimentPriceSynchronizer(
     private val rAlimentState: AlimentStateRepository,
     private val rAlimentStateMeasure: AlimentStateMeasureRepository,
     baseRepositoryFolder: File,
-    private val uuidGenerator: UuidGeneratorInterface
+    private val uuidGenerator: UuidGeneratorInterface,
+    private val notifier: NotifierInterface = DummyNotifier()
 ): BaseSynchronizer<AlimentPriceSynchronizer.ParseResult>(baseRepositoryFolder) {
     class ParseResult(
         val uuid: String,

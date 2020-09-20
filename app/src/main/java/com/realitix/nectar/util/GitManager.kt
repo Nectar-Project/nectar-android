@@ -148,7 +148,17 @@ class GitManager(private val repoDir: File, private val url: String, private val
     }
 
     fun commit() {
-        git.commit().setMessage("Commit all changes").call()
+        var u = "noname@noname.fr"
+        if(credentials != null) {
+            u = credentials.username
+        }
+
+        git
+            .commit()
+            .setAuthor(u, u)
+            .setCommitter(u, u)
+            .setMessage("Commit all changes")
+            .call()
     }
 
     // Return true if remote has new commits
