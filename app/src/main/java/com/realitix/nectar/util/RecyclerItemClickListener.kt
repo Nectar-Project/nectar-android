@@ -1,10 +1,12 @@
 package com.realitix.nectar.util
 
 import android.content.Context
+import android.util.Log
 import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener
 
@@ -13,8 +15,7 @@ class RecyclerItemClickListener(
     context: Context,
     recyclerView: RecyclerView,
     private val mListener: OnItemClickListener
-) :
-    OnItemTouchListener {
+): OnItemTouchListener {
 
     interface OnItemClickListener {
         fun onItemClick(view: View, position: Int)
@@ -24,14 +25,16 @@ class RecyclerItemClickListener(
     var mGestureDetector: GestureDetector
     override fun onInterceptTouchEvent(view: RecyclerView, e: MotionEvent): Boolean {
         val childView = view.findChildViewUnder(e.x, e.y)
+
         if (childView != null && mGestureDetector.onTouchEvent(e)) {
             mListener.onItemClick(childView, view.getChildAdapterPosition(childView))
-            return true
+            return false
         }
         return false
     }
 
-    override fun onTouchEvent(view: RecyclerView, motionEvent: MotionEvent) {}
+    override fun onTouchEvent(view: RecyclerView, e: MotionEvent) {}
+
     override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
 
     init {

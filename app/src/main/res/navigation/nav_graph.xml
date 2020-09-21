@@ -107,44 +107,8 @@
         android:label="Liste des aliments"
         tools:layout="@layout/fragment_aliments" >
         <action
-            android:id="@+id/action_alimentsFragment_to_alimentFragment"
-            app:destination="@id/alimentFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/alimentFragment"
-        android:name="com.realitix.nectar.fragment.AlimentFragment"
-        android:label="Aliment"
-        tools:layout="@layout/fragment_aliment" >
-        <argument
-            android:name="alimentUuid"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_alimentFragment_to_alimentDetailFragment"
-            app:destination="@id/alimentDetailFragment" />
-        <action
-            android:id="@+id/action_alimentFragment_to_alimentNutritionFragment"
-            app:destination="@id/alimentNutritionFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/alimentDetailFragment"
-        android:name="com.realitix.nectar.fragment.AlimentDetailFragment"
-        android:label="Détail de l'aliment"
-        tools:layout="@layout/fragment_aliment_detail" >
-        <argument
-            android:name="alimentUuid"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_alimentDetailFragment_to_alimentStateFragment"
+            android:id="@+id/action_alimentsFragment_to_alimentStateFragment"
             app:destination="@id/alimentStateFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/alimentNutritionFragment"
-        android:name="com.realitix.nectar.fragment.AlimentNutritionFragment"
-        android:label="Nutrition sur l'aliment"
-        tools:layout="@layout/fragment_aliment_nutrition" >
-        <argument
-            android:name="alimentUuid"
-            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/alimentStateFragment"

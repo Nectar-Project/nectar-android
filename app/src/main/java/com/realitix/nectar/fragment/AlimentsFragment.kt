@@ -6,7 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
@@ -17,12 +19,10 @@ import androidx.navigation.ui.setupWithNavController
 import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.Aliment
 import com.realitix.nectar.database.entity.AlimentState
+import com.realitix.nectar.fragment.dialog.AlimentStateDialogFragment
 import com.realitix.nectar.fragment.dialog.EditTextDialogFragment
 import com.realitix.nectar.fragment.view.AlimentItemViewHolder
-import com.realitix.nectar.repository.AlimentRepository
-import com.realitix.nectar.repository.AlimentStateRepository
-import com.realitix.nectar.repository.StringKeyRepository
-import com.realitix.nectar.repository.StringKeyValueRepository
+import com.realitix.nectar.repository.*
 import com.realitix.nectar.util.GenericAdapter
 import com.realitix.nectar.util.RecyclerItemClickListener
 import com.realitix.nectar.util.SingleLineItemViewHolder
@@ -37,6 +37,8 @@ class AlimentsFragment : Fragment() {
             RepositoryViewModelFactory {
                 AlimentsViewModel(
                     AlimentRepository(requireContext()),
+                    StateRepository(requireContext()),
+                    AlimentStateRepository(requireContext()),
                     StringKeyRepository(requireContext()),
                     StringKeyValueRepository(requireContext())
                 )
@@ -45,7 +47,6 @@ class AlimentsFragment : Fragment() {
     )
 
     private lateinit var adapter: GenericAdapter<AlimentItemViewHolder, Aliment>
-    private lateinit var adapterStates: GenericAdapter<SingleLineItemViewHolder, AlimentState>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,19 +57,6 @@ class AlimentsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         collapsingToolbarLayout.setupWithNavController(toolbar, findNavController())
 
-        // Adapter for state recyclerview
-        adapterStates = GenericAdapter(
-            { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
-            { holder, alimentState ->
-                holder.text.text = alimentState.state.getName()
-                holder.icon.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_receipt_black_24dp
-                    )
-                )
-            }
-        )
         // Set RecyclerView
         val rAlimentState = AlimentStateRepository(requireContext())
         adapter = GenericAdapter(
@@ -81,8 +69,43 @@ class AlimentsFragment : Fragment() {
                         R.drawable.ic_receipt_black_24dp
                     )
                 )
+
+                holder.buttonAddState.setOnClickListener {
+                    AlimentStateDialogFragment(
+                        "Sélectionner un état à ajouter",
+                        "Ajouter un état",
+                        "Etat à créer",
+                        object:
+                            AlimentStateDialogFragment.Listener {
+                            override fun onSelect(index: Int) = viewModel.insertAlimentState(aliment.uuid, viewModel.getAllStates()[index].uuid)
+                            override fun onCreate(name: String) = viewModel.insertState(name)
+                            override fun getData(): List<String> = viewModel.getAllStates().map { it.getName() }
+                        }
+                    ).show(parentFragmentManager, "addAlimentState")
+                }
+
+                val adapterStates = GenericAdapter<SingleLineItemViewHolder, AlimentState>(
+                    { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
+                    { holderAlimentState, alimentState ->
+                        holderAlimentState.text.text = alimentState.state.getName()
+                        holderAlimentState.icon.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                requireContext(),
+                                R.drawable.ic_receipt_black_24dp
+                            )
+                        )
+                    }
+                )
                 holder.recyclerView.adapter = adapterStates
                 adapterStates.setData(aliment.getStates(rAlimentState))
+
+                holder.recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), holder.recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
+                    override fun onItemClick(view: View, position: Int) {
+                        val alimentState = adapterStates.getAtPosition(position)
+                        val action = AlimentsFragmentDirections.actionAlimentsFragmentToAlimentStateFragment(alimentState.uuid)
+                        findNavController().navigate(action)
+                    }
+                }))
             }
         )
         recyclerView.hasFixedSize()
@@ -94,10 +117,10 @@ class AlimentsFragment : Fragment() {
 
         recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
-                (view as RelativeLayout).getChildAt(2).visibility = View.GONE
-                /*val aliment = adapter.getAtPosition(position)
-                val action = AlimentsFragmentDirections.actionAlimentsFragmentToAlimentFragment(aliment.uuid)
-                view.findNavController().navigate(action)*/
+                val viewToggle = (view as LinearLayout).getChildAt(1)
+                if(viewToggle.visibility == View.GONE) {
+                    viewToggle.visibility = View.VISIBLE
+                }
             }
         }))
 
@@ -110,11 +133,11 @@ class AlimentsFragment : Fragment() {
                         EditTextDialogFragment.OnValidateListener {
                         override fun onValidate(dialog: EditTextDialogFragment) {
                             val alimentUuid = viewModel.createAliment(dialog.getText())
-                            val action =
+                            /*val action =
                                 AlimentsFragmentDirections.actionAlimentsFragmentToAlimentFragment(
                                     alimentUuid
                                 )
-                            findNavController().navigate(action)
+                            findNavController().navigate(action)*/
                         }
                     })
 

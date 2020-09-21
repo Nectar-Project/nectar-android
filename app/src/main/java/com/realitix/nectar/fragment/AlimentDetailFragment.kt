@@ -85,8 +85,8 @@ class AlimentDetailFragment : Fragment() {
         recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val alimentState = adapter.getAtPosition(position)
-                val action = AlimentDetailFragmentDirections.actionAlimentDetailFragmentToAlimentStateFragment(alimentState.uuid)
-                findNavController().navigate(action)
+                //val action = AlimentDetailFragmentDirections.actionAlimentDetailFragmentToAlimentStateFragment(alimentState.uuid)
+                //findNavController().navigate(action)
             }
         }))
 

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.realitix.nectar.R
 import com.realitix.nectar.util.SingleLineItemViewHolder
 
@@ -14,6 +15,8 @@ open class AlimentItemViewHolder(view: View): RecyclerView.ViewHolder(view) {
     val icon: ImageView = itemView.findViewById(R.id.mtrl_list_item_icon)
     val text: TextView = itemView.findViewById(R.id.mtrl_list_item_text)
     val recyclerView: RecyclerView = itemView.findViewById(R.id.mtrl_list_item_recyclerview)
+    val buttonAddState: MaterialButton = itemView.findViewById(R.id.mtrl_list_item_button_add_state)
+    val buttonDelete: MaterialButton = itemView.findViewById(R.id.mtrl_list_item_button_delete)
 
     companion object {
         fun create(parent: ViewGroup): AlimentItemViewHolder {

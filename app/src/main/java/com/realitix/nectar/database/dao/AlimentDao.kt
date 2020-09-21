@@ -44,7 +44,7 @@ abstract class AlimentDao: GenericGetUuidDao<AlimentRaw, Aliment>() {
         SELECT AlimentRaw.* FROM AlimentRaw
         INNER JOIN StringKeyRaw ON StringKeyRaw.uuid = AlimentRaw.nameUuid
         INNER JOIN StringKeyValueRaw ON StringKeyValueRaw.stringKeyUuid = StringKeyRaw.uuid
-        ORDER BY StringKeyValueRaw.value
+        ORDER BY UPPER(StringKeyValueRaw.value)
     """)
     abstract override fun listLive(): LiveData<List<Aliment>>
 
