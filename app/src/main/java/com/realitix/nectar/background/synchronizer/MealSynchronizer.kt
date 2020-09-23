@@ -27,6 +27,7 @@ class MealSynchronizer(
 
     override fun getEntityType(): EntityType = EntityType.MEAL
     override fun getParseResult(repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(repositoryName, uuid)
+    override fun isEntityExists(uuid: String): Boolean = rMeal.get(uuid) != null
 
     override fun updateDb(parseResult: ParseResult) {
         // Create meal only if not exists

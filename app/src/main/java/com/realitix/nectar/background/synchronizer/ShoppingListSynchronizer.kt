@@ -24,6 +24,7 @@ class ShoppingListSynchronizer(
 
     override fun getEntityType(): EntityType = EntityType.SHOPPING_LIST
     override fun getParseResult(repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(repositoryName, uuid)
+    override fun isEntityExists(uuid: String): Boolean = rShoppingList.get(uuid) != null
 
     override fun updateDb(parseResult: ParseResult) {
         // Create meal only if not exists

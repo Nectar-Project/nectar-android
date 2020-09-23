@@ -30,6 +30,7 @@ class AlimentSynchronizer(
 
     override fun getEntityType(): EntityType = EntityType.ALIMENT
     override fun getParseResult(repositoryName: String, uuid: String): ParseResult = getInnerParseResult(repositoryName, uuid)
+    override fun isEntityExists(uuid: String): Boolean = rAliment.get(uuid) != null
 
     override fun updateDb(parseResult: ParseResult) {
 

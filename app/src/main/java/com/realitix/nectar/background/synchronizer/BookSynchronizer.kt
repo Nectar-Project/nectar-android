@@ -27,6 +27,7 @@ class BookSynchronizer(
 
     override fun getEntityType(): EntityType = EntityType.BOOK
     override fun getParseResult(repositoryName: String, uuid: String): ParseResult = getInnerParseResult(repositoryName, uuid)
+    override fun isEntityExists(uuid: String): Boolean = rBook.get(uuid) != null
 
     override fun updateDb(parseResult: ParseResult) {
         // Create book only if not exists

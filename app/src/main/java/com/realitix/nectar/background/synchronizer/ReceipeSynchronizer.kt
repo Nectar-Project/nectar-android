@@ -40,6 +40,7 @@ class ReceipeSynchronizer(
 
     override fun getEntityType(): EntityType = EntityType.RECEIPE
     override fun getParseResult(repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(repositoryName, uuid)
+    override fun isEntityExists(uuid: String): Boolean = rReceipe.get(uuid) != null
 
     override fun updateDb(parseResult: ParseResult) {
         // Create receipe only if not exists

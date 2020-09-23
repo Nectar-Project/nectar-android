@@ -38,14 +38,17 @@ class AlimentsViewModel(
         }
     }
 
-    fun insertAlimentState(alimentUuid: String, stateUuid: String) {
+    fun insertAlimentState(alimentUuid: String, stateUuid: String, fn: (alimentState: AlimentState) -> Unit) {
         viewModelScope.launch {
+            val newUuid = generateUuid()
             rAlimentState.insertSuspend(
                 AlimentStateRaw(
-                generateUuid(), alimentUuid,
-                stateUuid, Nutrition.generate()
+                    newUuid, alimentUuid,
+                    stateUuid, Nutrition.generate()
+                )
             )
-            )
+            val newAlimentState = rAlimentState.getUuidSuspend(newUuid)!!
+            fn(newAlimentState)
         }
     }
 
@@ -55,6 +58,24 @@ class AlimentsViewModel(
             rStringKey.insertSuspend(StringKeyRaw(sid))
             rStringKeyValue.insertSuspend(StringKeyValueRaw(sid, "fr", name))
             rState.insertSuspend(StateRaw(generateUuid(), sid))
+        }
+    }
+
+    fun deleteAliment(aliment: Aliment) {
+        viewModelScope.launch {
+            val alimentStates = rAlimentState.listByAlimentSuspend(aliment.uuid)
+            for(a in alimentStates) {
+                rAlimentState.deleteSuspend(a)
+            }
+            rAliment.deleteSuspend(aliment)
+        }
+    }
+
+    fun updateAlimentName(aliment: Aliment, newName: String) {
+        viewModelScope.launch {
+            val keyValue = rStringKeyValue.getSuspend(aliment.nameUuid, "fr")!!
+            keyValue.value = newName
+            rStringKeyValue.updateSuspend(keyValue)
         }
     }
 }

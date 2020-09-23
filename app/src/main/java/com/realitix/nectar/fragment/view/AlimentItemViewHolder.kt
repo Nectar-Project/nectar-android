@@ -17,6 +17,7 @@ open class AlimentItemViewHolder(view: View): RecyclerView.ViewHolder(view) {
     val recyclerView: RecyclerView = itemView.findViewById(R.id.mtrl_list_item_recyclerview)
     val buttonAddState: MaterialButton = itemView.findViewById(R.id.mtrl_list_item_button_add_state)
     val buttonDelete: MaterialButton = itemView.findViewById(R.id.mtrl_list_item_button_delete)
+    val buttonEdit: MaterialButton = itemView.findViewById(R.id.mtrl_list_item_button_edit)
 
     companion object {
         fun create(parent: ViewGroup): AlimentItemViewHolder {

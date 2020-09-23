@@ -19,14 +19,13 @@ import androidx.navigation.ui.setupWithNavController
 import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.Aliment
 import com.realitix.nectar.database.entity.AlimentState
+import com.realitix.nectar.database.entity.AlimentStateRaw
+import com.realitix.nectar.database.entity.Nutrition
 import com.realitix.nectar.fragment.dialog.AlimentStateDialogFragment
 import com.realitix.nectar.fragment.dialog.EditTextDialogFragment
 import com.realitix.nectar.fragment.view.AlimentItemViewHolder
 import com.realitix.nectar.repository.*
-import com.realitix.nectar.util.GenericAdapter
-import com.realitix.nectar.util.RecyclerItemClickListener
-import com.realitix.nectar.util.SingleLineItemViewHolder
-import com.realitix.nectar.util.TwoLineItemViewHolder
+import com.realitix.nectar.util.*
 import com.realitix.nectar.viewmodel.AlimentsViewModel
 import com.realitix.nectar.viewmodel.RepositoryViewModelFactory
 import kotlinx.android.synthetic.main.fragment_aliments.*
@@ -60,54 +59,89 @@ class AlimentsFragment : Fragment() {
         // Set RecyclerView
         val rAlimentState = AlimentStateRepository(requireContext())
         adapter = GenericAdapter(
-            { v: ViewGroup -> AlimentItemViewHolder.create(v) },
-            { holder, aliment ->
-                holder.text.text = aliment.getName()
-                holder.icon.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_receipt_black_24dp
-                    )
+            { v: ViewGroup -> AlimentItemViewHolder.create(v) }
+        ) { holder, aliment ->
+            holder.text.text = aliment.getName()
+            holder.icon.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_receipt_black_24dp
                 )
+            )
 
-                holder.buttonAddState.setOnClickListener {
-                    AlimentStateDialogFragment(
-                        "Sélectionner un état à ajouter",
-                        "Ajouter un état",
-                        "Etat à créer",
-                        object:
-                            AlimentStateDialogFragment.Listener {
-                            override fun onSelect(index: Int) = viewModel.insertAlimentState(aliment.uuid, viewModel.getAllStates()[index].uuid)
-                            override fun onCreate(name: String) = viewModel.insertState(name)
-                            override fun getData(): List<String> = viewModel.getAllStates().map { it.getName() }
-                        }
-                    ).show(parentFragmentManager, "addAlimentState")
-                }
-
-                val adapterStates = GenericAdapter<SingleLineItemViewHolder, AlimentState>(
-                    { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
-                    { holderAlimentState, alimentState ->
-                        holderAlimentState.text.text = alimentState.state.getName()
-                        holderAlimentState.icon.setImageDrawable(
-                            ContextCompat.getDrawable(
-                                requireContext(),
-                                R.drawable.ic_receipt_black_24dp
-                            )
+            val adapterStates = GenericAdapter<SingleLineItemViewHolder, AlimentState>(
+                { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
+                { holderAlimentState, alimentState ->
+                    holderAlimentState.text.text = alimentState.state.getName()
+                    holderAlimentState.icon.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.ic_receipt_black_24dp
                         )
-                    }
-                )
-                holder.recyclerView.adapter = adapterStates
-                adapterStates.setData(aliment.getStates(rAlimentState))
+                    )
+                }
+            )
+            holder.recyclerView.adapter = adapterStates
+            adapterStates.setData(aliment.getStates(rAlimentState))
 
-                holder.recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), holder.recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
-                    override fun onItemClick(view: View, position: Int) {
-                        val alimentState = adapterStates.getAtPosition(position)
-                        val action = AlimentsFragmentDirections.actionAlimentsFragmentToAlimentStateFragment(alimentState.uuid)
-                        findNavController().navigate(action)
+            holder.recyclerView.addOnItemTouchListener(
+                RecyclerItemClickListener(
+                    requireContext(),
+                    holder.recyclerView,
+                    object : RecyclerItemClickListener.OnItemClickListener {
+                        override fun onItemClick(view: View, position: Int) {
+                            val alimentState = adapterStates.getAtPosition(position)
+                            val action =
+                                AlimentsFragmentDirections.actionAlimentsFragmentToAlimentStateFragment(
+                                    alimentState.uuid
+                                )
+                            findNavController().navigate(action)
+                        }
+                    })
+            )
+
+            holder.buttonAddState.setOnClickListener {
+                AlimentStateDialogFragment(
+                    "Sélectionner un état à ajouter",
+                    "Ajouter un état",
+                    "Etat à créer",
+                    object :
+                        AlimentStateDialogFragment.Listener {
+                        override fun onSelect(index: Int) {
+                            viewModel.insertAlimentState(
+                                aliment.uuid,
+                                viewModel.getAllStates()[index].uuid
+                            ) {
+                                (holder.recyclerView.adapter as GenericAdapter<SingleLineItemViewHolder, AlimentState>).addData(
+                                    it
+                                )
+                            }
+
+                        }
+
+                        override fun onCreate(name: String) = viewModel.insertState(name)
+                        override fun getData(): List<String> =
+                            viewModel.getAllStates().map { it.getName() }
                     }
-                }))
+                ).show(parentFragmentManager, "addAlimentState")
             }
-        )
+
+            holder.buttonDelete.setOnClickListener {
+                viewModel.deleteAliment(aliment)
+            }
+
+            holder.buttonEdit.setOnClickListener {
+                EditTextDialogFragment(
+                    "Nom de l'aliment'",
+                    object :
+                        EditTextDialogFragment.OnValidateListener {
+                        override fun onValidate(dialog: EditTextDialogFragment) {
+                            viewModel.updateAlimentName(aliment, dialog.getText())
+                        }
+                    }, aliment.getName()
+                ).show(parentFragmentManager, "updateAlimentName")
+            }
+        }
         recyclerView.hasFixedSize()
         recyclerView.adapter = adapter
 
@@ -133,11 +167,6 @@ class AlimentsFragment : Fragment() {
                         EditTextDialogFragment.OnValidateListener {
                         override fun onValidate(dialog: EditTextDialogFragment) {
                             val alimentUuid = viewModel.createAliment(dialog.getText())
-                            /*val action =
-                                AlimentsFragmentDirections.actionAlimentsFragmentToAlimentFragment(
-                                    alimentUuid
-                                )
-                            findNavController().navigate(action)*/
                         }
                     })
 

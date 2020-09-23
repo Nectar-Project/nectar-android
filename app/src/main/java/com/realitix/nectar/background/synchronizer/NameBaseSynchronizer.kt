@@ -15,6 +15,7 @@ abstract class NameBaseSynchronizer<ERaw, E: UuidInterface>(
 
     abstract fun getNew(uuid: String, nameUuid: String): ERaw
     override fun getParseResult(repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(repositoryName, uuid)
+    override fun isEntityExists(uuid: String): Boolean = rName.get(uuid) != null
 
     override fun updateDb(parseResult: ParseResult) {
         // Create name only if not exists

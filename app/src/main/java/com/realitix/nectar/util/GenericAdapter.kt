@@ -25,6 +25,13 @@ class GenericAdapter<T: RecyclerView.ViewHolder, U>(
         notifyDataSetChanged()
     }
 
+    fun addData(d: U) {
+        val newData = data?.toMutableList() ?: mutableListOf()
+        newData.add(d)
+        data = newData
+        notifyDataSetChanged()
+    }
+
     fun getAtPosition(position: Int): U {
         return data!![position]
     }

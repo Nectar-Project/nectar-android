@@ -48,10 +48,15 @@
               android:layout_height="wrap_content"
               android:text="Ajouter un état" />
           <com.google.android.material.button.MaterialButton
+              android:id="@+id/mtrl_list_item_button_edit"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Modifier" />
+          <com.google.android.material.button.MaterialButton
               android:id="@+id/mtrl_list_item_button_delete"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="Supprimer cet aliment" />
+              android:text="Supprimer" />
 
       </LinearLayout>
 

@@ -15,6 +15,7 @@ abstract class BaseSynchronizer<P>(
     abstract fun getParseResult(repositoryName: String, uuid: String): P
     abstract fun updateDb(parseResult: P)
     abstract fun populateParseResult(uuid: String): P
+    abstract fun isEntityExists(uuid: String): Boolean
 
     private fun getEntityFile(repositoryName: String, uuid: String): File {
         val repoFolder = File(baseRepositoryFolder, repositoryName)
@@ -31,5 +32,12 @@ abstract class BaseSynchronizer<P>(
     inline fun <reified P> parse(json: String): P = Klaxon().parse<P>(json)!!
     inline fun <reified P> getInnerParseResult(repositoryName: String, uuid: String): P = parse(readFile(repositoryName, uuid))
     override fun fromGitToDb(gitRepositoryName: String, uuid: String) = updateDb(getParseResult(gitRepositoryName, uuid))
-    override fun fromDbToGit(gitRepositoryName: String, uuid: String) = writeFile(gitRepositoryName, uuid, populateParseResult(uuid))
+    override fun fromDbToGit(gitRepositoryName: String, uuid: String) {
+        if(isEntityExists(uuid)) {
+            writeFile(gitRepositoryName, uuid, populateParseResult(uuid))
+        }
+        else {
+            getEntityFile(gitRepositoryName, uuid).delete()
+        }
+    }
 }

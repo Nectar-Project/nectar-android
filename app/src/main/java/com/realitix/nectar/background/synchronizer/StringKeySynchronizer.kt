@@ -18,6 +18,7 @@ class StringKeySynchronizer(
 
     override fun getEntityType(): EntityType = EntityType.STRING_KEY
     override fun getParseResult(repositoryName: String, uuid: String): ParseResult = getInnerParseResult(repositoryName, uuid)
+    override fun isEntityExists(uuid: String): Boolean = rStringKey.get(uuid) != null
 
     override fun updateDb(parseResult: ParseResult) {
         // Create name only if not exists
