@@ -71,7 +71,7 @@
         android:id="@+id/mealsFragment"
         android:name="com.realitix.nectar.fragment.MealsFragment"
         android:label="Planning"
-        tools:layout="@layout/fragment_meals" >
+        tools:layout="@layout/fragment_meals">
         <action
             android:id="@+id/action_mealsFragment_to_mealFragment"
             app:destination="@id/mealFragment" />
@@ -107,17 +107,8 @@
         android:label="Liste des aliments"
         tools:layout="@layout/fragment_aliments" >
         <action
-            android:id="@+id/action_alimentsFragment_to_alimentStateFragment"
-            app:destination="@id/alimentStateFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/alimentStateFragment"
-        android:name="com.realitix.nectar.fragment.AlimentStateFragment"
-        android:label="Etat de l'aliment"
-        tools:layout="@layout/fragment_aliment_state" >
-        <argument
-            android:name="alimentStateUuid"
-            app:argType="string" />
+            android:id="@+id/action_alimentsFragment_to_alimentStatePagerFragment"
+            app:destination="@id/alimentStatePagerFragment" />
     </fragment>
     <fragment
         android:id="@+id/dashboardFragment"
@@ -135,6 +126,15 @@
         tools:layout="@layout/fragment_shopping_list" >
         <argument
             android:name="shoppingListUuid"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/alimentStatePagerFragment"
+        android:name="com.realitix.nectar.fragment.AlimentStatePagerFragment"
+        android:label="Détail de l'aliment"
+        tools:layout="@layout/fragment_aliment_state_pager">
+        <argument
+            android:name="alimentStateUuid"
             app:argType="string" />
     </fragment>
 </navigation>

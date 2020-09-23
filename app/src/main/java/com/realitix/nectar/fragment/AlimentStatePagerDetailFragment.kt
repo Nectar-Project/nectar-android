@@ -22,7 +22,7 @@ import com.realitix.nectar.viewmodel.RepositoryViewModelFactory
 import kotlinx.android.synthetic.main.fragment_aliment_state.*
 
 
-class AlimentStateFragment: Fragment() {
+class AlimentStatePagerDetailFragment: Fragment() {
     private lateinit var alimentStateUuid: String
     private val viewModel: AlimentStateViewModel by viewModels(
         factoryProducer = {
@@ -54,7 +54,6 @@ class AlimentStateFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbar.setupWithNavController(findNavController())
 
         // Set RecyclerView
         adapter = GenericAdapter(
@@ -87,5 +86,15 @@ class AlimentStateFragment: Fragment() {
                 }
             ).show(parentFragmentManager, "addAlimentState")
         }
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance(alimentStateUuid: String) =
+            AlimentStatePagerDetailFragment().apply {
+                arguments = Bundle().apply {
+                    putString("alimentStateUuid", alimentStateUuid)
+                }
+            }
     }
 }

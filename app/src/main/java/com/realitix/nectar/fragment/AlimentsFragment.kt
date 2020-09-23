@@ -92,7 +92,7 @@ class AlimentsFragment : Fragment() {
                         override fun onItemClick(view: View, position: Int) {
                             val alimentState = adapterStates.getAtPosition(position)
                             val action =
-                                AlimentsFragmentDirections.actionAlimentsFragmentToAlimentStateFragment(
+                                AlimentsFragmentDirections.actionAlimentsFragmentToAlimentStatePagerFragment(
                                     alimentState.uuid
                                 )
                             findNavController().navigate(action)
@@ -166,7 +166,7 @@ class AlimentsFragment : Fragment() {
                     object :
                         EditTextDialogFragment.OnValidateListener {
                         override fun onValidate(dialog: EditTextDialogFragment) {
-                            val alimentUuid = viewModel.createAliment(dialog.getText())
+                            viewModel.createAliment(dialog.getText())
                         }
                     })
 

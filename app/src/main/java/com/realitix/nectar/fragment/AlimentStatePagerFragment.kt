@@ -1,7 +1,6 @@
 package com.realitix.nectar.fragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,28 +11,22 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 
 import com.realitix.nectar.R
-import com.realitix.nectar.util.NectarUtil
-import kotlinx.android.synthetic.main.fragment_aliment.*
-import kotlinx.android.synthetic.main.fragment_aliment.tabLayout
-import kotlinx.android.synthetic.main.fragment_aliment.viewPager
-import kotlinx.android.synthetic.main.fragment_aliments.*
-import kotlinx.android.synthetic.main.fragment_aliments.toolbar
-import kotlinx.android.synthetic.main.fragment_meals.*
+import kotlinx.android.synthetic.main.fragment_aliment_state_pager.*
 
-class AlimentFragment : Fragment() {
-    private lateinit var alimentUuid: String
+class AlimentStatePagerFragment : Fragment() {
+    private lateinit var alimentStateUuid: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            alimentUuid = it.getString("alimentUuid")!!
+            alimentStateUuid = it.getString("alimentStateUuid")!!
         }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_aliment, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_aliment_state_pager, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,8 +42,8 @@ class AlimentFragment : Fragment() {
 
         override fun getItem(position: Int): Fragment {
             return when(position) {
-                0 -> AlimentDetailFragment.newInstance(alimentUuid)
-                1 -> AlimentNutritionFragment.newInstance(alimentUuid)
+                0 -> AlimentStatePagerDetailFragment.newInstance(alimentStateUuid)
+                1 -> AlimentStatePagerNutritionFragment.newInstance(alimentStateUuid)
                 else -> throw Exception("No fragment specified")
             }
         }

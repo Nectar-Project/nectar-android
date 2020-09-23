@@ -18,7 +18,7 @@ class AlimentsViewModel(
 ): ViewModel() {
     val aliments: LiveData<List<Aliment>> = rAliment.listLive()
 
-    fun createAliment(name: String): String {
+    fun createAliment(name: String) {
         val aid = generateUuid()
         val sid = generateUuid()
         runBlocking {
@@ -29,7 +29,6 @@ class AlimentsViewModel(
             // create aliment
             rAliment.insertSuspend(AlimentRaw(aid, sid))
         }
-        return aid
     }
 
     fun getAllStates(): List<State> {

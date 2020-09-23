@@ -12,6 +12,7 @@ import androidx.lifecycle.observe
 import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.Nutrition
 import com.realitix.nectar.repository.*
+import com.realitix.nectar.viewmodel.AlimentStateViewModel
 import com.realitix.nectar.viewmodel.AlimentViewModel
 import com.realitix.nectar.viewmodel.RepositoryViewModelFactory
 import ir.androidexception.datatable.model.DataTableHeader
@@ -20,28 +21,27 @@ import kotlinx.android.synthetic.main.fragment_aliment_nutrition.dataTable
 import kotlin.reflect.full.memberProperties
 
 
-class AlimentNutritionFragment : Fragment() {
-    private lateinit var alimentUuid: String
-    private val viewModel: AlimentViewModel by viewModels(
+class AlimentStatePagerNutritionFragment : Fragment() {
+    private lateinit var alimentStateUuid: String
+    private val viewModel: AlimentStateViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
-                AlimentViewModel(
-                    AlimentRepository(requireContext()),
-                    StateRepository(requireContext()),
+                AlimentStateViewModel(
                     AlimentStateRepository(requireContext()),
+                    AlimentStateMeasureRepository(requireContext()),
+                    MeasureRepository(requireContext()),
                     StringKeyRepository(requireContext()),
                     StringKeyValueRepository(requireContext()),
-                    alimentUuid
+                    alimentStateUuid
                 )
             }
         }
     )
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            alimentUuid = it.getString("alimentUuid")!!
+            alimentStateUuid = it.getString("alimentStateUuid")!!
         }
     }
 
@@ -54,35 +54,32 @@ class AlimentNutritionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val rAlimentState = AlimentStateRepository(requireContext())
-        viewModel.aliment.observe(viewLifecycleOwner) {
-            val states = it.getStates(rAlimentState)
-            if(states.isNotEmpty()) {
-                val header = DataTableHeader.Builder()
-                    .item("Propriété", 1)
-                    .item("Valeur", 1)
-                    .build()
-                val rows: ArrayList<DataTableRow> = arrayListOf()
-                for (p in Nutrition::class.memberProperties) {
-                    val n = states[0].nutrition
-                    rows.add(
-                        DataTableRow.Builder().value(p.name).value((p.get(n) as Float).toString())
-                            .build()
-                    )
-                }
-
-                dataTable.header = header
-                dataTable.rows = rows
-                dataTable.inflate(requireContext())
+        viewModel.alimentState.observe(viewLifecycleOwner) {
+            val header = DataTableHeader.Builder()
+                .item("Propriété", 1)
+                .item("Valeur", 1)
+                .build()
+            val rows: ArrayList<DataTableRow> = arrayListOf()
+            for (p in Nutrition::class.memberProperties) {
+                val n = it.nutrition
+                rows.add(
+                    DataTableRow.Builder().value(p.name).value((p.get(n) as Float).toString())
+                        .build()
+                )
             }
+
+            dataTable.header = header
+            dataTable.rows = rows
+            dataTable.inflate(requireContext())
         }
     }
 
     companion object {
         @JvmStatic
-        fun newInstance(alimentUuid: String) =
-            AlimentNutritionFragment().apply {
+        fun newInstance(alimentStateUuid: String) =
+            AlimentStatePagerNutritionFragment().apply {
                 arguments = Bundle().apply {
-                    putString("alimentUuid", alimentUuid)
+                    putString("alimentStateUuid", alimentStateUuid)
                 }
             }
     }
