@@ -53,7 +53,6 @@ class AlimentStatePagerNutritionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val rAlimentState = AlimentStateRepository(requireContext())
         viewModel.alimentState.observe(viewLifecycleOwner) {
             val header = DataTableHeader.Builder()
                 .item("Propriété", 1)

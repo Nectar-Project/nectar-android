@@ -7,8 +7,8 @@ import kotlinx.coroutines.runBlocking
 
 
 // Receipe without steps to prevent cycle in ReceipeStepReceipe
-class Receipe(uuid: String, nameUuid: String, portions: Int, stars: Int):
-    ReceipeRaw(uuid, nameUuid, portions, stars) {
+class Receipe(uuid: String, nameUuid: String, stars: Int):
+    ReceipeRaw(uuid, nameUuid, stars) {
     @Relation(parentColumn = "nameUuid", entityColumn = "uuid", entity = StringKeyRaw::class)
     lateinit var name: StringKey
     @Relation(parentColumn = "uuid", entityColumn = "receipeUuid", entity = ReceipeTagRaw::class)
@@ -32,16 +32,17 @@ class Receipe(uuid: String, nameUuid: String, portions: Int, stars: Int):
 
     fun getName(): String = name.getValue()
 
-    fun listAliments(receipeStepRepository: ReceipeStepRepository): List<Pair<AlimentState, Int>> {
+    fun listAliments(receipeStepRepository: ReceipeStepRepository, proportion: Float = 1f): List<Pair<AlimentState, Int>> {
         val out = mutableListOf<Pair<AlimentState, Int>>()
 
         for(step in getSteps(receipeStepRepository)) {
             for(aliment in step.aliments) {
-                NectarUtil.addAlimentStateToList(out, aliment.alimentState, aliment.weight)
+                NectarUtil.addAlimentStateToList(out, aliment.alimentState, (aliment.weight*proportion).toInt())
             }
 
             for(receipe in step.receipes) {
-                NectarUtil.addAlimentStateListToList(out, receipe.receipe.listAliments(receipeStepRepository))
+                val p = receipe.proportion * proportion
+                NectarUtil.addAlimentStateListToList(out, receipe.receipe.listAliments(receipeStepRepository, p))
             }
         }
 
@@ -64,7 +65,6 @@ open class ReceipeRaw(
     @PrimaryKey
     var uuid: String,
     var nameUuid: String,
-    var portions: Int,
     var stars: Int
 ): UuidInterface {
     override fun getEntityUuid() = uuid
@@ -77,7 +77,6 @@ open class ReceipeRaw(
 
         if (uuid != other.uuid) return false
         if (nameUuid != other.nameUuid) return false
-        if (portions != other.portions) return false
         if (stars != other.stars) return false
 
         return true
@@ -86,7 +85,6 @@ open class ReceipeRaw(
     override fun hashCode(): Int {
         var result = uuid.hashCode()
         result = 31 * result + nameUuid.hashCode()
-        result = 31 * result + portions.hashCode()
         result = 31 * result + stars
         return result
     }

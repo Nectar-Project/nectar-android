@@ -1,6 +1,8 @@
 package com.realitix.nectar.database.entity
 
 import androidx.room.*
+import com.realitix.nectar.repository.ReceipeStepRepository
+import kotlinx.coroutines.runBlocking
 
 
 class ReceipeStep(uuid: String, receipeUuid: String, previousStepUuid: String?, descriptionUuid: String, duration: Int):
@@ -15,6 +17,17 @@ class ReceipeStep(uuid: String, receipeUuid: String, previousStepUuid: String?, 
 
     fun getDescription(): String {
         return description.getValue()
+    }
+
+    fun getPreviousStep(rReceipeStep: ReceipeStepRepository): ReceipeStep? {
+        return runBlocking {
+            if(previousStepUuid != null) {
+                rReceipeStep.getSuspend(previousStepUuid!!)
+            }
+            else {
+                null
+            }
+        }
     }
 }
 

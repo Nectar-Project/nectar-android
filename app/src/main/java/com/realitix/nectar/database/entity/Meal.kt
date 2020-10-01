@@ -21,7 +21,7 @@ class Meal(uuid: String, timestamp: Long, nbPeople: Int, description: String): M
         }
 
         for(receipe in receipes) {
-            NectarUtil.addAlimentStateListToList(res, receipe.receipe.listAliments(receipeStepRepository))
+            NectarUtil.addAlimentStateListToList(res, receipe.receipe.listAliments(receipeStepRepository, receipe.proportion))
         }
 
         return res

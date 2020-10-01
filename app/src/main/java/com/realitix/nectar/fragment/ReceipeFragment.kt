@@ -118,12 +118,12 @@ class ReceipeFragment : Fragment() {
 
         viewModel.receipe.observe(viewLifecycleOwner) {
             name.text = it.getName()
-            portions.text = it.portions.toString()
             stars.text = it.stars.toString()
             adapterSteps.setData(it.getSteps(rReceipeStep))
             adapterMeasures.setData(it.measures)
             adapterTags.setData(it.tags)
         }
+
 
         name.setOnClickListener {
             EditTextDialogFragment(
@@ -135,18 +135,6 @@ class ReceipeFragment : Fragment() {
                     }
                 }, viewModel.receipe.value!!.getName()
             ).show(parentFragmentManager, "updateReceipeName")
-        }
-
-        portions.setOnClickListener {
-            EditTextDialogFragment(
-                "Nombre de portions",
-                object :
-                    EditTextDialogFragment.OnValidateListener {
-                    override fun onValidate(dialog: EditTextDialogFragment) {
-                        viewModel.updateReceipePortions(dialog.getText().toInt())
-                    }
-                }, viewModel.receipe.value!!.portions.toString()
-            ).show(parentFragmentManager, "updateReceipePortions")
         }
 
         stars.setOnClickListener {

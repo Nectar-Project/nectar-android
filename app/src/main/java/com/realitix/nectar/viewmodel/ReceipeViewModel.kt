@@ -74,14 +74,6 @@ class ReceipeViewModel (
         }
     }
 
-    fun updateReceipePortions(newPortions: Int) {
-        viewModelScope.launch {
-            val r = receipe.value!!
-            r.portions = newPortions
-            rReceipe.updateSuspend(r)
-        }
-    }
-
     fun updateReceipeStars(newStars: Int) {
         viewModelScope.launch {
             val r = receipe.value!!
@@ -96,6 +88,8 @@ class ReceipeViewModel (
             rStringKey.insertSuspend(StringKeyRaw(sid))
             rStringKeyValue.insertSuspend(StringKeyValueRaw(sid, "fr", description))
             rReceipeStep.insertSuspend(ReceipeStep(generateUuid(), receipe.value!!.uuid, null, sid, 0))
+            // Force receipe reload
+            rReceipe.updateSuspend(receipe.value!!)
         }
     }
 }

@@ -18,7 +18,7 @@ class RecyclerViewMerger (var text: String, var secondary: String) {
                 mergedList.add(RecyclerViewMerger(a.alimentState.aliment.getName(), a.weight.toString()+"g"))
             }
             for (r in receipes) {
-                mergedList.add(RecyclerViewMerger(r.receipe.getName(), "test"))
+                mergedList.add(RecyclerViewMerger(r.receipe.getName(), "proportion: "+r.proportion.toString()))
             }
 
             return mergedList
@@ -35,7 +35,7 @@ class RecyclerViewMerger (var text: String, var secondary: String) {
                 mergedList.add(RecyclerViewMerger(a.alimentState.aliment.getName(), a.weight.toString()+"g"))
             }
             for (r in receipes) {
-                mergedList.add(RecyclerViewMerger(r.receipe.getName(), "test"))
+                mergedList.add(RecyclerViewMerger(r.receipe.getName(), "proportion: "+r.proportion.toString()))
             }
 
             return mergedList

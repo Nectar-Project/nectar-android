@@ -89,7 +89,10 @@ class GitRepositorySynchronizer(val context: Context) {
         val s = gitRepository.selectiveSynchronization ?: return true
 
         return when(s.synchronizationType) {
-            GitSelectiveSynchronization.SynchronizationType.BOOK -> true
+            GitSelectiveSynchronization.SynchronizationType.BOOK -> {
+                //s.bookUuid
+                true
+            }
             GitSelectiveSynchronization.SynchronizationType.SELECTIVE -> {
                 entityType in s.getSelectiveMap()[s.level]!!
             }

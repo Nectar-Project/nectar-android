@@ -21,7 +21,6 @@ class ReceipeSynchronizer(
     class ParseResult(
         val uuid: String,
         val nameUuid: String,
-        val portions: Int,
         val stars: Int,
         val measures: Map<String, Float>,
         val tags: List<String>,
@@ -45,7 +44,7 @@ class ReceipeSynchronizer(
     override fun updateDb(parseResult: ParseResult) {
         // Create receipe only if not exists
         if(rReceipe.get(parseResult.uuid) == null) {
-            rReceipe.insert(ReceipeRaw(parseResult.uuid, parseResult.nameUuid, parseResult.portions, parseResult.stars))
+            rReceipe.insert(ReceipeRaw(parseResult.uuid, parseResult.nameUuid, parseResult.stars))
             notifier.addNotification("Ajout d'une recette")
         }
 
@@ -137,6 +136,6 @@ class ReceipeSynchronizer(
             steps.add(Step(s.uuid, null, s.descriptionUuid, s.duration, alimentStates, receipes))
         }
 
-        return ParseResult(receipe.uuid, receipe.nameUuid, receipe.portions, receipe.stars, measures, tags, utensils, steps)
+        return ParseResult(receipe.uuid, receipe.nameUuid, receipe.stars, measures, tags, utensils, steps)
     }
 }

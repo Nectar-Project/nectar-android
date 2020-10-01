@@ -12,8 +12,12 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.realitix.nectar.R
+import com.realitix.nectar.database.entity.ReceipeStep
+import com.realitix.nectar.fragment.dialog.EditTextDialogFragment
+import com.realitix.nectar.fragment.dialog.PreviousStepDialogFragment
 import com.realitix.nectar.repository.ReceipeRepository
 import com.realitix.nectar.repository.ReceipeStepRepository
+import com.realitix.nectar.repository.StringKeyValueRepository
 import com.realitix.nectar.util.*
 import com.realitix.nectar.viewmodel.ReceipeStepViewModel
 import com.realitix.nectar.viewmodel.RepositoryViewModelFactory
@@ -30,6 +34,7 @@ class ReceipeStepFragment : Fragment() {
                 ReceipeStepViewModel(
                     ReceipeRepository(requireContext()),
                     ReceipeStepRepository(requireContext()),
+                    StringKeyValueRepository(requireContext()),
                     receipeUuid,
                     stepUuid
                 )
@@ -56,6 +61,55 @@ class ReceipeStepFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         toolbar.setupWithNavController(findNavController())
 
+        stepDescription.setOnClickListener {
+            EditTextDialogFragment(
+                "Description de l'étape",
+                object :
+                    EditTextDialogFragment.OnValidateListener {
+                    override fun onValidate(dialog: EditTextDialogFragment) {
+                        viewModel.updateStepDescription(dialog.getText())
+                    }
+                }, viewModel.step.value!!.getDescription()
+            ).show(parentFragmentManager, "updateStepDescription")
+        }
+
+        stepTime.setOnClickListener {
+            EditTextDialogFragment(
+                "Durée de l'étape",
+                object: EditTextDialogFragment.OnValidateListener {
+                    override fun onValidate(dialog: EditTextDialogFragment) {
+                        viewModel.updateStepTime(dialog.getText().toInt())
+                    }
+                }, viewModel.step.value!!.duration.toString()
+            ).show(parentFragmentManager, "updateStepTime")
+        }
+
+        previousStep.setOnClickListener {
+            PreviousStepDialogFragment(
+                "Etape précédente",
+                object: PreviousStepDialogFragment.Listener {
+                    override fun onSelect(index: Int) {
+                        var r: ReceipeStep? = null
+                        if(index > 0) {
+                            r = viewModel.getAllSteps()[index-1]
+                        }
+
+                        viewModel.setPreviousStep(r)
+                    }
+
+                    override fun getData(): List<String> {
+                        val r = mutableListOf<String>()
+                        r.add("Aucune")
+                        for(s in viewModel.getAllSteps()) {
+                            r.add(s.getDescription())
+                        }
+
+                        return r
+                    }
+                }
+            ).show(parentFragmentManager, "updatePreviousStep")
+        }
+
         // Set RecyclerView
         adapter = GenericAdapter(
             { v: ViewGroup -> TwoLineItemViewHolder.create(v) },
@@ -77,8 +131,11 @@ class ReceipeStepFragment : Fragment() {
             receipeName.text = it.getName()
         }
 
+        val rReceipeStepRepository = ReceipeStepRepository(requireContext())
         viewModel.step.observe(viewLifecycleOwner) {
             stepDescription.text = it.getDescription()
+            stepTime.text = it.duration.toString() + " minutes"
+            previousStep.text = it.getPreviousStep(rReceipeStepRepository)?.getDescription() ?: "Aucune"
             adapter.setData(RecyclerViewMerger.from(it.aliments, it.receipes))
         }
 
@@ -91,5 +148,9 @@ class ReceipeStepFragment : Fragment() {
             findNavController().navigate(action)
         }
 
+        buttonDelete.setOnClickListener {
+            viewModel.deleteStep()
+            findNavController().popBackStack()
+        }
     }
 }
