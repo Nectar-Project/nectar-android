@@ -100,7 +100,10 @@ class GitRepositorySynchronizer(val context: Context) {
     }
 
     private fun fromGitToDbRepository(gitRepository: GitRepository, diff: GitManager.DiffResult) {
-        val sortedUpdates = diff.updates.sortedWith(compareBy{it.first.ordinal})
+        val sortedUpdates = diff.updates.sortedWith(compareBy { it.first.ordinal })
+        val sortedDeletes = diff.deletes.sortedWith(compareByDescending { it.first.ordinal })
+
+        // create and update
         for((dt, uuid) in sortedUpdates) {
             if(!mustBeSync(gitRepository, dt, uuid))
                 continue
@@ -110,6 +113,19 @@ class GitRepositorySynchronizer(val context: Context) {
             }
             catch(e: Exception) {
                 Log.e("nectar", "fromGitToDb error in repo ${gitRepository.name}: ${dt.folderName}/$uuid can't be parsed. Error: $e")
+            }
+        }
+
+        // delete
+        for((dt, uuid) in sortedDeletes) {
+            if(!mustBeSync(gitRepository, dt, uuid))
+                continue
+
+            try {
+                synchronizerMap[dt]?.fromGitDeleteInDb(uuid)
+            }
+            catch(e: Exception) {
+                Log.e("nectar", "can't delete $uuid. Error: $e")
             }
         }
     }

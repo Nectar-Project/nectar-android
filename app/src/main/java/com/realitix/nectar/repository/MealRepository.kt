@@ -16,6 +16,7 @@ class MealRepository(val context: Context, updater: EntityUpdaterInterface<MealR
         NectarUtil.endDayTimestamp(timestamp))
 
     suspend fun listRangeSuspend(begin: Long, end: Long): List<Meal> = getDao().searchSuspend(begin, end)
+    suspend fun listFromSuspend(from: Long): List<Meal> = getDao().searchFromSuspend(from)
 
     class Updater(context: Context): GenericEntityUpdater<MealRaw>(context) {
         override fun newDatabaseUpdate(entity: MealRaw) = DatabaseUpdateRaw(

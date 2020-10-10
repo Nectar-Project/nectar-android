@@ -119,7 +119,7 @@ class ReceipeFragment : Fragment() {
         viewModel.receipe.observe(viewLifecycleOwner) {
             name.text = it.getName()
             stars.text = it.stars.toString()
-            adapterSteps.setData(it.getSteps(rReceipeStep))
+            adapterSteps.setData(it.getStepsOrdered(rReceipeStep))
             adapterMeasures.setData(it.measures)
             adapterTags.setData(it.tags)
         }

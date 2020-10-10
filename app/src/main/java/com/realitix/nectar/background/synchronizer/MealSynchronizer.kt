@@ -29,6 +29,20 @@ class MealSynchronizer(
     override fun getParseResult(repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(repositoryName, uuid)
     override fun isEntityExists(uuid: String): Boolean = rMeal.get(uuid) != null
 
+    override fun fromGitDeleteInDb(uuid: String) {
+        val meal = rMeal.get(uuid)!!
+
+        for(aliment in meal.aliments) {
+            rMealAliment.delete(aliment)
+        }
+
+        for(receipe in meal.receipes) {
+            rMealReceipe.delete(receipe)
+        }
+
+        rMeal.delete(meal)
+    }
+
     override fun updateDb(parseResult: ParseResult) {
         // Create meal only if not exists
         if(rMeal.get(parseResult.uuid) == null) {

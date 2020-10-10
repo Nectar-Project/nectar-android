@@ -29,6 +29,18 @@ class BookSynchronizer(
     override fun getParseResult(repositoryName: String, uuid: String): ParseResult = getInnerParseResult(repositoryName, uuid)
     override fun isEntityExists(uuid: String): Boolean = rBook.get(uuid) != null
 
+    override fun fromGitDeleteInDb(uuid: String) {
+        val book = rBook.get(uuid)!!
+
+        for(image in book.images) {
+            rBookImage.delete(image)
+        }
+
+        for(receipe in book.receipes) {
+            rBookReceipe.delete(receipe)
+        }
+    }
+
     override fun updateDb(parseResult: ParseResult) {
         // Create book only if not exists
         if(rBook.get(parseResult.uuid) == null) {

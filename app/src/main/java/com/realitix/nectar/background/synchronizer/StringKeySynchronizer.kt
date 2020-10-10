@@ -20,6 +20,16 @@ class StringKeySynchronizer(
     override fun getParseResult(repositoryName: String, uuid: String): ParseResult = getInnerParseResult(repositoryName, uuid)
     override fun isEntityExists(uuid: String): Boolean = rStringKey.get(uuid) != null
 
+    override fun fromGitDeleteInDb(uuid: String) {
+        val s = rStringKey.get(uuid)!!
+
+        for(v in s.strings) {
+            rStringKeyValue.delete(v)
+        }
+
+        rStringKey.delete(s)
+    }
+
     override fun updateDb(parseResult: ParseResult) {
         // Create name only if not exists
         if(rStringKey.get(parseResult.uuid) == null) {

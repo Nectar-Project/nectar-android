@@ -41,6 +41,37 @@ class ReceipeSynchronizer(
     override fun getParseResult(repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(repositoryName, uuid)
     override fun isEntityExists(uuid: String): Boolean = rReceipe.get(uuid) != null
 
+    override fun fromGitDeleteInDb(uuid: String) {
+        val receipe = rReceipe.get(uuid)!!
+
+        // delete steps
+        for(step in receipe.getSteps(rReceipeStep)) {
+            for(a in step.aliments) {
+                rReceipeStepAlimentState.delete(a)
+            }
+
+            for(r in step.receipes) {
+                rReceipeStepReceipe.delete(r)
+            }
+
+            rReceipeStep.delete(step)
+        }
+
+        for(utensil in receipe.utensils) {
+            rReceipeUtensil.delete(utensil)
+        }
+
+        for(tag in receipe.tags) {
+            rReceipeTag.delete(tag)
+        }
+
+        for(measure in receipe.measures) {
+            rReceipeMeasure.delete(measure)
+        }
+
+        rReceipe.delete(receipe)
+    }
+
     override fun updateDb(parseResult: ParseResult) {
         // Create receipe only if not exists
         if(rReceipe.get(parseResult.uuid) == null) {

@@ -31,4 +31,7 @@ class ImageSynchronizer(
         val dstPath = File(File(File(baseRepositoryFolder, gitRepositoryName), getEntityType().folderName), uuid)
         srcPath.copyTo(dstPath, true)
     }
+
+    override fun fromGitDeleteInDb(uuid: String) {
+    }
 }

@@ -26,6 +26,16 @@ class ShoppingListSynchronizer(
     override fun getParseResult(repositoryName: String, uuid: String) = getInnerParseResult<ParseResult>(repositoryName, uuid)
     override fun isEntityExists(uuid: String): Boolean = rShoppingList.get(uuid) != null
 
+    override fun fromGitDeleteInDb(uuid: String) {
+        val shopping = rShoppingList.get(uuid)!!
+
+        for(a in shopping.aliments) {
+            rShoppingListAlimentState.delete(a)
+        }
+
+        rShoppingList.delete(shopping)
+    }
+
     override fun updateDb(parseResult: ParseResult) {
         // Create meal only if not exists
         if(rShoppingList.get(parseResult.uuid) == null) {

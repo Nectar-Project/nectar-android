@@ -20,11 +20,25 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/titleSteps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Prochaines étapes"
+        app:layout_constraintTop_toBottomOf="@+id/appbar" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewSteps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@+id/titleSteps"/>
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/titleShopping"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Liste de courses"
-        app:layout_constraintTop_toBottomOf="@+id/appbar" />
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewSteps" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewShopping"

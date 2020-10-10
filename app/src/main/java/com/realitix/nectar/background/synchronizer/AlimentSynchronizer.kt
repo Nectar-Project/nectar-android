@@ -32,6 +32,31 @@ class AlimentSynchronizer(
     override fun getParseResult(repositoryName: String, uuid: String): ParseResult = getInnerParseResult(repositoryName, uuid)
     override fun isEntityExists(uuid: String): Boolean = rAliment.get(uuid) != null
 
+    override fun fromGitDeleteInDb(uuid: String) {
+        val aliment = rAliment.get(uuid)!!
+
+        // delete states
+        for(state in aliment.getStates(rAlimentState)) {
+            for(measure in state.measures) {
+                rAlimentStateMeasure.delete(measure)
+            }
+            rAlimentState.delete(state)
+        }
+
+        // delete tags
+        for(tag in aliment.tags) {
+            rAlimentTag.delete(tag)
+        }
+
+        // delete image
+        for(image in aliment.images) {
+            rAlimentImage.delete(image)
+        }
+
+        // delete aliment
+        rAliment.delete(aliment)
+    }
+
     override fun updateDb(parseResult: ParseResult) {
 
         // Create aliment only if not exists

@@ -16,6 +16,10 @@ abstract class MealDao: GenericGetUuidDao<MealRaw, Meal>() {
     abstract suspend fun searchSuspend(begin: Long, end: Long): List<Meal>
 
     @Transaction
+    @Query("SELECT * FROM MealRaw WHERE timestamp > :from ORDER BY timestamp")
+    abstract suspend fun searchFromSuspend(from: Long): List<Meal>
+
+    @Transaction
     @Query("SELECT * FROM MealRaw WHERE uuid = :uuid")
     abstract override fun getLive(uuid: String): LiveData<Meal>
 

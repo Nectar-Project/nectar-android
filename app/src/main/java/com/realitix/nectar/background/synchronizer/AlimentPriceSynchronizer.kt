@@ -32,6 +32,10 @@ class AlimentPriceSynchronizer(
     override fun getParseResult(repositoryName: String, uuid: String): ParseResult = getInnerParseResult(repositoryName, uuid)
     override fun isEntityExists(uuid: String): Boolean = rAliment.get(uuid) != null
 
+    override fun fromGitDeleteInDb(uuid: String) {
+        TODO("Not yet implemented")
+    }
+
     override fun updateDb(parseResult: ParseResult) {
 
         // Create aliment only if not exists

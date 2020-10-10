@@ -1,7 +1,6 @@
 package com.realitix.nectar.fragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,9 +13,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.realitix.nectar.R
-import com.realitix.nectar.database.entity.Aliment
+import com.realitix.nectar.database.entity.ReceipeStep
 import com.realitix.nectar.database.entity.ShoppingList
-import com.realitix.nectar.fragment.dialog.EditTextDialogFragment
 import com.realitix.nectar.repository.MealRepository
 import com.realitix.nectar.repository.ReceipeStepRepository
 import com.realitix.nectar.repository.ShoppingListAlimentStateRepository
@@ -47,7 +45,8 @@ class DashboardFragment : Fragment() {
         }
     )
 
-    private lateinit var adapter: GenericAdapter<SingleLineItemViewHolder, ShoppingList>
+    private lateinit var adapterShopping: GenericAdapter<SingleLineItemViewHolder, ShoppingList>
+    private lateinit var adapterSteps: GenericAdapter<SingleLineItemViewHolder, Pair<Long, ReceipeStep>>
     
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,8 +57,8 @@ class DashboardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         toolbar.setupWithNavController(findNavController())
 
-        // Set RecyclerView
-        adapter = GenericAdapter(
+        // Set Shopping list
+        adapterShopping = GenericAdapter(
             { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
             { holder, shoppingList ->
                 holder.text.text = NectarUtil.dayMonthFromTimestamp(shoppingList.beginTimestamp) + " - " + NectarUtil.dayMonthFromTimestamp(shoppingList.endTimestamp)
@@ -72,19 +71,36 @@ class DashboardFragment : Fragment() {
             }
         )
         recyclerViewShopping.hasFixedSize()
-        recyclerViewShopping.adapter = adapter
+        recyclerViewShopping.adapter = adapterShopping
 
         viewModel.shoppingLists.observe(viewLifecycleOwner) {
-            adapter.setData(it)
+            adapterShopping.setData(it)
         }
 
         recyclerViewShopping.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerViewShopping, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
-                val shoppingList = adapter.getAtPosition(position)
+                val shoppingList = adapterShopping.getAtPosition(position)
                 val action = DashboardFragmentDirections.actionDashboardFragmentToShoppingListFragment(shoppingList.uuid)
                 view.findNavController().navigate(action)
             }
         }))
+
+        // Set receipe steps
+        adapterSteps = GenericAdapter(
+            { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
+            { holder, step ->
+                holder.text.text = "Dans " + (step.first-NectarUtil.timestamp()) + " min : " + step.second.description.getValue()
+                holder.icon.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_receipt_black_24dp
+                    )
+                )
+            }
+        )
+        recyclerViewSteps.hasFixedSize()
+        recyclerViewSteps.adapter = adapterSteps
+        adapterSteps.setData(viewModel.computeSteps())
 
         // Button
         val builder = MaterialDatePicker.Builder.dateRangePicker()

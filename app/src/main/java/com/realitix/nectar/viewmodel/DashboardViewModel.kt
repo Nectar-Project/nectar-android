@@ -16,7 +16,7 @@ class DashboardViewModel(
     private val rReceipeStep: ReceipeStepRepository,
     private val rShoppingList: ShoppingListRepository,
     private val rShoppingListAlimentState: ShoppingListAlimentStateRepository,
-    timestamp: Long
+    private val timestamp: Long
 ): ViewModel() {
     val shoppingLists: LiveData<List<ShoppingList>> = rShoppingList.listLive()
 
@@ -35,5 +35,21 @@ class DashboardViewModel(
                 rShoppingListAlimentState.insertSuspend(ShoppingListAlimentStateRaw(shoppingListUuid, r.first.uuid, r.second, false))
             }
         }
+    }
+
+    fun computeSteps(): List<Pair<Long, ReceipeStep>> {
+        val meals = runBlocking {
+            rMeal.listFromSuspend(timestamp)
+        }
+
+        val steps = mutableListOf<Pair<Long, ReceipeStep>>()
+        for(meal in meals) {
+            for(mreceipe in meal.receipes) {
+                steps.addAll(mreceipe.receipe.getStepsWithTimestamp(rReceipeStep, meal.timestamp))
+            }
+        }
+
+        steps.sortBy { it.first }
+        return steps
     }
 }
