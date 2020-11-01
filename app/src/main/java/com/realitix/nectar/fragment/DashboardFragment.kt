@@ -1,6 +1,7 @@
 package com.realitix.nectar.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -39,7 +40,7 @@ class DashboardFragment : Fragment() {
                     ReceipeStepRepository(requireContext()),
                     ShoppingListRepository(requireContext()),
                     ShoppingListAlimentStateRepository(requireContext()),
-                    NectarUtil.timestamp()
+                    NectarUtil.timestampTimezoned()
                 )
             }
         }
@@ -89,13 +90,14 @@ class DashboardFragment : Fragment() {
         adapterSteps = GenericAdapter(
             { v: ViewGroup -> SingleLineItemViewHolder.create(v) },
             { holder, step ->
-                holder.text.text = "Dans " + (step.first-NectarUtil.timestamp()) + " min : " + step.second.description.getValue()
+                holder.text.text = "Dans " + (step.first-NectarUtil.timestampTimezoned()) / 60 + " min : " + step.second.description.getValue()
                 holder.icon.setImageDrawable(
                     ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.ic_receipt_black_24dp
                     )
                 )
+                Log.e("ttt", step.first.toString() + "  " + NectarUtil.timestamp())
             }
         )
         recyclerViewSteps.hasFixedSize()

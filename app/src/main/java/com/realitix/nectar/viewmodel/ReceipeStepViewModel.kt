@@ -22,7 +22,7 @@ class ReceipeStepViewModel constructor(
 
     fun deleteStep() {
         viewModelScope.launch {
-            rReceipeStep.deleteSuspend(rReceipeStep.getSuspend(stepUuid)!!)
+            rReceipeStep.deleteSuspend(step.value!!)
         }
     }
 

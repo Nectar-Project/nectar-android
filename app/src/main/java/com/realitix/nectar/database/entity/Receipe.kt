@@ -80,7 +80,7 @@ class Receipe(uuid: String, nameUuid: String, stars: Int):
 
         val stepsWithTimestamp = mutableListOf<Pair<Long, ReceipeStep>>()
         for(s in stepsTotalDuration) {
-            stepsWithTimestamp.add(startTimestamp - s.first to s.second)
+            stepsWithTimestamp.add(startTimestamp - s.first*60 to s.second)
         }
 
         stepsWithTimestamp.sortBy { it.first }

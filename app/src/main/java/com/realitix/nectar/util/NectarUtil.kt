@@ -28,6 +28,7 @@ class NectarUtil {
         private val pattern3 = initSimpleDate("EEEE d MMMM YYYY")
 
         fun timestamp() = System.currentTimeMillis()/1000
+        fun timestampTimezoned() = timestamp() + TimeZone.getDefault().getOffset(timestamp())/1000
         fun beginDayTimestamp(timestamp: Long): Long = floor((timestamp / nbSecondsInDay).toDouble()).toLong() * nbSecondsInDay
         fun endDayTimestamp(timestamp: Long): Long = beginDayTimestamp(timestamp) + nbSecondsInDay
         fun hourTimestamp(hour: Int): Long = hour * nbSecondsInHour
