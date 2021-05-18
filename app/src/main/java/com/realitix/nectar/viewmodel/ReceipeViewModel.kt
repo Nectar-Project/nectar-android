@@ -92,4 +92,36 @@ class ReceipeViewModel (
             rReceipe.updateSuspend(receipe.value!!)
         }
     }
+
+    fun deleteReceipe(
+        rReceipeStepAlimentState: ReceipeStepAlimentStateRepository,
+        rReceipeStepReceipe: ReceipeStepReceipeRepository
+    ) {
+        runBlocking {
+            val r = rReceipe.getSuspend(receipeUuid)!!
+
+            // Delete measure
+            for(m in r.measures) {
+                rReceipeMeasure.deleteSuspend(m)
+            }
+
+            // Delete tags
+            for(t in  r.tags) {
+                rReceipeTag.deleteSuspend(t)
+            }
+
+            // Delete steps
+            for(step in r.getSteps(rReceipeStep)) {
+                for(a in step.aliments) {
+                    rReceipeStepAlimentState.deleteSuspend(a)
+                }
+                for(a in step.receipes) {
+                    rReceipeStepReceipe.deleteSuspend(a)
+                }
+                rReceipeStep.deleteSuspend(step)
+            }
+
+            rReceipe.deleteSuspend(r)
+        }
+    }
 }

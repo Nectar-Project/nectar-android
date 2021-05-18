@@ -11,12 +11,16 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.realitix.nectar.R
+import com.realitix.nectar.databinding.FragmentMealPagerBinding
+import com.realitix.nectar.databinding.FragmentMealsBinding
 import com.realitix.nectar.util.NectarUtil
 import com.realitix.nectar.util.ViewPagerAdapter
-import kotlinx.android.synthetic.main.fragment_meals.*
 
 
 class MealsFragment : Fragment() {
+    private var _binding: FragmentMealsBinding? = null
+    private val binding get() = _binding!!
+
     private var timestamp: Long = -1
     private val adapter: ViewPagerAdapter by lazy {
         ViewPagerAdapter(NectarUtil.timestamp(), childFragmentManager)
@@ -25,17 +29,25 @@ class MealsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_meals, container, false)
+    ): View? {
+        _binding = FragmentMealsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbar.setupWithNavController(findNavController())
+        binding.toolbar.setupWithNavController(findNavController())
 
         // Set viewpager
-        tabLayout.setupWithViewPager(viewPager)
+        binding.tabLayout.setupWithViewPager(binding.viewPager)
         reloadViewPager()
 
-        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        binding.viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) { }
             override fun onPageScrolled(
                 position: Int,
@@ -44,14 +56,14 @@ class MealsFragment : Fragment() {
             ) {}
 
             override fun onPageSelected(position: Int) {
-                timestamp = ((viewPager.adapter) as ViewPagerAdapter).getTimestampFromPosition(position)
+                timestamp = ((binding.viewPager.adapter) as ViewPagerAdapter).getTimestampFromPosition(position)
             }
         })
 
         // Set datepicker
         val builder = MaterialDatePicker.Builder.datePicker()
         val picker = builder.build()
-        agenda.setOnClickListener {
+        binding.agenda.setOnClickListener {
             picker.show(requireActivity().supportFragmentManager, picker.toString())
         }
         picker.addOnPositiveButtonClickListener {
@@ -61,7 +73,7 @@ class MealsFragment : Fragment() {
     }
 
     private fun reloadViewPager() {
-        viewPager.adapter = adapter
-        viewPager.currentItem = (viewPager.adapter)!!.count/2
+        binding.viewPager.adapter = adapter
+        binding.viewPager.currentItem = (binding.viewPager.adapter)!!.count/2
     }
 }

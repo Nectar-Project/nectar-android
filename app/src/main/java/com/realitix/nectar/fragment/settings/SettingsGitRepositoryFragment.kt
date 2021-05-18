@@ -75,8 +75,9 @@ class SettingsGitRepositoryFragment: PreferenceFragmentCompat() {
         syncButton.setOnPreferenceClickListener {
             Toast.makeText(requireContext(), "Launching synchronization", Toast.LENGTH_LONG).show()
             val mHandler = object : Handler(Looper.getMainLooper()) {
-                override fun handleMessage(message: Message?) {
-                    Toast.makeText(requireContext(), "Synchronization finished", Toast.LENGTH_SHORT).show()
+                override fun handleMessage(msg: Message) {
+                    // TODO should launch a notification because context can be no more accessible at this time
+                    //Toast.makeText(requireContext(), "Synchronization finished", Toast.LENGTH_SHORT).show()
                 }
             }
             thread(start=true) {

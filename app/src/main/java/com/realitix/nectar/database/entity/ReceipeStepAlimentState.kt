@@ -7,6 +7,16 @@ class ReceipeStepAlimentState(stepUuid: String, alimentStateUuid: String, weight
     ReceipeStepAlimentStateRaw(stepUuid, alimentStateUuid, weight) {
     @Relation(parentColumn = "alimentStateUuid", entityColumn = "uuid", entity = AlimentStateRaw::class)
     lateinit var alimentState: AlimentState
+
+    fun getMeasures(): List<Pair<Float, Measure>> {
+        val out = mutableListOf<Pair<Float, Measure>>()
+
+        for(m in alimentState.measures) {
+            out.add(weight.toFloat()/m.quantity.toFloat() to m.measure)
+        }
+
+        return out
+    }
 }
 
 @Entity(

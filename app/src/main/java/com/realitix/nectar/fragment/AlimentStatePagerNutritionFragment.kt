@@ -11,17 +11,21 @@ import androidx.lifecycle.observe
 
 import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.Nutrition
+import com.realitix.nectar.databinding.FragmentAlimentNutritionBinding
+import com.realitix.nectar.databinding.FragmentAlimentStatePagerBinding
 import com.realitix.nectar.repository.*
 import com.realitix.nectar.viewmodel.AlimentStateViewModel
 import com.realitix.nectar.viewmodel.AlimentViewModel
 import com.realitix.nectar.viewmodel.RepositoryViewModelFactory
 import ir.androidexception.datatable.model.DataTableHeader
 import ir.androidexception.datatable.model.DataTableRow
-import kotlinx.android.synthetic.main.fragment_aliment_nutrition.dataTable
 import kotlin.reflect.full.memberProperties
 
 
 class AlimentStatePagerNutritionFragment : Fragment() {
+    private var _binding: FragmentAlimentNutritionBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var alimentStateUuid: String
     private val viewModel: AlimentStateViewModel by viewModels(
         factoryProducer = {
@@ -48,7 +52,15 @@ class AlimentStatePagerNutritionFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_aliment_nutrition, container, false)
+    ): View? {
+        _binding = FragmentAlimentNutritionBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -67,9 +79,9 @@ class AlimentStatePagerNutritionFragment : Fragment() {
                 )
             }
 
-            dataTable.header = header
-            dataTable.rows = rows
-            dataTable.inflate(requireContext())
+            binding.dataTable.header = header
+            binding.dataTable.rows = rows
+            binding.dataTable.inflate(requireContext())
         }
     }
 

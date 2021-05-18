@@ -12,14 +12,18 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.realitix.nectar.R
+import com.realitix.nectar.databinding.FragmentDashboardBinding
+import com.realitix.nectar.databinding.FragmentMealBinding
 import com.realitix.nectar.repository.MealRepository
 import com.realitix.nectar.util.*
 import com.realitix.nectar.viewmodel.MealViewModel
 import com.realitix.nectar.viewmodel.RepositoryViewModelFactory
-import kotlinx.android.synthetic.main.fragment_meal.*
 
 
 class MealFragment : Fragment() {
+    private var _binding: FragmentMealBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var mealUuid: String
     private val viewModel: MealViewModel by viewModels(
         factoryProducer = {
@@ -41,11 +45,19 @@ class MealFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_meal, container, false)
+    ): View? {
+        _binding = FragmentMealBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbar.setupWithNavController(findNavController())
+        binding.toolbar.setupWithNavController(findNavController())
 
         // Set RecyclerView
         adapter = GenericAdapter(
@@ -61,20 +73,20 @@ class MealFragment : Fragment() {
                 )
             }
         )
-        recyclerView.adapter = adapter
-        recyclerView.hasFixedSize()
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.hasFixedSize()
 
         viewModel.meal.observe(viewLifecycleOwner) {
             adapter.setData(RecyclerViewMerger.from(it.aliments, it.receipes))
-            datetime.text = NectarUtil.dayMonthYearFromTimestamp(it.timestamp)
+            binding.datetime.text = NectarUtil.dayMonthYearFromTimestamp(it.timestamp)
         }
 
-        fab.setCallbackFirst {
+        binding.fab.setCallbackFirst {
             val action = MealFragmentDirections.actionMealFragmentToAlimentAddSearchFragment(mealUuid, EntityType.MEAL.ordinal)
             findNavController().navigate(action)
         }
 
-        fab.setCallbackSecond {
+        binding.fab.setCallbackSecond {
             val action = MealFragmentDirections.actionMealFragmentToReceipeAddFragment(mealUuid, EntityType.MEAL.ordinal)
             findNavController().navigate(action)
         }

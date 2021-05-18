@@ -11,13 +11,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class ReceipeStepViewModel constructor(
-    rReceipe: ReceipeRepository,
     private val rReceipeStep: ReceipeStepRepository,
     private val rStringKeyValue: StringKeyValueRepository,
-    private val receipeUuid: String,
     private val stepUuid: String
 ) : ViewModel() {
-    val receipe: LiveData<Receipe> = rReceipe.getLive(receipeUuid)
     val step: LiveData<ReceipeStep> = rReceipeStep.getLive(stepUuid)
 
     fun deleteStep() {
@@ -43,6 +40,7 @@ class ReceipeStepViewModel constructor(
     }
 
     fun getAllSteps(): List<ReceipeStep> {
+        val receipeUuid = step.value!!.receipeUuid
         return runBlocking {
             val allSteps = rReceipeStep.listByReceipeSuspend(receipeUuid)
             // Remove current step

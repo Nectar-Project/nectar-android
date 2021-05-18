@@ -13,16 +13,20 @@ import androidx.lifecycle.observe
 
 import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.AlimentStateMeasure
+import com.realitix.nectar.databinding.FragmentAlimentAddSearchBinding
+import com.realitix.nectar.databinding.FragmentAlimentStateBinding
 import com.realitix.nectar.fragment.dialog.MeasureAddDialogFragment
 import com.realitix.nectar.repository.*
 import com.realitix.nectar.util.GenericAdapter
 import com.realitix.nectar.util.SingleLineItemViewHolder
 import com.realitix.nectar.viewmodel.AlimentStateViewModel
 import com.realitix.nectar.viewmodel.RepositoryViewModelFactory
-import kotlinx.android.synthetic.main.fragment_aliment_state.*
 
 
 class AlimentStatePagerDetailFragment: Fragment() {
+    private var _binding: FragmentAlimentStateBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var alimentStateUuid: String
     private val viewModel: AlimentStateViewModel by viewModels(
         factoryProducer = {
@@ -50,7 +54,15 @@ class AlimentStatePagerDetailFragment: Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_aliment_state, container, false)
+    ): View? {
+        _binding = FragmentAlimentStateBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -68,14 +80,14 @@ class AlimentStatePagerDetailFragment: Fragment() {
                 )
             }
         )
-        recyclerView.hasFixedSize()
-        recyclerView.adapter = adapter
+        binding.recyclerView.hasFixedSize()
+        binding.recyclerView.adapter = adapter
 
         viewModel.alimentState.observe(viewLifecycleOwner) {
             adapter.setData(it.measures)
         }
 
-        fab.setOnClickListener {
+        binding.fab.setOnClickListener {
             MeasureAddDialogFragment(
                 object:
                     MeasureAddDialogFragment.Listener {

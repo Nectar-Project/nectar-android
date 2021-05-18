@@ -14,6 +14,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.Receipe
+import com.realitix.nectar.databinding.FragmentMealsBinding
+import com.realitix.nectar.databinding.FragmentReceipeAddSearchBinding
 import com.realitix.nectar.fragment.dialog.EditTextDialogFragment
 import com.realitix.nectar.fragment.dialog.ReceipeAddDialogFragment
 import com.realitix.nectar.repository.MealReceipeRepository
@@ -25,10 +27,12 @@ import com.realitix.nectar.util.RecyclerItemClickListener
 import com.realitix.nectar.util.SingleLineItemViewHolder
 import com.realitix.nectar.viewmodel.ReceipeAddSearchViewModel
 import com.realitix.nectar.viewmodel.RepositoryViewModelFactory
-import kotlinx.android.synthetic.main.fragment_receipe_add_search.*
 
 
 class ReceipeAddSearchFragment : Fragment() {
+    private var _binding: FragmentReceipeAddSearchBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var objUuid: String
     private lateinit var entityType: EntityType
 
@@ -57,11 +61,19 @@ class ReceipeAddSearchFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_receipe_add_search, container, false)
+    ): View? {
+        _binding = FragmentReceipeAddSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbar.setupWithNavController(findNavController())
+        binding.toolbar.setupWithNavController(findNavController())
 
         // Set RecyclerView
         adapter = GenericAdapter(
@@ -76,13 +88,13 @@ class ReceipeAddSearchFragment : Fragment() {
                 )
             }
         )
-        recyclerView.hasFixedSize()
-        recyclerView.adapter = adapter
+        binding.recyclerView.hasFixedSize()
+        binding.recyclerView.adapter = adapter
         viewModel.receipes.observe(viewLifecycleOwner) {
             adapter.setData(it)
         }
 
-        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+        binding.searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
@@ -94,7 +106,7 @@ class ReceipeAddSearchFragment : Fragment() {
             }
         })
 
-        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
+        binding.recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), binding.recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val receipe = adapter.getAtPosition(position)
 

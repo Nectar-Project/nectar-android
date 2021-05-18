@@ -2,7 +2,6 @@ package com.realitix.nectar.fragment.view
 
 import android.content.Context
 import android.util.AttributeSet
-import kotlinx.android.synthetic.main.view_fab2.view.*
 
 class ReceipeStepMultiFab: BaseFab2 {
     constructor(context: Context): this(context, null)
@@ -11,7 +10,7 @@ class ReceipeStepMultiFab: BaseFab2 {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int): super(context, attrs, defStyleAttr, defStyleRes)
 
     override fun postInit() {
-        textFirst.text = "Ajouter un aliment"
-        textSecond.text = "Ajouter une recette"
+        binding.textFirst.text = "Ajouter un aliment"
+        binding.textSecond.text = "Ajouter une recette"
     }
 }

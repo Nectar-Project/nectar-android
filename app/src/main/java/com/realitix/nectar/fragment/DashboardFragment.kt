@@ -16,6 +16,8 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.ReceipeStep
 import com.realitix.nectar.database.entity.ShoppingList
+import com.realitix.nectar.databinding.FragmentAlimentNutritionBinding
+import com.realitix.nectar.databinding.FragmentDashboardBinding
 import com.realitix.nectar.repository.MealRepository
 import com.realitix.nectar.repository.ReceipeStepRepository
 import com.realitix.nectar.repository.ShoppingListAlimentStateRepository
@@ -26,11 +28,11 @@ import com.realitix.nectar.util.RecyclerItemClickListener
 import com.realitix.nectar.util.SingleLineItemViewHolder
 import com.realitix.nectar.viewmodel.DashboardViewModel
 import com.realitix.nectar.viewmodel.RepositoryViewModelFactory
-import kotlinx.android.synthetic.main.fragment_dashboard.*
-import kotlinx.android.synthetic.main.fragment_dashboard.toolbar
 
 
 class DashboardFragment : Fragment() {
+    private var _binding: FragmentDashboardBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel: DashboardViewModel by viewModels(
         factoryProducer = {
@@ -52,11 +54,19 @@ class DashboardFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.fragment_dashboard, container, false)
+    ): View {
+        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbar.setupWithNavController(findNavController())
+        binding.toolbar.setupWithNavController(findNavController())
 
         // Set Shopping list
         adapterShopping = GenericAdapter(
@@ -71,14 +81,14 @@ class DashboardFragment : Fragment() {
                 )
             }
         )
-        recyclerViewShopping.hasFixedSize()
-        recyclerViewShopping.adapter = adapterShopping
+        binding.recyclerViewShopping.hasFixedSize()
+        binding.recyclerViewShopping.adapter = adapterShopping
 
         viewModel.shoppingLists.observe(viewLifecycleOwner) {
             adapterShopping.setData(it)
         }
 
-        recyclerViewShopping.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerViewShopping, object: RecyclerItemClickListener.OnItemClickListener {
+        binding.recyclerViewShopping.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), binding.recyclerViewShopping, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val shoppingList = adapterShopping.getAtPosition(position)
                 val action = DashboardFragmentDirections.actionDashboardFragmentToShoppingListFragment(shoppingList.uuid)
@@ -100,9 +110,17 @@ class DashboardFragment : Fragment() {
                 Log.e("ttt", step.first.toString() + "  " + NectarUtil.timestamp())
             }
         )
-        recyclerViewSteps.hasFixedSize()
-        recyclerViewSteps.adapter = adapterSteps
+        binding.recyclerViewSteps.hasFixedSize()
+        binding.recyclerViewSteps.adapter = adapterSteps
         adapterSteps.setData(viewModel.computeSteps())
+
+        binding.recyclerViewSteps.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), binding.recyclerViewSteps, object: RecyclerItemClickListener.OnItemClickListener {
+            override fun onItemClick(view: View, position: Int) {
+                val rStep = adapterSteps.getAtPosition(position)
+                val action = DashboardFragmentDirections.actionDashboardFragmentToReceipeStepFragment(rStep.second.uuid)
+                view.findNavController().navigate(action)
+            }
+        }))
 
         // Button
         val builder = MaterialDatePicker.Builder.dateRangePicker()
@@ -112,7 +130,7 @@ class DashboardFragment : Fragment() {
             val end = it.second!!/1000
             viewModel.computeShoppingList(begin, end)
         }
-        buttonAddShopping.setOnClickListener {
+        binding.buttonAddShopping.setOnClickListener {
             picker.show(requireActivity().supportFragmentManager, picker.toString())
         }
     }

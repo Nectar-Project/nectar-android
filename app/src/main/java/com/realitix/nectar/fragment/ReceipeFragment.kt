@@ -1,5 +1,6 @@
 package com.realitix.nectar.fragment
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,8 @@ import com.realitix.nectar.database.entity.ReceipeMeasure
 import com.realitix.nectar.util.GenericAdapter
 import com.realitix.nectar.database.entity.ReceipeStep
 import com.realitix.nectar.database.entity.ReceipeTag
+import com.realitix.nectar.databinding.FragmentReceipeAddSearchBinding
+import com.realitix.nectar.databinding.FragmentReceipeBinding
 import com.realitix.nectar.fragment.dialog.MeasureAddDialogFragment
 import com.realitix.nectar.fragment.dialog.EditTextDialogFragment
 import com.realitix.nectar.fragment.dialog.TagAddDialogFragment
@@ -23,10 +26,12 @@ import com.realitix.nectar.util.RecyclerItemClickListener
 import com.realitix.nectar.util.SingleLineItemViewHolder
 import com.realitix.nectar.viewmodel.ReceipeViewModel
 import com.realitix.nectar.viewmodel.RepositoryViewModelFactory
-import kotlinx.android.synthetic.main.fragment_receipe.*
 
 
 class ReceipeFragment : Fragment() {
+    private var _binding: FragmentReceipeBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var receipeUuid: String
     private val viewModel: ReceipeViewModel by viewModels(
         factoryProducer = {
@@ -60,11 +65,19 @@ class ReceipeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_receipe, container, false)
+    ): View? {
+        _binding = FragmentReceipeBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbar.setupWithNavController(findNavController())
+        binding.toolbar.setupWithNavController(findNavController())
 
         // Set RecyclerView for Steps
         adapterSteps = GenericAdapter(
@@ -79,8 +92,8 @@ class ReceipeFragment : Fragment() {
                 )
             }
         )
-        recyclerViewSteps.hasFixedSize()
-        recyclerViewSteps.adapter = adapterSteps
+        binding.recyclerViewSteps.hasFixedSize()
+        binding.recyclerViewSteps.adapter = adapterSteps
 
         // Set RecyclerView for Measures
         adapterMeasures = GenericAdapter(
@@ -95,8 +108,8 @@ class ReceipeFragment : Fragment() {
                 )
             }
         )
-        recyclerViewMeasures.hasFixedSize()
-        recyclerViewMeasures.adapter = adapterMeasures
+        binding.recyclerViewMeasures.hasFixedSize()
+        binding.recyclerViewMeasures.adapter = adapterMeasures
 
         // Set RecyclerView for Tags
         adapterTags = GenericAdapter(
@@ -111,21 +124,21 @@ class ReceipeFragment : Fragment() {
                 )
             }
         )
-        recyclerViewTags.hasFixedSize()
-        recyclerViewTags.adapter = adapterTags
+        binding.recyclerViewTags.hasFixedSize()
+        binding.recyclerViewTags.adapter = adapterTags
 
         val rReceipeStep = ReceipeStepRepository(requireContext())
 
         viewModel.receipe.observe(viewLifecycleOwner) {
-            name.text = it.getName()
-            stars.text = it.stars.toString()
+            binding.name.text = it.getName()
+            binding.stars.text = it.stars.toString()
             adapterSteps.setData(it.getStepsOrdered(rReceipeStep))
             adapterMeasures.setData(it.measures)
             adapterTags.setData(it.tags)
         }
 
 
-        name.setOnClickListener {
+        binding.name.setOnClickListener {
             EditTextDialogFragment(
                 "Nom de la recette",
                 object :
@@ -137,7 +150,7 @@ class ReceipeFragment : Fragment() {
             ).show(parentFragmentManager, "updateReceipeName")
         }
 
-        stars.setOnClickListener {
+        binding.stars.setOnClickListener {
             EditTextDialogFragment(
                 "Nombre d'étoile",
                 object :
@@ -149,15 +162,15 @@ class ReceipeFragment : Fragment() {
             ).show(parentFragmentManager, "updateReceipeStars")
         }
 
-        recyclerViewSteps.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerViewSteps, object: RecyclerItemClickListener.OnItemClickListener {
+        binding.recyclerViewSteps.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), binding.recyclerViewSteps, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val step = adapterSteps.getAtPosition(position)
-                val action = ReceipeFragmentDirections.actionReceipeFragmentToReceipeStepFragment(step.uuid, receipeUuid)
+                val action = ReceipeFragmentDirections.actionReceipeFragmentToReceipeStepFragment(step.uuid)
                 findNavController().navigate(action)
             }
         }))
 
-        fab.setCallbackFirst {
+        binding.fab.setCallbackFirst {
             EditTextDialogFragment(
                 "Nom de l'étape à créer",
                 object :
@@ -169,7 +182,7 @@ class ReceipeFragment : Fragment() {
             ).show(parentFragmentManager, "createStep")
         }
 
-        fab.setCallbackSecond {
+        binding.fab.setCallbackSecond {
             MeasureAddDialogFragment(
                 object:
                     MeasureAddDialogFragment.Listener {
@@ -181,7 +194,7 @@ class ReceipeFragment : Fragment() {
             ).show(parentFragmentManager, "addReceipeMeasure")
         }
 
-        fab.setCallbackThird {
+        binding.fab.setCallbackThird {
             TagAddDialogFragment(
                 object:
                     TagAddDialogFragment.Listener {
@@ -191,6 +204,21 @@ class ReceipeFragment : Fragment() {
                     override fun getData(): List<String> = viewModel.getAllTags().map { it.getName() }
                 }
             ).show(parentFragmentManager, "addReceipeMeasure")
+        }
+
+        binding.fab.setCallbackFour {
+            AlertDialog.Builder(requireContext())
+                .setMessage("Etes vous sûr de supprimer cette recette ?")
+                .setCancelable(true)
+                .setPositiveButton("Oui") { _, _ ->
+                    viewModel.deleteReceipe(
+                        ReceipeStepAlimentStateRepository(requireContext()),
+                        ReceipeStepReceipeRepository(requireContext())
+                    )
+                    findNavController().popBackStack()
+                }
+                .create()
+                .show()
         }
     }
 }

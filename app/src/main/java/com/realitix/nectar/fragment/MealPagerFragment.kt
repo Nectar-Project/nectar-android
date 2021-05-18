@@ -13,6 +13,8 @@ import androidx.navigation.fragment.findNavController
 
 import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.Meal
+import com.realitix.nectar.databinding.FragmentMealBinding
+import com.realitix.nectar.databinding.FragmentMealPagerBinding
 import com.realitix.nectar.repository.MealRepository
 import com.realitix.nectar.util.GenericAdapter
 import com.realitix.nectar.util.NectarUtil
@@ -21,10 +23,12 @@ import com.realitix.nectar.util.SingleLineItemViewHolder
 import com.realitix.nectar.viewmodel.MealPagerViewModel
 import com.realitix.nectar.viewmodel.RepositoryViewModelFactory
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
-import kotlinx.android.synthetic.main.fragment_meal_pager.*
 
 
 class MealPagerFragment : Fragment() {
+    private var _binding: FragmentMealPagerBinding? = null
+    private val binding get() = _binding!!
+
     private var timestamp: Long = -1
     private val viewModel: MealPagerViewModel by viewModels(
         factoryProducer = {
@@ -56,7 +60,15 @@ class MealPagerFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_meal_pager, container, false)
+    ): View? {
+        _binding = FragmentMealPagerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -74,19 +86,19 @@ class MealPagerFragment : Fragment() {
                 )
             }
         )
-        recyclerView.hasFixedSize()
-        recyclerView.adapter = adapter
+        binding.recyclerView.hasFixedSize()
+        binding.recyclerView.adapter = adapter
 
         viewModel.meals.observe(viewLifecycleOwner) {
             adapter.setData(it)
         }
 
         // Set fab
-        fab.setOnClickListener {
+        binding.fab.setOnClickListener {
             timePicker.show(requireActivity().supportFragmentManager, "TimePickerDialog")
         }
 
-        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
+        binding.recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), binding.recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val meal = adapter.getAtPosition(position)
                 val action = MealsFragmentDirections.actionMealsFragmentToMealFragment(meal.uuid)

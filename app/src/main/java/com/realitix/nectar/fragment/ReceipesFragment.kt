@@ -14,6 +14,8 @@ import androidx.navigation.ui.setupWithNavController
 import com.realitix.nectar.R
 import com.realitix.nectar.util.GenericAdapter
 import com.realitix.nectar.database.entity.Receipe
+import com.realitix.nectar.databinding.FragmentReceipeBinding
+import com.realitix.nectar.databinding.FragmentReceipesBinding
 import com.realitix.nectar.fragment.dialog.EditTextDialogFragment
 import com.realitix.nectar.repository.ReceipeRepository
 import com.realitix.nectar.repository.StringKeyRepository
@@ -22,9 +24,11 @@ import com.realitix.nectar.util.RecyclerItemClickListener
 import com.realitix.nectar.util.SingleLineItemViewHolder
 import com.realitix.nectar.viewmodel.ReceipeListViewModel
 import com.realitix.nectar.viewmodel.RepositoryViewModelFactory
-import kotlinx.android.synthetic.main.fragment_receipes.*
 
 class ReceipesFragment : Fragment() {
+    private var _binding: FragmentReceipesBinding? = null
+    private val binding get() = _binding!!
+
     private val viewModel: ReceipeListViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
@@ -42,12 +46,19 @@ class ReceipesFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_receipes, container, false)
+    ): View? {
+        _binding = FragmentReceipesBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        collapsingToolbarLayout.setupWithNavController(toolbar, findNavController())
+        binding.collapsingToolbarLayout.setupWithNavController(binding.toolbar, findNavController())
 
         // Set RecyclerView
         adapter = GenericAdapter(
@@ -62,14 +73,14 @@ class ReceipesFragment : Fragment() {
                 )
             }
         )
-        recyclerView.hasFixedSize()
-        recyclerView.adapter = adapter
+        binding.recyclerView.hasFixedSize()
+        binding.recyclerView.adapter = adapter
 
         viewModel.receipes.observe(viewLifecycleOwner) {
             adapter.setData(it)
         }
 
-        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
+        binding.recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), binding.recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val receipe = adapter.getAtPosition(position)
                 val action = ReceipesFragmentDirections.actionReceipesToSingle(receipe.uuid)
@@ -78,7 +89,7 @@ class ReceipesFragment : Fragment() {
         }))
 
 
-        fab.setOnClickListener {
+        binding.fab.setOnClickListener {
             EditTextDialogFragment(
                 "Nom de la recette",
                 object :

@@ -15,10 +15,16 @@ class RecyclerViewMerger (var text: String, var secondary: String) {
         ): ArrayList<RecyclerViewMerger> {
             val mergedList = ArrayList<RecyclerViewMerger>(aliments.size + receipes.size)
             for (a in aliments) {
-                mergedList.add(RecyclerViewMerger(a.alimentState.aliment.getName(), a.weight.toString()+"g"))
+                val n = a.alimentState.aliment.getName() + " / " + a.alimentState.state.getName()
+                val ms = a.getMeasures()
+                var mStr = a.weight.toString() + "g"
+                for(m in ms) {
+                    mStr += " | " + "%.2f".format(m.first) + " " + m.second.getName()
+                }
+                mergedList.add(RecyclerViewMerger(n, mStr))
             }
             for (r in receipes) {
-                mergedList.add(RecyclerViewMerger(r.receipe.getName(), "proportion: "+r.proportion.toString()))
+                mergedList.add(RecyclerViewMerger(r.receipe.getName(), "proportion: " + r.proportion.toString()))
             }
 
             return mergedList

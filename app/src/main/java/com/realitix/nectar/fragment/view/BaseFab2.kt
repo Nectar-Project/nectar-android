@@ -2,13 +2,15 @@ package com.realitix.nectar.fragment.view
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.widget.LinearLayout
 import com.realitix.nectar.R
+import com.realitix.nectar.databinding.ViewFab2Binding
 import com.realitix.nectar.util.FabAnimation
-import kotlinx.android.synthetic.main.view_fab2.view.*
 
 
 abstract class BaseFab2: LinearLayout {
+    protected lateinit var binding: ViewFab2Binding
     constructor(context: Context): this(context, null)
     constructor(context: Context, attrs: AttributeSet?): this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int): this(context, attrs, defStyleAttr, 0)
@@ -22,34 +24,35 @@ abstract class BaseFab2: LinearLayout {
 
     private fun init() {
         this.orientation = VERTICAL
-        inflate(context, R.layout.view_fab2,this)
+        val inflater = LayoutInflater.from(context)
+        binding = ViewFab2Binding.inflate(inflater, this)
         postInit()
 
-        fabMain.setOnClickListener {
+        binding.fabMain.setOnClickListener {
             switchFab()
         }
     }
 
     private fun switchFab() {
-        isFabRotated = FabAnimation.rotate(fabMain, !isFabRotated)
+        isFabRotated = FabAnimation.rotate(binding.fabMain, !isFabRotated)
         if (isFabRotated) {
-            FabAnimation.show(containerFabFirst)
-            FabAnimation.show(containerFabSecond)
+            FabAnimation.show(binding.containerFabFirst)
+            FabAnimation.show(binding.containerFabSecond)
         } else {
-            FabAnimation.hide(containerFabFirst)
-            FabAnimation.hide(containerFabSecond)
+            FabAnimation.hide(binding.containerFabFirst)
+            FabAnimation.hide(binding.containerFabSecond)
         }
     }
 
     fun setCallbackFirst(callback: () -> Unit) {
-        fabFirst.setOnClickListener {
+        binding.fabFirst.setOnClickListener {
             callback()
             switchFab()
         }
     }
 
     fun setCallbackSecond(callback: () -> Unit) {
-        fabSecond.setOnClickListener {
+        binding.fabSecond.setOnClickListener {
             callback()
             switchFab()
         }

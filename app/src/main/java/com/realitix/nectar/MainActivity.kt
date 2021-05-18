@@ -14,7 +14,7 @@ import androidx.work.*
 import com.realitix.nectar.background.GitRepositoryBackgroundThread
 import com.realitix.nectar.background.GitRepositorySynchronizer
 import com.realitix.nectar.database.NectarDatabase
-import kotlinx.android.synthetic.main.activity_main.*
+import com.realitix.nectar.databinding.ActivityMainBinding
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 
@@ -23,15 +23,17 @@ class MainActivity: AppCompatActivity() {
     companion object {
         var enableSynchronizer = true
     }
-
+    // https://developer.android.com/topic/libraries/view-binding/migration
+    private lateinit var binding: ActivityMainBinding
     private lateinit var gitSynchronizer: GitRepositoryBackgroundThread
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Fix bug with instrumented tests (force database reload)
         NectarDatabase.reloadInstance()
-        setContentView(R.layout.activity_main)
-        navigation.setupWithNavController(findNavController(this, R.id.nav_host_fragment))
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.navigation.setupWithNavController(findNavController(this, R.id.nav_host_fragment))
         createNotificationChannel()
     }
 

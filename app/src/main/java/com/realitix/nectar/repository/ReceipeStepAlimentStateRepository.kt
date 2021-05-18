@@ -14,5 +14,14 @@ class ReceipeStepAlimentStateRepository(val context: Context, updater: EntityUpd
         override fun newDatabaseUpdate(entity: ReceipeStepAlimentStateRaw) = DatabaseUpdateRaw(
             ReceipeStepRepository(context).get(entity.stepUuid)!!.receipeUuid,
             EntityType.RECEIPE, NectarUtil.timestamp())
+
+        private suspend fun newDatabaseUpdateSuspend(entity: ReceipeStepAlimentStateRaw) = DatabaseUpdateRaw(
+            ReceipeStepRepository(context).getSuspend(entity.stepUuid)!!.receipeUuid,
+            EntityType.RECEIPE, NectarUtil.timestamp())
+
+        override suspend fun onEntityUpdateSuspend(entity: ReceipeStepAlimentStateRaw) {
+            DatabaseUpdateRepository(context).insertSuspend(newDatabaseUpdateSuspend(entity))
+        }
     }
+
 }

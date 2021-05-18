@@ -18,6 +18,8 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.realitix.nectar.R
 import com.realitix.nectar.database.entity.ShoppingList
 import com.realitix.nectar.database.entity.ShoppingListAlimentState
+import com.realitix.nectar.databinding.FragmentSettingsBinding
+import com.realitix.nectar.databinding.FragmentShoppingListBinding
 import com.realitix.nectar.repository.MealRepository
 import com.realitix.nectar.repository.ReceipeStepRepository
 import com.realitix.nectar.repository.ShoppingListAlimentStateRepository
@@ -28,10 +30,12 @@ import com.realitix.nectar.util.RecyclerItemClickListener
 import com.realitix.nectar.util.SingleLineItemViewHolder
 import com.realitix.nectar.viewmodel.RepositoryViewModelFactory
 import com.realitix.nectar.viewmodel.ShoppingListViewModel
-import kotlinx.android.synthetic.main.fragment_shopping_list.*
 
 
 class ShoppingListFragment : Fragment() {
+    private var _binding: FragmentShoppingListBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var shoppingListUuid: String
 
     private val viewModel: ShoppingListViewModel by viewModels(
@@ -58,11 +62,19 @@ class ShoppingListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_shopping_list, container, false)
+    ): View? {
+        _binding = FragmentShoppingListBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbar.setupWithNavController(findNavController())
+        binding.toolbar.setupWithNavController(findNavController())
 
         // Set RecyclerView
         adapter = GenericAdapter(
@@ -82,14 +94,14 @@ class ShoppingListFragment : Fragment() {
 
             }
         )
-        recyclerView.hasFixedSize()
-        recyclerView.adapter = adapter
+        binding.recyclerView.hasFixedSize()
+        binding.recyclerView.adapter = adapter
 
         viewModel.shoppingList.observe(viewLifecycleOwner) {
             adapter.setData(it.aliments)
         }
 
-        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
+        binding.recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), binding.recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val a = adapter.getAtPosition(position)
 
@@ -109,7 +121,7 @@ class ShoppingListFragment : Fragment() {
             }
         }))
 
-        buttonDelete.setOnClickListener {
+        binding.buttonDelete.setOnClickListener {
             viewModel.deleteShoppingList()
             findNavController().popBackStack()
         }

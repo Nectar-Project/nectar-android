@@ -12,6 +12,8 @@ class ReceipeStep(uuid: String, receipeUuid: String, previousStepUuid: String?, 
     // Can't return list of ReceipeStepReceipe because it creates an inner loop and a stackoverflow
     @Relation(parentColumn = "uuid", entityColumn = "stepUuid", entity = ReceipeStepReceipeRaw::class)
     lateinit var receipes: List<ReceipeStepReceipe>
+    @Relation(parentColumn = "receipeUuid", entityColumn = "uuid", entity = ReceipeRaw::class)
+    lateinit var parentReceipe: Receipe
     @Relation(parentColumn = "descriptionUuid", entityColumn = "uuid", entity = StringKeyRaw::class)
     lateinit var description: StringKey
 

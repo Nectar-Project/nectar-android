@@ -21,6 +21,8 @@ import com.realitix.nectar.database.entity.Aliment
 import com.realitix.nectar.database.entity.AlimentState
 import com.realitix.nectar.database.entity.AlimentStateRaw
 import com.realitix.nectar.database.entity.Nutrition
+import com.realitix.nectar.databinding.FragmentAlimentAddSearchBinding
+import com.realitix.nectar.databinding.FragmentAlimentsBinding
 import com.realitix.nectar.fragment.dialog.AlimentStateDialogFragment
 import com.realitix.nectar.fragment.dialog.EditTextDialogFragment
 import com.realitix.nectar.fragment.view.AlimentItemViewHolder
@@ -28,9 +30,11 @@ import com.realitix.nectar.repository.*
 import com.realitix.nectar.util.*
 import com.realitix.nectar.viewmodel.AlimentsViewModel
 import com.realitix.nectar.viewmodel.RepositoryViewModelFactory
-import kotlinx.android.synthetic.main.fragment_aliments.*
 
 class AlimentsFragment : Fragment() {
+    private var _binding: FragmentAlimentsBinding? = null
+    private val binding get() = _binding!!
+
     private val viewModel: AlimentsViewModel by viewModels(
         factoryProducer = {
             RepositoryViewModelFactory {
@@ -50,11 +54,19 @@ class AlimentsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_aliments, container, false)
+    ): View? {
+        _binding = FragmentAlimentsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        collapsingToolbarLayout.setupWithNavController(toolbar, findNavController())
+        binding.collapsingToolbarLayout.setupWithNavController(binding.toolbar, findNavController())
 
         // Set RecyclerView
         val rAlimentState = AlimentStateRepository(requireContext())
@@ -95,7 +107,11 @@ class AlimentsFragment : Fragment() {
                                 AlimentsFragmentDirections.actionAlimentsFragmentToAlimentStatePagerFragment(
                                     alimentState.uuid
                                 )
-                            findNavController().navigate(action)
+                            try {
+                                findNavController().navigate(action)
+                            } catch (e: Exception) {
+                                Toast.makeText(requireContext(), "Recharger la page", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     })
             )
@@ -142,14 +158,14 @@ class AlimentsFragment : Fragment() {
                 ).show(parentFragmentManager, "updateAlimentName")
             }
         }
-        recyclerView.hasFixedSize()
-        recyclerView.adapter = adapter
+        binding.recyclerView.hasFixedSize()
+        binding.recyclerView.adapter = adapter
 
         viewModel.aliments.observe(viewLifecycleOwner) {
             adapter.setData(it)
         }
 
-        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
+        binding.recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), binding.recyclerView, object: RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val viewToggle = (view as LinearLayout).getChildAt(1)
                 if(viewToggle.visibility == View.GONE) {
@@ -159,7 +175,7 @@ class AlimentsFragment : Fragment() {
         }))
 
 
-        fab.setOnClickListener {
+        binding.fab.setOnClickListener {
             val dialog =
                 EditTextDialogFragment(
                     "Nom de l'aliment",

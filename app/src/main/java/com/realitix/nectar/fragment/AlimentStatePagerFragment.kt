@@ -10,10 +10,12 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 
-import com.realitix.nectar.R
-import kotlinx.android.synthetic.main.fragment_aliment_state_pager.*
+import com.realitix.nectar.databinding.FragmentAlimentStatePagerBinding
 
 class AlimentStatePagerFragment : Fragment() {
+    private var _binding: FragmentAlimentStatePagerBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var alimentStateUuid: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,15 +28,23 @@ class AlimentStatePagerFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_aliment_state_pager, container, false)
+    ): View? {
+        _binding = FragmentAlimentStatePagerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbar.setupWithNavController(findNavController())
+        binding.toolbar.setupWithNavController(findNavController())
 
-        tabLayout.setupWithViewPager(viewPager)
-        viewPager.currentItem = 1
-        viewPager.adapter = AlimentPagerAdapter(childFragmentManager)
+        binding.tabLayout.setupWithViewPager(binding.viewPager)
+        binding.viewPager.currentItem = 1
+        binding.viewPager.adapter = AlimentPagerAdapter(childFragmentManager)
     }
 
     private inner class AlimentPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {

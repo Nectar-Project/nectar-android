@@ -10,18 +10,27 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.realitix.nectar.R
+import com.realitix.nectar.databinding.FragmentReceipeStepBinding
+import com.realitix.nectar.databinding.FragmentSettingsBinding
 import com.realitix.nectar.fragment.settings.SettingsGitRepositoryFragment
 import com.realitix.nectar.fragment.settings.SettingsInnerFragment
-import kotlinx.android.synthetic.main.fragment_settings.*
 
 
 class SettingsFragment : Fragment(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_settings, container, false)
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun updateFragment(fragment: Fragment) {
@@ -33,7 +42,7 @@ class SettingsFragment : Fragment(), PreferenceFragmentCompat.OnPreferenceStartF
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbar.setupWithNavController(findNavController())
+        binding.toolbar.setupWithNavController(findNavController())
 
         val newFragment = SettingsInnerFragment.newInstance()
         updateFragment(newFragment)

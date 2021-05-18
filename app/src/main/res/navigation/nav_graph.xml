@@ -33,9 +33,6 @@
         <argument
             android:name="stepUuid"
             app:argType="string" />
-        <argument
-            android:name="receipeUuid"
-            app:argType="string" />
         <action
             android:id="@+id/action_receipeStepFragment_to_alimentAddSearchFragment"
             app:destination="@id/alimentAddSearchFragment" />
@@ -118,6 +115,9 @@
         <action
             android:id="@+id/action_dashboardFragment_to_shoppingListFragment"
             app:destination="@id/shoppingListFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_receipeStepFragment"
+            app:destination="@id/receipeStepFragment" />
     </fragment>
     <fragment
         android:id="@+id/shoppingListFragment"
