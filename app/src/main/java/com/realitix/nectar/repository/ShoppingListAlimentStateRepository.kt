@@ -11,7 +11,6 @@ class ShoppingListAlimentStateRepository(val context: Context,  updater: EntityU
     override fun getDao() = NectarDatabase.getInstance(context).shoppingListAlimentStateDao()
 
     class Updater(context: Context): GenericEntityUpdater<ShoppingListAlimentStateRaw>(context) {
-        override fun newDatabaseUpdate(entity: ShoppingListAlimentStateRaw) = DatabaseUpdateRaw(
-            entity.shoppingListUuid, EntityType.SHOPPING_LIST, NectarUtil.timestamp())
+        override fun getUuidType(entity: ShoppingListAlimentStateRaw): Pair<String, EntityType> = Pair(entity.shoppingListUuid, EntityType.SHOPPING_LIST)
     }
 }

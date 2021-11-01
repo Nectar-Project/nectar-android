@@ -13,7 +13,6 @@ class AlimentRepository(val context: Context, updater: EntityUpdaterInterface<Al
     fun search(name: String): LiveData<List<Aliment>> = getDao().search(NectarUtil.searchMaker(name))
 
     class Updater(context: Context): GenericEntityUpdater<AlimentRaw>(context) {
-        override fun newDatabaseUpdate(entity: AlimentRaw) = DatabaseUpdateRaw(
-            entity.uuid, EntityType.ALIMENT, NectarUtil.timestamp())
+        override fun getUuidType(entity: AlimentRaw): Pair<String, EntityType> = Pair(entity.uuid, EntityType.ALIMENT)
     }
 }

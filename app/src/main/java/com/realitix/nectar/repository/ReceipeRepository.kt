@@ -13,7 +13,6 @@ class ReceipeRepository(val context: Context, updater: EntityUpdaterInterface<Re
     fun search(name: String): LiveData<List<Receipe>> = getDao().search(NectarUtil.searchMaker(name))
 
     class Updater(context: Context): GenericEntityUpdater<ReceipeRaw>(context) {
-        override fun newDatabaseUpdate(entity: ReceipeRaw) = DatabaseUpdateRaw(
-            entity.uuid, EntityType.RECEIPE, NectarUtil.timestamp())
+        override fun getUuidType(entity: ReceipeRaw): Pair<String, EntityType> = Pair(entity.uuid, EntityType.RECEIPE)
     }
 }

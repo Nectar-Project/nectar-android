@@ -13,7 +13,6 @@ class MeasureRepository(val context: Context, updater: EntityUpdaterInterface<Me
     override fun getDao() = NectarDatabase.getInstance(context).measureDao()
 
     class Updater(context: Context): GenericEntityUpdater<MeasureRaw>(context) {
-        override fun newDatabaseUpdate(entity: MeasureRaw) = DatabaseUpdateRaw(
-            entity.uuid, EntityType.MEASURE, NectarUtil.timestamp())
+        override fun getUuidType(entity: MeasureRaw): Pair<String, EntityType> = Pair(entity.uuid, EntityType.MEASURE)
     }
 }

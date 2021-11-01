@@ -8,6 +8,7 @@ import com.realitix.nectar.database.entity.DatabaseUpdateRaw
 import com.realitix.nectar.database.entity.UuidInterface
 import com.realitix.nectar.util.EntityType
 import com.realitix.nectar.util.NectarUtil
+import com.realitix.nectar.util.UpdateType
 
 class DatabaseUpdateRepository(val context: Context, updater: EntityUpdaterInterface<DatabaseUpdateRaw> = NoTrackEntityUpdater()):
     GenericCrudRepository<DatabaseUpdateRaw, DatabaseUpdate>(updater) {
@@ -52,7 +53,14 @@ class DatabaseUpdateRepository(val context: Context, updater: EntityUpdaterInter
         for((k, v) in entitiesMap) {
             val entities = v.list()
             for(e in entities) {
-                result.add(DatabaseUpdate(e.getEntityUuid(), k, NectarUtil.timestamp()))
+                result.add(DatabaseUpdate(e.getEntityUuid(), k, UpdateType.UPDATE, NectarUtil.timestamp()))
+            }
+        }
+
+        // Add deletes if exists
+        for(ud in list()) {
+            if(ud.updateType == UpdateType.DELETE) {
+                result.add(DatabaseUpdate(ud.entityUuid, ud.entityType, UpdateType.DELETE, NectarUtil.timestamp()))
             }
         }
 

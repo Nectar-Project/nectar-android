@@ -3,13 +3,10 @@ package com.realitix.nectar.background
 import android.content.Context
 import android.util.Log
 import com.realitix.nectar.repository.*
-import com.realitix.nectar.util.EntityType
-import com.realitix.nectar.util.GitManager
-import com.realitix.nectar.util.NectarUtil
-import com.realitix.nectar.util.UuidGenerator
 import com.realitix.nectar.background.synchronizer.*
 import com.realitix.nectar.database.entity.GitRepository
 import com.realitix.nectar.database.entity.GitSelectiveSynchronization
+import com.realitix.nectar.util.*
 import java.io.File
 import org.eclipse.jgit.api.errors.TransportException
 
@@ -104,8 +101,17 @@ class GitRepositorySynchronizer(val context: Context) {
         val sortedDeletes = diff.deletes.sortedWith(compareByDescending { it.first.ordinal })
 
         // create and update
+        // we don't add entity deleted recently
+        val updates = DatabaseUpdateRepository(context).list()
+        var deleteUpdates = mutableListOf<String>()
+        for(u in updates) {
+            if(u.updateType == UpdateType.DELETE)
+                deleteUpdates.add(u.entityUuid)
+        }
         for((dt, uuid) in sortedUpdates) {
             if(!mustBeSync(gitRepository, dt, uuid))
+                continue
+            if(uuid in deleteUpdates)
                 continue
 
             try {
@@ -179,7 +185,14 @@ class GitRepositorySynchronizer(val context: Context) {
             if(!mustBeSync(gitRepository, u.entityType, u.entityUuid))
                 continue
 
-            synchronizerMap[u.entityType]?.fromDbToGit(gitRepository.name, u.entityUuid)
+            // Force delete fixes a bug because the entity is never deleted.
+            // Indeed the entity is always recreated in synchronizeFromGitToDb.
+            synchronizerMap[u.entityType]?.fromDbToGit(
+                gitRepository.name,
+                u.entityUuid,
+                u.updateType == UpdateType.DELETE
+            )
+
             updated = true
         }
 

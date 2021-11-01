@@ -3,6 +3,10 @@ package com.realitix.nectar.repository
 import android.content.Context
 import com.realitix.nectar.database.dao.GenericCrudDao
 import com.realitix.nectar.database.entity.DatabaseUpdateRaw
+import com.realitix.nectar.database.entity.MealReceipeRaw
+import com.realitix.nectar.util.EntityType
+import com.realitix.nectar.util.NectarUtil
+import com.realitix.nectar.util.UpdateType
 
 abstract class GenericCrudRepository<ERaw, E>(private val entityUpdaterListener: EntityUpdaterInterface<ERaw>) {
     abstract fun getDao(): GenericCrudDao<ERaw, E>
@@ -10,22 +14,58 @@ abstract class GenericCrudRepository<ERaw, E>(private val entityUpdaterListener:
     interface EntityUpdaterInterface<ERaw> {
         fun onEntityUpdate(entity: ERaw)
         suspend fun onEntityUpdateSuspend(entity: ERaw)
+        fun onEntityInsert(entity: ERaw)
+        suspend fun onEntityInsertSuspend(entity: ERaw)
+        fun onEntityDelete(entity: ERaw)
+        suspend fun onEntityDeleteSuspend(entity: ERaw)
     }
 
     abstract class GenericEntityUpdater<ERaw>(val context: Context): EntityUpdaterInterface<ERaw> {
-        abstract fun newDatabaseUpdate(entity: ERaw): DatabaseUpdateRaw
+        abstract fun getUuidType(entity: ERaw): Pair<String, EntityType>
 
         override fun onEntityUpdate(entity: ERaw) {
-            DatabaseUpdateRepository(context).insert(newDatabaseUpdate(entity))
+            val (uuid, etype) = getUuidType(entity)
+            DatabaseUpdateRepository(context).insert(
+                DatabaseUpdateRaw(uuid, etype, UpdateType.UPDATE, NectarUtil.timestamp()))
         }
         override suspend fun onEntityUpdateSuspend(entity: ERaw) {
-            DatabaseUpdateRepository(context).insertSuspend(newDatabaseUpdate(entity))
+            val (uuid, etype) = getUuidType(entity)
+            DatabaseUpdateRepository(context).insertSuspend(
+                DatabaseUpdateRaw(uuid, etype, UpdateType.UPDATE, NectarUtil.timestamp()))
+        }
+
+        override fun onEntityInsert(entity: ERaw) {
+            val (uuid, etype) = getUuidType(entity)
+            DatabaseUpdateRepository(context).insert(
+                DatabaseUpdateRaw(uuid, etype, UpdateType.INSERT, NectarUtil.timestamp()))
+        }
+
+        override suspend fun onEntityInsertSuspend(entity: ERaw) {
+            val (uuid, etype) = getUuidType(entity)
+            DatabaseUpdateRepository(context).insertSuspend(
+                DatabaseUpdateRaw(uuid, etype, UpdateType.INSERT, NectarUtil.timestamp()))
+        }
+
+        override fun onEntityDelete(entity: ERaw) {
+            val (uuid, etype) = getUuidType(entity)
+            DatabaseUpdateRepository(context).insert(
+                DatabaseUpdateRaw(uuid, etype, UpdateType.DELETE, NectarUtil.timestamp()))
+        }
+
+        override suspend fun onEntityDeleteSuspend(entity: ERaw) {
+            val (uuid, etype) = getUuidType(entity)
+            DatabaseUpdateRepository(context).insertSuspend(
+                DatabaseUpdateRaw(uuid, etype, UpdateType.DELETE, NectarUtil.timestamp()))
         }
     }
 
     class NoTrackEntityUpdater<ERaw>: EntityUpdaterInterface<ERaw> {
         override fun onEntityUpdate(entity: ERaw) {}
         override suspend fun onEntityUpdateSuspend(entity: ERaw) {}
+        override fun onEntityInsert(entity: ERaw) {}
+        override suspend fun onEntityInsertSuspend(entity: ERaw) {}
+        override fun onEntityDelete(entity: ERaw) {}
+        override suspend fun onEntityDeleteSuspend(entity: ERaw) {}
     }
 
     // list
@@ -36,12 +76,12 @@ abstract class GenericCrudRepository<ERaw, E>(private val entityUpdaterListener:
     // insert
     open fun insert(i: ERaw) {
         getDao().insert(i)
-        entityUpdaterListener.onEntityUpdate(i)
+        entityUpdaterListener.onEntityInsert(i)
     }
 
     open suspend fun insertSuspend(i: ERaw) {
         getDao().insertSuspend(i)
-        entityUpdaterListener.onEntityUpdateSuspend(i)
+        entityUpdaterListener.onEntityInsertSuspend(i)
     }
 
     // update
@@ -58,11 +98,11 @@ abstract class GenericCrudRepository<ERaw, E>(private val entityUpdaterListener:
     // delete
     open fun delete(i: ERaw) {
         getDao().delete(i)
-        entityUpdaterListener.onEntityUpdate(i)
+        entityUpdaterListener.onEntityDelete(i)
     }
 
     open suspend fun deleteSuspend(i: ERaw) {
         getDao().deleteSuspend(i)
-        entityUpdaterListener.onEntityUpdateSuspend(i)
+        entityUpdaterListener.onEntityDeleteSuspend(i)
     }
 }

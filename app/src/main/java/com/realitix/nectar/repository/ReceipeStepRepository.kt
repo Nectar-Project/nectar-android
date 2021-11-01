@@ -11,8 +11,7 @@ class ReceipeStepRepository(val context: Context, updater: EntityUpdaterInterfac
     override fun getDao() = NectarDatabase.getInstance(context).receipeStepDao()
 
     class Updater(context: Context): GenericEntityUpdater<ReceipeStepRaw>(context) {
-        override fun newDatabaseUpdate(entity: ReceipeStepRaw) = DatabaseUpdateRaw(
-            entity.receipeUuid, EntityType.RECEIPE, NectarUtil.timestamp())
+        override fun getUuidType(entity: ReceipeStepRaw): Pair<String, EntityType> = Pair(entity.receipeUuid, EntityType.RECEIPE)
     }
 
     suspend fun listByReceipeSuspend(uuid: String): List<ReceipeStep> {

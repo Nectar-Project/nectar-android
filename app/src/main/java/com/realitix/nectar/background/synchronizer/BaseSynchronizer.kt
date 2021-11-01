@@ -32,8 +32,8 @@ abstract class BaseSynchronizer<P>(
     inline fun <reified P> parse(json: String): P = Klaxon().parse<P>(json)!!
     inline fun <reified P> getInnerParseResult(repositoryName: String, uuid: String): P = parse(readFile(repositoryName, uuid))
     override fun fromGitToDb(gitRepositoryName: String, uuid: String) = updateDb(getParseResult(gitRepositoryName, uuid))
-    override fun fromDbToGit(gitRepositoryName: String, uuid: String) {
-        if(isEntityExists(uuid)) {
+    override fun fromDbToGit(gitRepositoryName: String, uuid: String, forceDelete: Boolean) {
+        if(!forceDelete || isEntityExists(uuid)) {
             writeFile(gitRepositoryName, uuid, populateParseResult(uuid))
         }
         else {

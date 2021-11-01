@@ -1,19 +1,18 @@
 package com.realitix.nectar.database.entity
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.Relation
-import androidx.room.TypeConverter
 import com.realitix.nectar.util.EntityType
+import com.realitix.nectar.util.UpdateType
 
 
-class DatabaseUpdate(entityUuid: String, entityType: EntityType, timestamp: Long):
-    DatabaseUpdateRaw(entityUuid, entityType, timestamp)
+class DatabaseUpdate(entityUuid: String, entityType: EntityType, updateType: UpdateType, timestamp: Long):
+    DatabaseUpdateRaw(entityUuid, entityType, updateType, timestamp)
 
-@Entity(primaryKeys = ["entityUuid", "entityType"])
+@Entity(primaryKeys = ["entityUuid", "entityType", "updateType"])
 open class DatabaseUpdateRaw(
     var entityUuid: String,
     var entityType: EntityType,
+    var updateType: UpdateType,
     var timestamp: Long
 ) {
     override fun equals(other: Any?): Boolean {
@@ -25,6 +24,7 @@ open class DatabaseUpdateRaw(
         if (entityUuid != other.entityUuid) return false
         if (entityType != other.entityType) return false
         if (timestamp != other.timestamp) return false
+        if (updateType != other.updateType) return false
 
         return true
     }
@@ -33,6 +33,8 @@ open class DatabaseUpdateRaw(
         var result = entityUuid.hashCode()
         result = 31 * result + entityType.hashCode()
         result = 31 * result + timestamp.hashCode()
+        result = 31 * result + updateType.hashCode()
         return result
     }
+
 }

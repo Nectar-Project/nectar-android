@@ -16,3 +16,9 @@ enum class EntityType(val folderName: String) {
     MEAL("meals"),
     SHOPPING_LIST("shoppings")
 }
+
+enum class UpdateType() {
+    INSERT(),
+    UPDATE(),
+    DELETE()
+}

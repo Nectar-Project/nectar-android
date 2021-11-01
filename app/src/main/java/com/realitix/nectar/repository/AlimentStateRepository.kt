@@ -20,7 +20,6 @@ class AlimentStateRepository(val context: Context, updater: EntityUpdaterInterfa
     }
 
     class Updater(context: Context): GenericEntityUpdater<AlimentStateRaw>(context) {
-        override fun newDatabaseUpdate(entity: AlimentStateRaw) = DatabaseUpdateRaw(
-            entity.alimentUuid, EntityType.ALIMENT, NectarUtil.timestamp())
+        override fun getUuidType(entity: AlimentStateRaw): Pair<String, EntityType> = Pair(entity.alimentUuid, EntityType.ALIMENT)
     }
 }

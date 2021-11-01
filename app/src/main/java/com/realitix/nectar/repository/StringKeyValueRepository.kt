@@ -12,7 +12,6 @@ class StringKeyValueRepository(val context: Context, updater: EntityUpdaterInter
     override fun getDao() = NectarDatabase.getInstance(context).stringKeyValueDao()
 
     class Updater(context: Context): GenericEntityUpdater<StringKeyValueRaw>(context) {
-        override fun newDatabaseUpdate(entity: StringKeyValueRaw) = DatabaseUpdateRaw(
-            entity.stringKeyUuid, EntityType.STRING_KEY, NectarUtil.timestamp())
+        override fun getUuidType(entity: StringKeyValueRaw): Pair<String, EntityType> = Pair(entity.stringKeyUuid, EntityType.STRING_KEY)
     }
 }

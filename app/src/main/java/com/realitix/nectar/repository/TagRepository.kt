@@ -13,7 +13,6 @@ class TagRepository(val context: Context, updater: EntityUpdaterInterface<TagRaw
     override fun getDao() = NectarDatabase.getInstance(context).tagDao()
 
     class Updater(context: Context): GenericEntityUpdater<TagRaw>(context) {
-        override fun newDatabaseUpdate(entity: TagRaw) = DatabaseUpdateRaw(
-            entity.uuid, EntityType.TAG, NectarUtil.timestamp())
+        override fun getUuidType(entity: TagRaw): Pair<String, EntityType> = Pair(entity.uuid, EntityType.TAG)
     }
 }

@@ -12,7 +12,6 @@ class BookRepository(val context: Context, updater: EntityUpdaterInterface<BookR
     override fun getDao() = NectarDatabase.getInstance(context).bookDao()
 
     class Updater(context: Context): GenericEntityUpdater<BookRaw>(context) {
-        override fun newDatabaseUpdate(entity: BookRaw) = DatabaseUpdateRaw(
-            entity.uuid, EntityType.BOOK, NectarUtil.timestamp())
+        override fun getUuidType(entity: BookRaw): Pair<String, EntityType> = Pair(entity.uuid, EntityType.BOOK)
     }
 }

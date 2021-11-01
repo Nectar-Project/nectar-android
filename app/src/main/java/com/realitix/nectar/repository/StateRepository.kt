@@ -16,7 +16,6 @@ class StateRepository(val context: Context, updater: EntityUpdaterInterface<Stat
     override fun getNameUuid(uuid: String) = get(uuid)!!.nameUuid
 
     class Updater(context: Context): GenericEntityUpdater<StateRaw>(context) {
-        override fun newDatabaseUpdate(entity: StateRaw) = DatabaseUpdateRaw(
-            entity.uuid, EntityType.STATE, NectarUtil.timestamp())
+        override fun getUuidType(entity: StateRaw): Pair<String, EntityType> = Pair(entity.uuid, EntityType.STATE)
     }
 }

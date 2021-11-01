@@ -11,7 +11,6 @@ class MealAlimentRepository(val context: Context, updater: EntityUpdaterInterfac
     override fun getDao() = NectarDatabase.getInstance(context).mealAlimentDao()
 
     class Updater(context: Context): GenericEntityUpdater<MealAlimentStateRaw>(context) {
-        override fun newDatabaseUpdate(entity: MealAlimentStateRaw) = DatabaseUpdateRaw(
-            entity.mealUuid, EntityType.MEAL, NectarUtil.timestamp())
+        override fun getUuidType(entity: MealAlimentStateRaw): Pair<String, EntityType> = Pair(entity.mealUuid, EntityType.MEAL)
     }
 }

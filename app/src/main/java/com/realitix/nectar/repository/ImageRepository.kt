@@ -11,7 +11,6 @@ class ImageRepository(val context: Context, updater: EntityUpdaterInterface<Imag
     override fun getDao() = NectarDatabase.getInstance(context).imageDao()
 
     class Updater(context: Context): GenericEntityUpdater<ImageRaw>(context) {
-        override fun newDatabaseUpdate(entity: ImageRaw) = DatabaseUpdateRaw(
-            entity.uuid, EntityType.IMAGE, NectarUtil.timestamp())
+        override fun getUuidType(entity: ImageRaw): Pair<String, EntityType> = Pair(entity.uuid, EntityType.IMAGE)
     }
 }

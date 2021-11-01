@@ -125,7 +125,7 @@ abstract class NectarDatabase : RoomDatabase() {
                         rescan = true,
                         readOnly = true,
                         lastCheck = 0,
-                        frequency = 60 * 60 * 6,
+                        frequency = (60 * 60 * 6).toLong(),
                         selectiveSynchronization = selective,
                         credentials = null
                     )
